@@ -236,6 +236,12 @@ export interface InspectedPointInfo {
 
 interface JogjaRealMapProps {
   selectedRegionId?: string;
+  /**
+   * Daftar region ID yang akan di-highlight sekaligus (multi-polygon).
+   * Digunakan untuk cluster lintas kab/kota. Contoh: ['sleman', 'kota'].
+   * Jika ['semua'] atau kosong, semua region tampil normal.
+   */
+  highlightRegionIds?: string[];
   filterMode?: 'zonasi' | 'harga' | 'akses';
   onSelectRegion: (region: YogyakartaRegion) => void;
   onApplyZoneToCalculator: (zoneName: string) => void;
@@ -246,6 +252,7 @@ interface JogjaRealMapProps {
 
 export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
   selectedRegionId = 'semua',
+  highlightRegionIds,
   filterMode = 'zonasi',
   onSelectRegion,
   onApplyZoneToCalculator,
@@ -253,6 +260,13 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
   compact = false,
   height = '480px',
 }) => {
+  // Normalised set of region IDs to highlight (empty = show all equally)
+  const highlightSet: Set<string> = React.useMemo(() => {
+    if (!highlightRegionIds || highlightRegionIds.includes('semua') || highlightRegionIds.length === 0) {
+      return new Set<string>();
+    }
+    return new Set(highlightRegionIds);
+  }, [highlightRegionIds]);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const polygonsRef = useRef<{ [key: string]: L.Polygon }>({});
@@ -642,18 +656,29 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
     if (!mapInstanceRef.current) return;
 
     // 1. Update Polygons Style
+    // Multi-region highlight: jika highlightSet tidak kosong, polygon yang masuk set = aktif
+    const hasMultiHighlight = highlightSet.size > 0;
     Object.keys(polygonsRef.current).forEach((regId) => {
       const poly = polygonsRef.current[regId];
       const isSelected = regId === activeRegionId;
+      const isHighlighted = hasMultiHighlight ? highlightSet.has(regId) : isSelected;
       const reg = YOGYAKARTA_REGIONS.find((r) => r.id === regId);
       if (poly && reg) {
         const fillColor = filterMode === 'harga' ? reg.njopColor : reg.color;
         poly.setStyle({
           fillColor: fillColor,
           color: fillColor,
-          fillOpacity: filterMode === 'akses' ? 0.08 : isAll ? 0.25 : isSelected ? 0.45 : 0.12,
-          weight: filterMode === 'akses' ? 1.0 : isAll ? 1.5 : isSelected ? 3 : 1.2,
-          opacity: isAll ? 0.85 : isSelected ? 1 : 0.65,
+          fillOpacity:
+            filterMode === 'akses' ? 0.08
+            : isAll ? 0.25
+            : isHighlighted ? 0.45
+            : 0.08,
+          weight:
+            filterMode === 'akses' ? 1.0
+            : isAll ? 1.5
+            : isHighlighted ? 3
+            : 0.8,
+          opacity: isAll ? 0.85 : isHighlighted ? 1 : 0.45,
         });
       }
     });
@@ -699,23 +724,32 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
     }
   }, [filterMode, activeRegionId, isAll, showTollLayer, showPoiLayer]);
 
-  // Re-fit map bounds when region changes
+  // Re-fit map bounds when region or highlight changes
   useEffect(() => {
-    if (mapInstanceRef.current) {
-      if (isAll) {
-        mapInstanceRef.current.fitBounds(diyBounds, { padding: [16, 16], duration: 0.6 });
-      } else {
-        const poly = polygonsRef.current[activeRegionId];
-        if (poly) {
-          mapInstanceRef.current.fitBounds(poly.getBounds(), {
-            padding: [30, 30],
-            maxZoom: 12,
-            duration: 0.6,
-          });
-        }
+    if (!mapInstanceRef.current) return;
+    const map = mapInstanceRef.current;
+
+    // If multi-highlight active, fit to combined bounds of all highlighted polygons
+    if (highlightSet.size > 1) {
+      const boundsArr = Array.from(highlightSet)
+        .map((id) => polygonsRef.current[id]?.getBounds())
+        .filter(Boolean) as L.LatLngBounds[];
+      if (boundsArr.length > 0) {
+        const combined = boundsArr.reduce((acc, b) => acc.extend(b), boundsArr[0]);
+        map.fitBounds(combined, { padding: [24, 24], maxZoom: 11, duration: 0.7 });
+        return;
       }
     }
-  }, [activeRegionId]);
+
+    if (isAll) {
+      map.fitBounds(diyBounds, { padding: [16, 16], duration: 0.6 });
+    } else {
+      const poly = polygonsRef.current[activeRegionId];
+      if (poly) {
+        map.fitBounds(poly.getBounds(), { padding: [30, 30], maxZoom: 12, duration: 0.6 });
+      }
+    }
+  }, [activeRegionId, highlightSet]);
 
   const handleRegionClick = (reg: YogyakartaRegion) => {
     setActiveRegionId(reg.id);
