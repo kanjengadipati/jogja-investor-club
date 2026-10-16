@@ -132,8 +132,8 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
             </p>
           </div>
 
-          {/* Filter Pills (Zonasi RTRW, Harga Lahan / NJOP, Aksesibilitas & Tol) */}
-          <div className="flex items-center gap-1.5 bg-[#0a231c] p-1 rounded-full border border-white/10 shrink-0">
+          {/* Filter Pills (Zonasi RTRW, Harga Lahan / NJOP, Akses & Jalur Tol, Blok Mikro) */}
+          <div className="flex items-center gap-1.5 bg-[#0a231c] p-1 rounded-full border border-white/10 shrink-0 flex-wrap">
             <button
               type="button"
               onClick={() => {
@@ -181,6 +181,21 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
               <Navigation className="w-3.5 h-3.5" />
               <span>Akses &amp; Jalur Tol</span>
             </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setActiveMapTab('blok');
+              }}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeMapTab === 'blok'
+                  ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
+                  : 'text-neutral-300 hover:text-white'
+              }`}
+            >
+              <Globe className="w-3.5 h-3.5" />
+              <span>Blok Mikro</span>
+            </button>
           </div>
         </div>
 
@@ -208,45 +223,16 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
               </div>
             </div>
 
-            <div className="flex items-center gap-2 shrink-0 flex-wrap">
-              {/* Segmented Tab Buttons: Zonasi (Makro) | Blok (Mikro) */}
-              <div className="flex items-center gap-1 bg-[#0a231c] p-1 rounded-lg border border-white/15">
-                <button
-                  type="button"
-                  onClick={() => setActiveMapTab('zonasi')}
-                  className={`px-3 py-1 rounded-md text-xs font-bold cursor-pointer transition-all flex items-center gap-1.5 ${
-                    activeMapTab === 'zonasi'
-                      ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
-                      : 'text-neutral-300 hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  <Layers className="w-3 h-3" />
-                  <span>Zonasi &amp; NJOP</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveMapTab('blok')}
-                  className={`px-3 py-1 rounded-md text-xs font-bold cursor-pointer transition-all flex items-center gap-1.5 ${
-                    activeMapTab === 'blok'
-                      ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
-                      : 'text-neutral-300 hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  <Globe className="w-3 h-3" />
-                  <span>Blok Mikro</span>
-                </button>
-              </div>
-
+            <div className="flex items-center gap-2 shrink-0">
               {/* Fullscreen Button */}
               <button
                 type="button"
                 onClick={() => setIsFullscreen(true)}
                 title="Buka peta layar penuh (Full Screen)"
-                className="px-2.5 py-1 rounded-lg bg-[#d5a864]/15 hover:bg-[#d5a864]/30 border border-[#d5a864]/40 text-[#d5a864] transition-all cursor-pointer flex items-center gap-1.5 text-xs font-bold"
+                className="px-2.5 py-1.5 rounded-lg bg-[#d5a864]/15 hover:bg-[#d5a864]/30 border border-[#d5a864]/40 text-[#d5a864] transition-all cursor-pointer flex items-center gap-1.5 text-xs font-bold"
               >
-                <Maximize2 className="w-3 h-3" />
-                <span className="hidden sm:inline">Full Map</span>
+                <Maximize2 className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Layar Penuh</span>
               </button>
             </div>
           </div>
@@ -427,32 +413,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
               </div>
             )}
 
-            {/* Floating Mini HUD Card on Bottom Right of Map */}
-            <div className="absolute bottom-4 right-4 z-[400] max-w-xs sm:max-w-sm bg-[#071914]/92 backdrop-blur-md p-3 rounded-2xl border border-[#d5a864]/30 shadow-2xl space-y-1.5 hidden sm:block pointer-events-auto">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-[10px] font-mono text-[#d5a864] font-bold uppercase tracking-wider flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  Kawasan Terpilih:
-                </span>
-                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#0a231c] text-[#d5a864] border border-[#d5a864]/20">
-                  {currentData.badge}
-                </span>
-              </div>
-              <h4 className="text-xs sm:text-sm font-bold text-white tracking-tight leading-snug line-clamp-1">
-                {currentData.fullName}
-              </h4>
-              <div className="flex items-center gap-3 text-[10px] font-mono pt-1 border-t border-white/10">
-                <div>
-                  <span className="text-neutral-400 block text-[8.5px]">NJOP RESMI</span>
-                  <span className="text-amber-300 font-bold text-[10px]">{currentData.njopPrice}</span>
-                </div>
-                <div className="h-5 w-px bg-white/10" />
-                <div>
-                  <span className="text-neutral-400 block text-[8.5px]">ESTIMASI ROI</span>
-                  <span className="text-emerald-300 font-bold text-[10px]">{currentData.roi}</span>
-                </div>
-              </div>
-            </div>
+            {/* End of Map Container */}
 
           </div>
 
@@ -479,45 +440,55 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
               </div>
 
               <div className="flex items-center gap-2">
-                {/* Filter Pills (compact, inside fullscreen) */}
-                <div className="hidden sm:flex items-center gap-1 bg-[#0a231c] p-1 rounded-full border border-white/10 text-[11px]">
-                  {(['zonasi', 'harga', 'akses'] as const).map((tab) => (
-                    <button
-                      key={tab}
-                      type="button"
-                      onClick={() => { setActiveMapTab('zonasi'); setActiveFilterTab(tab); }}
-                      className={`px-3 py-1 rounded-full font-bold transition-all cursor-pointer ${
-                        activeFilterTab === tab && activeMapTab === 'zonasi'
-                          ? 'bg-[#d5a864] text-[#071914]'
-                          : 'text-neutral-300 hover:text-white'
-                      }`}
-                    >
-                      {tab === 'zonasi' ? '🗺️ Zonasi' : tab === 'harga' ? '💰 NJOP' : '🛣️ Tol'}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Tab Blok / Zonasi switcher */}
-                <div className="flex items-center gap-1 bg-[#0a231c] p-1 rounded-xl border border-white/10">
+                {/* Unified Filter Pills (inside fullscreen) */}
+                <div className="flex items-center gap-1 bg-[#0a231c] p-1 rounded-full border border-white/10 text-[11px]">
                   <button
                     type="button"
-                    onClick={() => setActiveMapTab('zonasi')}
-                    className={`px-3 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition-all flex items-center gap-1 ${
-                      activeMapTab === 'zonasi' ? 'bg-[#d5a864] text-[#071914]' : 'text-neutral-300 hover:text-white'
+                    onClick={() => { setActiveMapTab('zonasi'); setActiveFilterTab('zonasi'); }}
+                    className={`px-3 py-1 rounded-full font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                      activeFilterTab === 'zonasi' && activeMapTab === 'zonasi'
+                        ? 'bg-[#d5a864] text-[#071914]'
+                        : 'text-neutral-300 hover:text-white'
                     }`}
                   >
                     <Layers className="w-3 h-3" />
-                    Zonasi
+                    <span>Zonasi</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setActiveMapTab('zonasi'); setActiveFilterTab('harga'); }}
+                    className={`px-3 py-1 rounded-full font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                      activeFilterTab === 'harga' && activeMapTab === 'zonasi'
+                        ? 'bg-[#d5a864] text-[#071914]'
+                        : 'text-neutral-300 hover:text-white'
+                    }`}
+                  >
+                    <DollarSign className="w-3 h-3" />
+                    <span>NJOP</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setActiveMapTab('zonasi'); setActiveFilterTab('akses'); }}
+                    className={`px-3 py-1 rounded-full font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                      activeFilterTab === 'akses' && activeMapTab === 'zonasi'
+                        ? 'bg-[#d5a864] text-[#071914]'
+                        : 'text-neutral-300 hover:text-white'
+                    }`}
+                  >
+                    <Navigation className="w-3 h-3" />
+                    <span>Tol</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setActiveMapTab('blok')}
-                    className={`px-3 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition-all flex items-center gap-1 ${
-                      activeMapTab === 'blok' ? 'bg-[#d5a864] text-[#071914]' : 'text-neutral-300 hover:text-white'
+                    className={`px-3 py-1 rounded-full font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                      activeMapTab === 'blok'
+                        ? 'bg-[#d5a864] text-[#071914]'
+                        : 'text-neutral-300 hover:text-white'
                     }`}
                   >
                     <Globe className="w-3 h-3" />
-                    Blok
+                    <span>Blok Mikro</span>
                   </button>
                 </div>
 
@@ -712,32 +683,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                 />
               )}
 
-              {/* Floating Mini HUD Card on Bottom Right of Fullscreen Map */}
-              <div className="absolute bottom-4 right-4 z-[500] max-w-xs sm:max-w-sm bg-[#071914]/92 backdrop-blur-md p-3 rounded-2xl border border-[#d5a864]/30 shadow-2xl space-y-1.5 hidden sm:block pointer-events-auto">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-[10px] font-mono text-[#d5a864] font-bold uppercase tracking-wider flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    Kawasan Terpilih:
-                  </span>
-                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#0a231c] text-[#d5a864] border border-[#d5a864]/20">
-                    {currentData.badge}
-                  </span>
-                </div>
-                <h4 className="text-xs sm:text-sm font-bold text-white tracking-tight leading-snug line-clamp-1">
-                  {currentData.fullName}
-                </h4>
-                <div className="flex items-center gap-3 text-[10px] font-mono pt-1 border-t border-white/10">
-                  <div>
-                    <span className="text-neutral-400 block text-[8.5px]">NJOP RESMI</span>
-                    <span className="text-amber-300 font-bold text-[10px]">{currentData.njopPrice}</span>
-                  </div>
-                  <div className="h-5 w-px bg-white/10" />
-                  <div>
-                    <span className="text-neutral-400 block text-[8.5px]">ESTIMASI ROI</span>
-                    <span className="text-emerald-300 font-bold text-[10px]">{currentData.roi}</span>
-                  </div>
-                </div>
-              </div>
+              {/* End of Fullscreen Map Canvas */}
 
             </div>
 

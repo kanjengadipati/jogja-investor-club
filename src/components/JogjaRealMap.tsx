@@ -1093,44 +1093,7 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
           </div>
         </div>
 
-        {/* Dynamic Overlay HUD Info for Active Filter Mode */}
-        {filterMode === 'harga' && (
-          <div className="absolute top-14 left-3 z-[400] pointer-events-auto max-w-sm">
-            <div className="bg-[#071914]/95 backdrop-blur-md p-2.5 rounded-xl border border-amber-500/40 text-white text-[11px] shadow-xl space-y-1.5">
-              <div className="flex items-center gap-1.5 text-amber-400 font-bold uppercase tracking-wider text-[10px]">
-                <DollarSign className="w-3 h-3" />
-                <span>Indikasi NJOP Resmi (PBB-P2) DIY 2024/2025</span>
-              </div>
-              <p className="text-[10px] text-neutral-300 leading-tight">
-                Warna peta menunjukkan level NJOP: Merah (Tertinggi, Kota Jogja) &rarr; Amber (Sleman) &rarr; Biru/Teal (Bantul/KP) &rarr; Ungu (Gunungkidul).
-              </p>
-            </div>
-          </div>
-        )}
 
-        {filterMode === 'akses' && (
-          <div className="absolute top-14 left-3 z-[400] pointer-events-auto max-w-sm">
-            <div className="bg-[#071914]/95 backdrop-blur-md p-2.5 rounded-xl border border-amber-500/40 text-white text-[11px] shadow-xl space-y-1.5">
-              <div className="flex items-center gap-1.5 text-amber-400 font-bold uppercase tracking-wider text-[10px]">
-                <Navigation className="w-3 h-3" />
-                <span>Konektivitas Trase Tol Solo-Jogja-YIA &amp; Bawen</span>
-              </div>
-              <p className="text-[10px] text-neutral-300 leading-tight">
-                Garis putus-putus kuning/hijau = Trase Tol Strategis. Klik pin gerbang tol untuk estimasi target operasional &amp; impact zone.
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Floating Hint "Klik Peta untuk Analisis Titik Lahan" */}
-        <div className="absolute bottom-16 right-3 z-[400] pointer-events-auto">
-          <div className="bg-[#071914]/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-[#d5a864]/30 text-white text-[11px] shadow-lg flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#d5a864] animate-ping" />
-            <span className="text-neutral-300">
-              💡 <span className="text-white font-medium">Klik sembarang titik di peta</span> untuk cek potensi lahan
-            </span>
-          </div>
-        </div>
 
         {/* Leaflet Mount Div */}
         <div
