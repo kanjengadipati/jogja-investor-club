@@ -5,7 +5,7 @@ import { JOGJA_IMAGES } from '../data/jogjaData';
 import { LeadFormData, PropertyType } from '../types/property';
 import { calculateLandPotential, formatShortRupiah } from '../utils/calculator';
 import {
-  User, Phone, Home, ArrowRight, ChevronDown, ChevronUp,
+  User, Phone, Home, ArrowRight, ChevronDown,
   Sparkles, Check, Copy, Shield, FileText, Compass, Send
 } from 'lucide-react';
 
@@ -29,7 +29,6 @@ export const LeadCalculatorBanner: React.FC<LeadCalculatorBannerProps> = ({
   });
 
   const [notes, setNotes] = useState('');
-  const [isDetailedViewOpen, setIsDetailedViewOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
   React.useEffect(() => {
@@ -149,16 +148,15 @@ export const LeadCalculatorBanner: React.FC<LeadCalculatorBannerProps> = ({
                 </div>
               </div>
 
-              {/* Toggle Simulation Drawer */}
+              {/* Parameter & Simulation Anchor Indicator */}
               <div className="pt-1">
-                <button
-                  type="button"
-                  onClick={() => setIsDetailedViewOpen(!isDetailedViewOpen)}
-                  className="inline-flex items-center gap-2 text-xs font-semibold text-[#d5a864] hover:text-white underline underline-offset-4 cursor-pointer transition-colors"
+                <a
+                  href="#simulasi-potensi"
+                  className="inline-flex items-center gap-2 text-xs font-semibold text-[#d5a864] hover:text-white transition-colors cursor-pointer"
                 >
-                  <span>{isDetailedViewOpen ? 'Tutup Parameter & Simulasi Anggaran' : 'Sesuaikan Luas Tanah & Estimasi RAB'}</span>
-                  {isDetailedViewOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                </button>
+                  <Sparkles className="w-3.5 h-3.5 text-[#d5a864]" />
+                  <span>Parameter &amp; Simulasi Anggaran Aktif di Bawah &darr;</span>
+                </a>
               </div>
 
             </div>
@@ -280,9 +278,8 @@ export const LeadCalculatorBanner: React.FC<LeadCalculatorBannerProps> = ({
 
           </div>
 
-          {/* Interactive Detailed Simulation Drawer (Expandable) */}
-          {isDetailedViewOpen && (
-            <div className="mt-10 pt-8 border-t border-white/10 space-y-6">
+          {/* Interactive Detailed Simulation (Always Open) */}
+          <div id="simulasi-potensi" className="mt-10 pt-8 border-t border-white/10 space-y-6 scroll-mt-24">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#d5a864]">
                   <Sparkles className="w-4 h-4" />
@@ -424,7 +421,6 @@ export const LeadCalculatorBanner: React.FC<LeadCalculatorBannerProps> = ({
                 </button>
               </div>
             </div>
-          )}
 
         </div>
 
