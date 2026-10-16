@@ -5,7 +5,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import {
   Compass, MapPin, ArrowRight, Route, GraduationCap,
-  Sparkles, MessageSquare, Check, X, Info, Zap
+  Sparkles, MessageSquare, Check, X, Info, Zap, DollarSign, Navigation, ShieldCheck
 } from 'lucide-react';
 import jogjaGeoDataRaw from '../data/jogjaGeoData.json';
 import {
@@ -30,13 +30,19 @@ export interface YogyakartaRegion {
   lat: number;
   lng: number;
   recommended: string;
-  landPrice: string;
+  landPrice: string; // Pasar
+  njopPrice: string; // NJOP Resmi PBB-P2
+  njopRangeDetail: string;
+  njopRatio: string;
+  tollAccessDesc: string;
+  rtrwDesc: string;
   yieldEst: string;
   occupancy: string;
   kdb: string;
   highlights: string[];
   desc: string;
   color: string;
+  njopColor: string; // Warna Heatmap/Choropleth NJOP
   polygon: [number, number][];
 }
 
@@ -54,7 +60,12 @@ export const DIY_ALL_REGION: YogyakartaRegion = {
   lat: -7.82,
   lng: 110.38,
   recommended: 'Rumah Mewah, Villa Resort & Kos Eksklusif',
-  landPrice: 'Rp 1.5 Jt - 22 Jt / m²',
+  landPrice: 'Rp 1,5 Jt - 25 Jt / m²',
+  njopPrice: 'Rp 450 Rb - 22 Jt / m²',
+  njopRangeDetail: 'Rentang NJOP Resmi PBB-P2 Seluruh DIY: Terendah di Lahan Kars GK, Tertinggi di Koridor Malioboro',
+  njopRatio: '~50% - 75% dari harga pasar transaksi',
+  tollAccessDesc: 'Akses 2 Trase Tol Utama: Solo-Yogyakarta-YIA & Yogyakarta-Bawen',
+  rtrwDesc: 'Zonasi Terpadu RTRW DIY: Perkotaan, Kawasan Pendidikan, Aerotropolis, & Cagar Budaya',
   yieldEst: '12% - 19% / tahun',
   occupancy: '85% - 98%',
   kdb: 'KDB 50% - 70% · Bergantung Zonasi RTRW',
@@ -67,6 +78,7 @@ export const DIY_ALL_REGION: YogyakartaRegion = {
   ],
   desc: 'Peluang investasi properti terpadu di seluruh Daerah Istimewa Yogyakarta: kos eksklusif mahasiswa di Sleman, hunian heritage & homestay di Kota Jogja, villa asri di Kaliurang & Bantul, hingga resort pesisir di Gunungkidul.',
   color: '#d5a864',
+  njopColor: '#d5a864',
   polygon: DIY_OUTER_PERIMETER,
 };
 
@@ -79,13 +91,19 @@ export const YOGYAKARTA_REGIONS: YogyakartaRegion[] = [
     lat: -7.685,
     lng: 110.385,
     recommended: 'Kos Eksklusif, Co-Living Mahasiswa & Villa Kaliurang',
-    landPrice: 'Rp 4.5 Jt - 14 Jt / m²',
+    landPrice: 'Rp 5,5 Jt - 16 Jt / m²',
+    njopPrice: 'Rp 3,5 Jt - 14 Jt / m²',
+    njopRangeDetail: 'Depok/Seturan: Rp 8-14 Jt | Jakal/Ngaglik: Rp 5-10 Jt | Sleman Barat: Rp 3,5-7 Jt | Sleman Utara: Rp 1,5-3,5 Jt',
+    njopRatio: '~60% - 75% dari harga pasar',
+    tollAccessDesc: 'Koneksi Langsung 5 Exit Tol (Purwomartani, Maguwo, Monjali, Trihanggo, Gamping)',
+    rtrwDesc: 'Zona Pendidikan Tinggi, Agrowisata Merapi & Hunian Komersial Vertikal',
     yieldEst: '14% - 19% / tahun',
     occupancy: '94% - 98%',
     kdb: 'KDB 60% · Maksimal 3-4 Lantai',
     highlights: ['Kampus UGM & UNY', 'Kawasan Seturan & Jakal', 'Wisata Kaliurang & Merapi'],
     desc: 'Sentra pendidikan terbesar di DIY dengan 300.000+ mahasiswa aktif. Permintaan kos eksklusif dan villa staycation tertinggi sepanjang tahun.',
     color: '#10b981', // Emerald
+    njopColor: '#f59e0b', // Amber/Emas (Tinggi)
     polygon: jogjaGeoData.sleman,
   },
   {
@@ -96,13 +114,19 @@ export const YOGYAKARTA_REGIONS: YogyakartaRegion[] = [
     lat: -7.7972,
     lng: 110.3705,
     recommended: 'Boutique Homestay, Hotel Transit & Rumah Heritage Mewah',
-    landPrice: 'Rp 8 Jt - 22 Jt / m²',
+    landPrice: 'Rp 9 Jt - 25 Jt / m²',
+    njopPrice: 'Rp 6 Jt - 22 Jt / m²',
+    njopRangeDetail: 'Malioboro/Sudirman: Rp 18-22 Jt | Kotabaru/Kraton: Rp 9-15 Jt | Umbulharjo: Rp 6-9 Jt',
+    njopRatio: '~65% - 85% dari harga pasar',
+    tollAccessDesc: 'Akses 12-15 menit ke Exit Tol Trihanggo & Maguwo Ring Road',
+    rtrwDesc: 'Zona Perkotaan Padat, Kawasan Cagar Budaya & Sentra Bisnis Komersial',
     yieldEst: '12% - 15% / tahun',
     occupancy: '88% - 94%',
     kdb: 'KDB 70% · Zona Pusat Kota & Bisnis',
     highlights: ['Kawasan Malioboro', 'Keraton Ngayogyakarta', 'Kotabaru & Tugu Jogja'],
     desc: 'Jantung denyut budaya dan pariwisata urban DIY. Keterbatasan lahan kosong menjadikan aset properti di sini bernilai likuiditas dan apresiasi kapital tertinggi.',
     color: '#f59e0b', // Amber
+    njopColor: '#ef4444', // Merah (Tertinggi)
     polygon: jogjaGeoData.jogja,
   },
   {
@@ -113,13 +137,19 @@ export const YOGYAKARTA_REGIONS: YogyakartaRegion[] = [
     lat: -7.8900,
     lng: 110.3440,
     recommended: 'Rumah Modern Tropis, Villa Etnik & Guest House Seni',
-    landPrice: 'Rp 3 Jt - 8.5 Jt / m²',
+    landPrice: 'Rp 3 Jt - 10 Jt / m²',
+    njopPrice: 'Rp 1,5 Jt - 7,5 Jt / m²',
+    njopRangeDetail: 'Banguntapan/Sewon: Rp 4-7,5 Jt | Bantul Kota: Rp 2,5-4,5 Jt | Pajangan/Sedayu: Rp 1,5-3 Jt | Pesisir: Rp 800 Rb-2 Jt',
+    njopRatio: '~50% - 65% dari harga pasar',
+    tollAccessDesc: '15-20 menit via Ring Road Selatan ke Exit Tol Gamping',
+    rtrwDesc: 'Zona Industri Kreatif, Sentra Kriya Seni & Hunian Sub-Urban Hijau',
     yieldEst: '11% - 16% / tahun',
     occupancy: '82% - 89%',
     kdb: 'KDB 60% · Sentra Residensial Nyaman',
     highlights: ['Sentra Gerabah Kasongan', 'Kampus ISI Yogyakarta', 'Pantai Parangtritis'],
     desc: 'Lingkungan asri bernuansa seni dan budaya kreatif. Sangat diminati untuk cluster perumahan keluarga modern dan homestay pelancong seni mancanegara.',
     color: '#3b82f6', // Blue
+    njopColor: '#0284c7', // Sky Blue (Menengah)
     polygon: jogjaGeoData.bantul,
   },
   {
@@ -130,13 +160,19 @@ export const YOGYAKARTA_REGIONS: YogyakartaRegion[] = [
     lat: -7.9650,
     lng: 110.6000,
     recommended: 'Boutique Resort Tebing, Glamping & Villa Wisata Pantai',
-    landPrice: 'Rp 1.5 Jt - 5 Jt / m²',
+    landPrice: 'Rp 900 Rb - 4,5 Jt / m²',
+    njopPrice: 'Rp 450 Rb - 3 Jt / m²',
+    njopRangeDetail: 'Kawasan Pantai JJLS: Rp 1,5-3 Jt | Wonosari Kota: Rp 1,8-3 Jt | Patuk: Rp 1-2,2 Jt | Lahan Kars: Rp 250-650 Rb',
+    njopRatio: '~40% - 55% dari harga pasar',
+    tollAccessDesc: 'Akses Jalur JJLS (Jalur Jalan Lintas Selatan) & Akses Prambanan-Gayamharjo',
+    rtrwDesc: 'Zona Geopark UNESCO, Pariwisata Pantai Bahari & Kawasan Lindung Ekologis',
     yieldEst: '13% - 18% / tahun',
     occupancy: '72% - 85%',
     kdb: 'KDB 40% - 50% · Kawasan Konservasi & Wisata',
     highlights: ['Pantai Indrayanti & Baron', 'Goa Pindul', 'Wonosari Sentra Bisnis'],
     desc: 'Kawasan pesisir eksotis dengan pertumbuhan destinasi pariwisata alam tercepat di DIY. Potensi capital gain tanah jangka panjang yang sangat agresif.',
     color: '#8b5cf6', // Purple
+    njopColor: '#8b5cf6', // Violet (Terjangkau / Entry)
     polygon: jogjaGeoData.gunungkidul,
   },
   {
@@ -147,13 +183,19 @@ export const YOGYAKARTA_REGIONS: YogyakartaRegion[] = [
     lat: -7.8200,
     lng: 110.1600,
     recommended: 'Hotel Transit Bandara, Guest House & Perumahan Baru',
-    landPrice: 'Rp 2 Jt - 6.5 Jt / m²',
+    landPrice: 'Rp 1,8 Jt - 6,5 Jt / m²',
+    njopPrice: 'Rp 850 Rb - 4,5 Jt / m²',
+    njopRangeDetail: 'Aerotropolis Temon (YIA): Rp 2,5-4,5 Jt | Kota Wates: Rp 1,8-3,5 Jt | Nanggulan: Rp 1-2,5 Jt | Menoreh: Rp 450-900 Rb',
+    njopRatio: '~45% - 60% dari harga pasar',
+    tollAccessDesc: 'Titik Akhir Trase Tol Solo-Jogja-YIA & Jalur Kereta Cepat Bandara',
+    rtrwDesc: 'Zona Aerotropolis Terpadu, Transportasi Intermoda & Pusat Pertumbuhan Baru',
     yieldEst: '12% - 16% / tahun',
     occupancy: '78% - 86%',
     kdb: 'KDB 50% - 60% · Koridor Infrastruktur Baru',
     highlights: ['Bandara YIA Glagah', 'Kota Wates', 'Perbukitan Menoreh'],
     desc: 'Pintu gerbang udara internasional DIY. Mengalami akselerasi pembangunan infrastruktur jalan tol bandara dan kawasan logistik aerotropolis.',
     color: '#06b6d4', // Cyan
+    njopColor: '#0d9488', // Teal (Berkembang)
     polygon: jogjaGeoData.kulonprogo,
   },
 ];
@@ -173,21 +215,31 @@ function calcDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number):
   return parseFloat((R * c).toFixed(1));
 }
 
-interface InspectedPointInfo {
+export interface InspectedPointInfo {
   lat: number;
   lng: number;
   regionName: string;
-  nearestExit: { name: string; dist: number; toll: string };
-  nearestPoi: { name: string; dist: number; badge: string };
-  estPrice: string;
+  nearestExit: {
+    name: string;
+    dist: number;
+    toll: string;
+  };
+  nearestPoi: {
+    name: string;
+    dist: number;
+    badge: string;
+  };
   recommended: string;
+  estPrice: string;
+  njopPrice: string;
 }
 
 interface JogjaRealMapProps {
   selectedRegionId?: string;
   filterMode?: 'zonasi' | 'harga' | 'akses';
-  onSelectRegion: (reg: YogyakartaRegion) => void;
+  onSelectRegion: (region: YogyakartaRegion) => void;
   onApplyZoneToCalculator: (zoneName: string) => void;
+  onCustomPinPlaced?: (coords: { lat: number; lng: number; approxZone: string }) => void;
   compact?: boolean;
   height?: string;
 }
@@ -197,12 +249,14 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
   filterMode = 'zonasi',
   onSelectRegion,
   onApplyZoneToCalculator,
+  onCustomPinPlaced,
+  compact = false,
   height = '480px',
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
-  const markersRef = useRef<{ [key: string]: L.Marker }>({});
   const polygonsRef = useRef<{ [key: string]: L.Polygon }>({});
+  const markersRef = useRef<{ [key: string]: L.Marker }>({});
   const outerBorderRef = useRef<L.Polygon | null>(null);
   const tollLayerGroupRef = useRef<L.LayerGroup | null>(null);
   const poiLayerGroupRef = useRef<L.LayerGroup | null>(null);
@@ -214,7 +268,6 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
   // Layer Toggles
   const [showTollLayer, setShowTollLayer] = useState(true);
   const [showPoiLayer, setShowPoiLayer] = useState(true);
-  const [isPinModeActive, setIsPinModeActive] = useState(false);
   const [inspectedPoint, setInspectedPoint] = useState<InspectedPointInfo | null>(null);
 
   // Sync prop changes
@@ -240,7 +293,6 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
 
   // Handle Point Inspection Logic
   const handleInspectCoordinates = (lat: number, lng: number, map: L.Map) => {
-    // 1. Tentukan Region Terdekat
     let closestReg = YOGYAKARTA_REGIONS[0];
     let minRegDist = 9999;
     YOGYAKARTA_REGIONS.forEach((reg) => {
@@ -251,7 +303,6 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
       }
     });
 
-    // 2. Tentukan Exit Tol Terdekat
     let closestExit = TOLL_EXITS[0];
     let minExitDist = 9999;
     TOLL_EXITS.forEach((ex) => {
@@ -262,7 +313,6 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
       }
     });
 
-    // 3. Tentukan POI Kampus / RS Terdekat
     let closestPoi = INVESTMENT_POIS[0];
     let minPoiDist = 9999;
     INVESTMENT_POIS.forEach((poi) => {
@@ -287,15 +337,23 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
         dist: minPoiDist,
         badge: closestPoi.badge,
       },
-      estPrice: closestReg.landPrice,
       recommended: closestReg.recommended,
+      estPrice: closestReg.landPrice,
+      njopPrice: closestReg.njopPrice,
     };
 
     setInspectedPoint(info);
 
-    // Update marker on map
-    if (inspectMarkerRef.current) {
-      inspectMarkerRef.current.remove();
+    if (onCustomPinPlaced) {
+      onCustomPinPlaced({
+        lat: info.lat,
+        lng: info.lng,
+        approxZone: `${closestReg.name} (Dekat ${closestExit.name})`,
+      });
+    }
+
+    if (inspectMarkerRef.current && mapInstanceRef.current) {
+      mapInstanceRef.current.removeLayer(inspectMarkerRef.current);
     }
 
     const pinIcon = L.divIcon({
@@ -316,6 +374,59 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
     inspectMarkerRef.current = marker;
   };
 
+  // -------------------------------------------------------------
+  // HELPER: Generate Marker HTML based on Active filterMode
+  // -------------------------------------------------------------
+  const getMarkerHtml = (reg: YogyakartaRegion, mode: 'zonasi' | 'harga' | 'akses') => {
+    if (mode === 'harga') {
+      return `
+        <div style="display: flex; flex-direction: column; gap: 2px; cursor: pointer; transform: translate(-50%, -10px); min-width: 130px; text-align: center;">
+          <div style="background: rgba(7,25,20,0.96); border: 1.5px solid ${reg.njopColor}; padding: 4px 8px; border-radius: 10px; box-shadow: 0 4px 14px rgba(0,0,0,0.7);">
+            <div style="font-family: system-ui, sans-serif; font-size: 10px; font-weight: 800; color: #d5a864; text-transform: uppercase;">
+              ${reg.name}
+            </div>
+            <div style="font-family: monospace; font-size: 11px; font-weight: 900; color: #ffffff; white-space: nowrap; margin-top: 1px;">
+              NJOP: ${reg.njopPrice}
+            </div>
+            <div style="font-size: 9px; color: #a3e635; font-weight: 600; white-space: nowrap;">
+              Pasar: ${reg.landPrice}
+            </div>
+          </div>
+          <div style="width: 8px; height: 8px; background: ${reg.njopColor}; border-radius: 9999px; margin: 0 auto; box-shadow: 0 0 6px ${reg.njopColor};"></div>
+        </div>
+      `;
+    }
+
+    if (mode === 'akses') {
+      return `
+        <div style="display: flex; flex-direction: column; gap: 2px; cursor: pointer; transform: translate(-50%, -10px); min-width: 140px; text-align: center;">
+          <div style="background: rgba(7,25,20,0.96); border: 1.5px solid #eab308; padding: 4px 8px; border-radius: 10px; box-shadow: 0 4px 14px rgba(234,179,8,0.4);">
+            <div style="font-family: system-ui, sans-serif; font-size: 10px; font-weight: 800; color: #eab308; text-transform: uppercase;">
+              🛣️ ${reg.name}
+            </div>
+            <div style="font-family: system-ui, sans-serif; font-size: 9px; font-weight: 600; color: #cbd5e1; white-space: nowrap; margin-top: 1px;">
+              ${reg.id === 'sleman' ? '5 Exit Tol Langsung' : reg.id === 'kulonprogo' ? 'Exit Tol YIA & Bandara' : reg.id === 'kota' ? '12-15 mnt ke Tol' : reg.id === 'bantul' ? 'Akses Ring Road Sltn' : 'Akses Jalur JJLS'}
+            </div>
+          </div>
+          <div style="width: 8px; height: 8px; background: #eab308; border-radius: 9999px; margin: 0 auto; box-shadow: 0 0 6px #eab308;"></div>
+        </div>
+      `;
+    }
+
+    // Default: Zonasi RTRW
+    return `
+      <div style="display: flex; align-items: center; gap: 5px; cursor: pointer; transform: translate(-8px, -8px);">
+        <div style="width: 12px; height: 12px; border-radius: 9999px; background-color: #071914; border: 2.5px solid ${reg.color}; box-shadow: 0 0 10px ${reg.color}; flex-shrink: 0;"></div>
+        <div style="font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 800; color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.9); background: rgba(7,25,20,0.92); padding: 2.5px 7px; border-radius: 6px; border: 1px solid ${reg.color}60; white-space: nowrap;">
+          ${reg.name} · ${reg.id === 'sleman' ? 'Zonasi Kampus' : reg.id === 'kota' ? 'Zonasi Urban' : reg.id === 'bantul' ? 'Zonasi Seni' : reg.id === 'gunungkidul' ? 'Zonasi Geopark' : 'Zonasi Aerotropolis'}
+        </div>
+      </div>
+    `;
+  };
+
+  // -------------------------------------------------------------
+  // INITIAL MAP MOUNT
+  // -------------------------------------------------------------
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
@@ -358,25 +469,22 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
     // 1. Draw Official Region Boundaries
     YOGYAKARTA_REGIONS.forEach((reg) => {
       const isSelected = reg.id === activeRegionId;
+      const fillColor = filterMode === 'harga' ? reg.njopColor : reg.color;
 
       const polygon = L.polygon(reg.polygon, {
-        color: reg.color,
-        fillColor: reg.color,
-        fillOpacity: isAll ? 0.22 : isSelected ? 0.42 : 0.10,
-        weight: isAll ? 1.5 : isSelected ? 3 : 1.2,
+        color: fillColor,
+        fillColor: fillColor,
+        fillOpacity: filterMode === 'akses' ? 0.08 : isAll ? 0.25 : isSelected ? 0.45 : 0.12,
+        weight: filterMode === 'akses' ? 1.0 : isAll ? 1.5 : isSelected ? 3 : 1.2,
         opacity: isAll ? 0.85 : isSelected ? 1 : 0.65,
         lineCap: 'round',
         lineJoin: 'round',
       }).addTo(map);
 
-      polygon.on('click', (e) => {
-        if (isPinModeActive) {
-          handleInspectCoordinates(e.latlng.lat, e.latlng.lng, map);
-        } else {
-          setActiveRegionId(reg.id);
-          onSelectRegion(reg);
-          map.fitBounds(polygon.getBounds(), { padding: [30, 30], maxZoom: 12, duration: 0.6 });
-        }
+      polygon.on('click', () => {
+        setActiveRegionId(reg.id);
+        onSelectRegion(reg);
+        map.fitBounds(polygon.getBounds(), { padding: [30, 30], maxZoom: 12, duration: 0.6 });
       });
 
       polygonsRef.current[reg.id] = polygon;
@@ -384,26 +492,17 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
       // Region Pin Marker
       const pinIcon = L.divIcon({
         className: 'custom-diy-pin',
-        html: `
-          <div style="display: flex; align-items: center; gap: 5px; cursor: pointer; transform: translate(-8px, -8px);">
-            <div style="width: 12px; height: 12px; border-radius: 9999px; background-color: #071914; border: 2.5px solid ${reg.color}; box-shadow: 0 0 10px ${reg.color}; flex-shrink: 0;"></div>
-            <div style="font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 800; color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.9); background: rgba(7,25,20,0.92); padding: 2.5px 7px; border-radius: 6px; border: 1px solid ${reg.color}60; white-space: nowrap;">
-              ${reg.name}
-            </div>
-          </div>
-        `,
-        iconSize: [120, 24],
-        iconAnchor: [6, 6],
+        html: getMarkerHtml(reg, filterMode),
+        iconSize: filterMode === 'harga' ? [140, 48] : filterMode === 'akses' ? [150, 42] : [140, 24],
+        iconAnchor: filterMode === 'harga' || filterMode === 'akses' ? [70, 48] : [6, 6],
       });
 
       const marker = L.marker([reg.lat, reg.lng], { icon: pinIcon }).addTo(map);
 
       marker.on('click', () => {
-        if (!isPinModeActive) {
-          setActiveRegionId(reg.id);
-          onSelectRegion(reg);
-          map.fitBounds(polygon.getBounds(), { padding: [30, 30], maxZoom: 12, duration: 0.6 });
-        }
+        setActiveRegionId(reg.id);
+        onSelectRegion(reg);
+        map.fitBounds(polygon.getBounds(), { padding: [30, 30], maxZoom: 12, duration: 0.6 });
       });
 
       markersRef.current[reg.id] = marker;
@@ -427,16 +526,16 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
       // Glow background line
       L.polyline(route.path, {
         color: route.color,
-        weight: 6,
-        opacity: 0.35,
+        weight: filterMode === 'akses' ? 8 : 6,
+        opacity: filterMode === 'akses' ? 0.55 : 0.35,
         lineCap: 'round',
       }).addTo(tollGroup);
 
       // Main dashed toll line
       const polyline = L.polyline(route.path, {
         color: route.color,
-        weight: 3.2,
-        opacity: 0.95,
+        weight: filterMode === 'akses' ? 4.5 : 3.2,
+        opacity: 0.98,
         dashArray: '8, 6',
         lineCap: 'round',
       }).addTo(tollGroup);
@@ -454,7 +553,7 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
       const exitIcon = L.divIcon({
         className: 'toll-exit-pin',
         html: `
-          <div style="background: #071914; border: 2px solid #eab308; color: #eab308; border-radius: 8px; padding: 2px 6px; font-size: 10px; font-weight: 800; font-family: monospace; display: flex; align-items: center; gap: 4px; box-shadow: 0 0 8px rgba(234,179,8,0.5); cursor: pointer; white-space: nowrap;">
+          <div style="background: #071914; border: 2px solid #eab308; color: #eab308; border-radius: 8px; padding: 2px 6px; font-size: 10px; font-weight: 800; font-family: monospace; display: flex; align-items: center; gap: 4px; box-shadow: 0 0 12px rgba(234,179,8,0.7); cursor: pointer; white-space: nowrap;">
             <span>🚧</span>
             <span>${exit.name.replace('Exit Tol ', '')}</span>
           </div>
@@ -474,38 +573,26 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
       `);
     });
     tollLayerGroupRef.current = tollGroup;
-    if (showTollLayer) {
+    if (showTollLayer || filterMode === 'akses') {
       tollGroup.addTo(map);
     }
 
-    // 4. POI Magnet Investasi Layer (Kampus & RS)
+    // 4. Strategic Investment POI Layer (Kampus & RS)
     const poiGroup = L.layerGroup();
     INVESTMENT_POIS.forEach((poi) => {
-      // Radius buffer circle
-      L.circle([poi.lat, poi.lng], {
-        radius: poi.catchmentRadius,
-        color: poi.category === 'kampus' ? '#10b981' : poi.category === 'kesehatan' ? '#ef4444' : '#06b6d4',
-        fillColor: poi.category === 'kampus' ? '#10b981' : poi.category === 'kesehatan' ? '#ef4444' : '#06b6d4',
-        fillOpacity: 0.05,
-        weight: 1,
-        dashArray: '4, 4',
-      }).addTo(poiGroup);
-
-      const categoryEmoji =
-        poi.category === 'kampus' ? '🎓' :
-        poi.category === 'kesehatan' ? '🏥' :
-        poi.category === 'transport' ? '✈️' : '🌲';
+      const categoryColor = poi.category === 'kampus' ? '#10b981' : poi.category === 'kesehatan' ? '#ef4444' : '#06b6d4';
+      const categoryEmoji = poi.category === 'kampus' ? '🎓' : poi.category === 'kesehatan' ? '🏥' : '✈️';
 
       const poiIcon = L.divIcon({
         className: 'poi-pin',
         html: `
-          <div style="background: rgba(7,25,20,0.92); border: 1.5px solid #d5a864; color: #fff; border-radius: 9999px; padding: 2px 7px; font-size: 10px; font-weight: bold; font-family: sans-serif; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.8); cursor: pointer; white-space: nowrap;">
-            <span>${categoryEmoji}</span>
-            <span>${poi.name.split(' (')[0]}</span>
+          <div style="background: rgba(7,25,20,0.92); border: 1.5px solid ${categoryColor}; border-radius: 9999px; padding: 3px 6px; display: flex; align-items: center; gap: 3px; box-shadow: 0 0 6px ${categoryColor}80; cursor: pointer; white-space: nowrap;">
+            <span style="font-size: 10px;">${categoryEmoji}</span>
+            <span style="font-size: 9px; font-weight: bold; color: #fff; font-family: system-ui;">${poi.name}</span>
           </div>
         `,
-        iconSize: [110, 20],
-        iconAnchor: [55, 10],
+        iconSize: [120, 20],
+        iconAnchor: [60, 10],
       });
 
       const poiMarker = L.marker([poi.lat, poi.lng], { icon: poiIcon }).addTo(poiGroup);
@@ -519,7 +606,7 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
       `);
     });
     poiLayerGroupRef.current = poiGroup;
-    if (showPoiLayer) {
+    if (showPoiLayer && filterMode !== 'akses') {
       poiGroup.addTo(map);
     }
 
@@ -548,51 +635,72 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
     };
   }, [mapTheme]);
 
-  // Toggle Toll Layer dynamically
+  // -------------------------------------------------------------
+  // RE-STYLE ON FILTER MODE CHANGE (ZONASI vs HARGA/NJOP vs AKSES/TOL)
+  // -------------------------------------------------------------
   useEffect(() => {
-    if (!mapInstanceRef.current || !tollLayerGroupRef.current) return;
-    if (showTollLayer) {
-      if (!mapInstanceRef.current.hasLayer(tollLayerGroupRef.current)) {
-        tollLayerGroupRef.current.addTo(mapInstanceRef.current);
-      }
-    } else {
-      if (mapInstanceRef.current.hasLayer(tollLayerGroupRef.current)) {
-        tollLayerGroupRef.current.remove();
-      }
-    }
-  }, [showTollLayer]);
+    if (!mapInstanceRef.current) return;
 
-  // Toggle POI Layer dynamically
-  useEffect(() => {
-    if (!mapInstanceRef.current || !poiLayerGroupRef.current) return;
-    if (showPoiLayer) {
-      if (!mapInstanceRef.current.hasLayer(poiLayerGroupRef.current)) {
-        poiLayerGroupRef.current.addTo(mapInstanceRef.current);
-      }
-    } else {
-      if (mapInstanceRef.current.hasLayer(poiLayerGroupRef.current)) {
-        poiLayerGroupRef.current.remove();
-      }
-    }
-  }, [showPoiLayer]);
-
-  // Adjust highlights & bounds when activeRegionId changes
-  useEffect(() => {
+    // 1. Update Polygons Style
     Object.keys(polygonsRef.current).forEach((regId) => {
       const poly = polygonsRef.current[regId];
       const isSelected = regId === activeRegionId;
       const reg = YOGYAKARTA_REGIONS.find((r) => r.id === regId);
       if (poly && reg) {
+        const fillColor = filterMode === 'harga' ? reg.njopColor : reg.color;
         poly.setStyle({
-          fillOpacity: isAll ? 0.22 : isSelected ? 0.42 : 0.10,
-          weight: isAll ? 1.5 : isSelected ? 3 : 1.2,
-          color: reg.color,
-          fillColor: reg.color,
-          opacity: isAll ? 0.85 : isSelected ? 1 : 0.6,
+          fillColor: fillColor,
+          color: fillColor,
+          fillOpacity: filterMode === 'akses' ? 0.08 : isAll ? 0.25 : isSelected ? 0.45 : 0.12,
+          weight: filterMode === 'akses' ? 1.0 : isAll ? 1.5 : isSelected ? 3 : 1.2,
+          opacity: isAll ? 0.85 : isSelected ? 1 : 0.65,
         });
       }
     });
 
+    // 2. Update Markers HTML & Icons
+    Object.keys(markersRef.current).forEach((regId) => {
+      const marker = markersRef.current[regId];
+      const reg = YOGYAKARTA_REGIONS.find((r) => r.id === regId);
+      if (marker && reg) {
+        const newIcon = L.divIcon({
+          className: 'custom-diy-pin',
+          html: getMarkerHtml(reg, filterMode),
+          iconSize: filterMode === 'harga' ? [140, 48] : filterMode === 'akses' ? [150, 42] : [140, 24],
+          iconAnchor: filterMode === 'harga' || filterMode === 'akses' ? [70, 48] : [6, 6],
+        });
+        marker.setIcon(newIcon);
+      }
+    });
+
+    // 3. Handle Toll & POI visibility based on filterMode
+    if (tollLayerGroupRef.current) {
+      if (filterMode === 'akses' || showTollLayer) {
+        if (!mapInstanceRef.current.hasLayer(tollLayerGroupRef.current)) {
+          tollLayerGroupRef.current.addTo(mapInstanceRef.current);
+        }
+      } else {
+        if (mapInstanceRef.current.hasLayer(tollLayerGroupRef.current)) {
+          tollLayerGroupRef.current.remove();
+        }
+      }
+    }
+
+    if (poiLayerGroupRef.current) {
+      if (filterMode === 'harga' || filterMode === 'akses') {
+        if (mapInstanceRef.current.hasLayer(poiLayerGroupRef.current)) {
+          poiLayerGroupRef.current.remove();
+        }
+      } else if (showPoiLayer) {
+        if (!mapInstanceRef.current.hasLayer(poiLayerGroupRef.current)) {
+          poiLayerGroupRef.current.addTo(mapInstanceRef.current);
+        }
+      }
+    }
+  }, [filterMode, activeRegionId, isAll, showTollLayer, showPoiLayer]);
+
+  // Re-fit map bounds when region changes
+  useEffect(() => {
     if (mapInstanceRef.current) {
       if (isAll) {
         mapInstanceRef.current.fitBounds(diyBounds, { padding: [16, 16], duration: 0.6 });
@@ -619,7 +727,6 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
     onSelectRegion(DIY_ALL_REGION);
   };
 
-  // WhatsApp consultation link for inspected point
   const getInspectWaLink = () => {
     if (!inspectedPoint) return 'https://wa.me/6281215447788';
     const msg = `Halo Tim Jogja Investor Club, saya menandai titik tanah di peta GIS (${inspectedPoint.lat}, ${inspectedPoint.lng} - Wilayah ${inspectedPoint.regionName}). Lokasi berjarak ~${inspectedPoint.nearestExit.dist} km dari ${inspectedPoint.nearestExit.name} dan ~${inspectedPoint.nearestPoi.dist} km dari ${inspectedPoint.nearestPoi.name}. Mohon info kelayakan dan potensi pengembangan lahannya.`;
@@ -633,22 +740,24 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
         
         {/* HUD Top Bar Floating Over Map */}
         <div className="absolute top-3 left-3 right-3 z-[400] flex flex-wrap items-center justify-between gap-2 pointer-events-none">
-          <div className="bg-[#071914]/92 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-white/15 text-white flex items-center gap-2 text-xs shadow-lg pointer-events-auto">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="font-extrabold text-[#d5a864] tracking-tight">GIS SPATIAL INTELLIGENCE</span>
+          <div className="bg-[#071914]/95 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-white/15 text-white flex items-center gap-2 text-xs shadow-lg pointer-events-auto">
+            <span className={`w-2 h-2 rounded-full ${filterMode === 'harga' ? 'bg-amber-400 animate-pulse' : filterMode === 'akses' ? 'bg-blue-400 animate-ping' : 'bg-emerald-400 animate-pulse'}`} />
+            <span className="font-extrabold text-[#d5a864] tracking-tight">
+              {filterMode === 'harga' ? 'NJOP RESMI (PBB-P2) DIY' : filterMode === 'akses' ? 'KORIDOR & TRASE JALAN TOL' : 'ZONASI SPASIAL DIY'}
+            </span>
             <span className="text-[10px] text-neutral-400 font-mono hidden md:inline">
-              5 WILAYAH · MEGA PROYEK TOL · POI INVESTASI
+              {filterMode === 'harga' ? '· HEATMAP NILAI TANAH PEMKAB/PEMKOT' : filterMode === 'akses' ? '· 2 TRASE TOL & 5 EXIT GATE' : '· 5 KABUPATEN/KOTA TERPADU'}
             </span>
           </div>
 
           {/* Map Layer Controls & Theme */}
-          <div className="flex flex-wrap items-center gap-1.5 bg-[#071914]/92 backdrop-blur-md p-1 rounded-xl border border-white/15 text-[11px] shadow-lg pointer-events-auto">
+          <div className="flex flex-wrap items-center gap-1.5 bg-[#071914]/95 backdrop-blur-md p-1 rounded-xl border border-white/15 text-[11px] shadow-lg pointer-events-auto">
             {/* Toggle Tol */}
             <button
               type="button"
               onClick={() => setShowTollLayer(!showTollLayer)}
               className={`px-2.5 py-1 rounded-lg font-bold cursor-pointer transition-all flex items-center gap-1.5 ${
-                showTollLayer
+                showTollLayer || filterMode === 'akses'
                   ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-xs'
                   : 'text-neutral-400 hover:text-white'
               }`}
@@ -701,6 +810,35 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
           </div>
         </div>
 
+        {/* Dynamic Overlay HUD Info for Active Filter Mode */}
+        {filterMode === 'harga' && (
+          <div className="absolute top-14 left-3 z-[400] pointer-events-auto max-w-sm">
+            <div className="bg-[#071914]/95 backdrop-blur-md p-2.5 rounded-xl border border-amber-500/40 text-white text-[11px] shadow-xl space-y-1.5">
+              <div className="flex items-center gap-1.5 text-amber-400 font-bold uppercase tracking-wider text-[10px]">
+                <DollarSign className="w-3 h-3" />
+                <span>Indikasi NJOP Resmi (PBB-P2) DIY 2024/2025</span>
+              </div>
+              <p className="text-[10px] text-neutral-300 leading-tight">
+                Warna peta menunjukkan level NJOP: Merah (Tertinggi, Kota Jogja) &rarr; Amber (Sleman) &rarr; Biru/Teal (Bantul/KP) &rarr; Ungu (Gunungkidul).
+              </p>
+            </div>
+          </div>
+        )}
+
+        {filterMode === 'akses' && (
+          <div className="absolute top-14 left-3 z-[400] pointer-events-auto max-w-sm">
+            <div className="bg-[#071914]/95 backdrop-blur-md p-2.5 rounded-xl border border-amber-500/40 text-white text-[11px] shadow-xl space-y-1.5">
+              <div className="flex items-center gap-1.5 text-amber-400 font-bold uppercase tracking-wider text-[10px]">
+                <Navigation className="w-3 h-3" />
+                <span>Konektivitas Trase Tol Solo-Jogja-YIA &amp; Bawen</span>
+              </div>
+              <p className="text-[10px] text-neutral-300 leading-tight">
+                Garis putus-putus kuning/hijau = Trase Tol Strategis. Klik pin gerbang tol untuk estimasi target operasional &amp; impact zone.
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Floating Hint "Klik Peta untuk Analisis Titik Lahan" */}
         <div className="absolute bottom-16 right-3 z-[400] pointer-events-auto">
           <div className="bg-[#071914]/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-[#d5a864]/30 text-white text-[11px] shadow-lg flex items-center gap-2">
@@ -723,7 +861,7 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
           <div className="flex flex-wrap items-center gap-1.5">
             <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest mr-1 flex items-center gap-1">
               <Compass className="w-3 h-3 text-[#d5a864]" />
-              Zonasi:
+              Wilayah:
             </span>
 
             {/* Semua Wilayah */}
@@ -742,6 +880,7 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
 
             {YOGYAKARTA_REGIONS.map((reg) => {
               const isSelected = activeRegionId === reg.id;
+              const buttonColor = filterMode === 'harga' ? reg.njopColor : reg.color;
               return (
                 <button
                   key={reg.id}
@@ -755,7 +894,7 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
                 >
                   <span
                     className="w-2 h-2 rounded-full"
-                    style={{ backgroundColor: reg.color }}
+                    style={{ backgroundColor: buttonColor }}
                   />
                   <span>{reg.name}</span>
                 </button>
@@ -764,14 +903,28 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
           </div>
 
           <div className="flex items-center gap-3 text-[11px] text-neutral-400">
-            <span className="flex items-center gap-1.5">
-              <span className="w-2 h-0.5 bg-amber-400 inline-block border-t border-dashed" />
-              <span>Trase Tol</span>
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block" />
-              <span>Kampus & RS</span>
-            </span>
+            {filterMode === 'harga' ? (
+              <span className="flex items-center gap-1.5 text-amber-300">
+                <DollarSign className="w-3.5 h-3.5 text-amber-400" />
+                <span>Basis NJOP Resmi PBB-P2</span>
+              </span>
+            ) : filterMode === 'akses' ? (
+              <span className="flex items-center gap-1.5 text-blue-300">
+                <Route className="w-3.5 h-3.5 text-amber-400" />
+                <span>Trase Tol &amp; 5 Exit Gate</span>
+              </span>
+            ) : (
+              <>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-0.5 bg-amber-400 inline-block border-t border-dashed" />
+                  <span>Trase Tol</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block" />
+                  <span>Kampus &amp; RS</span>
+                </span>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -818,11 +971,11 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
 
             <div className="p-3 bg-[#071914] rounded-xl border border-white/10 space-y-1">
               <span className="text-[10px] uppercase font-mono text-emerald-400 flex items-center gap-1">
-                <GraduationCap className="w-3 h-3" /> Magnet / POI Terdekat
+                <DollarSign className="w-3 h-3" /> Indikasi NJOP &amp; Pasar
               </span>
-              <p className="text-sm font-bold text-white truncate">{inspectedPoint.nearestPoi.name}</p>
-              <p className="text-xs text-neutral-300 font-mono">
-                ~{inspectedPoint.nearestPoi.dist} km · {inspectedPoint.nearestPoi.badge}
+              <p className="text-sm font-bold text-white truncate">NJOP: {inspectedPoint.njopPrice}</p>
+              <p className="text-xs text-emerald-400 font-mono">
+                Pasar: {inspectedPoint.estPrice}
               </p>
             </div>
 
@@ -831,14 +984,16 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
                 <Zap className="w-3 h-3" /> Rekomendasi Pemanfaatan
               </span>
               <p className="text-sm font-bold text-[#d5a864] truncate">{inspectedPoint.recommended}</p>
-              <p className="text-xs text-neutral-300 font-mono">Range: {inspectedPoint.estPrice}</p>
+              <p className="text-xs text-neutral-300 font-mono">
+                Radius Magnet: ~{inspectedPoint.nearestPoi.dist} km ({inspectedPoint.nearestPoi.name})
+              </p>
             </div>
           </div>
 
           {/* Action CTA */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
             <p className="text-xs text-neutral-300">
-              Tertarik mengembangkan tanah di koordinat ini? Tim riset JIC siap membuatkan studi kelayakan legalitas & ROI.
+              Tertarik mengembangkan tanah di koordinat ini? Tim riset JIC siap membuatkan studi kelayakan legalitas &amp; ROI.
             </p>
             <a
               href={getInspectWaLink()}
@@ -860,11 +1015,21 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
             <div className="flex items-center gap-2">
               <span
                 className="w-2.5 h-2.5 rounded-full ring-2 ring-white/20"
-                style={{ backgroundColor: activeRegion.color }}
+                style={{ backgroundColor: filterMode === 'harga' ? activeRegion.njopColor : activeRegion.color }}
               />
               <span className="text-[11px] font-mono uppercase tracking-wider text-[#d5a864]">
                 {activeRegion.code} · {isAll ? 'OVERVIEW SELURUH DIY' : 'SPASIAL TERPILIH'}
               </span>
+              {filterMode === 'harga' && (
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                  DATA NJOP PBB-P2 RESMI
+                </span>
+              )}
+              {filterMode === 'akses' && (
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/40">
+                  AKSES INFRASTRUKTUR TOL
+                </span>
+              )}
             </div>
             <h3 className="text-xl sm:text-2xl font-bold text-white mt-1 tracking-tight">
               {activeRegion.fullName}
@@ -879,46 +1044,138 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
         </div>
 
         <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-light">
-          {activeRegion.desc}
+          {filterMode === 'harga' ? activeRegion.njopRangeDetail : filterMode === 'akses' ? activeRegion.tollAccessDesc : activeRegion.desc}
         </p>
 
-        {/* 4 High-Tech Data Grid Tiles */}
+        {/* 4 High-Tech Data Grid Tiles (Dynamic according to filterMode) */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
-          <div className="p-3.5 rounded-2xl bg-[#071914] border border-white/10">
-            <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-mono">
-              Harga Lahan
-            </span>
-            <span className="text-xs sm:text-sm font-bold text-white block mt-1 tabular-nums">
-              {activeRegion.landPrice}
-            </span>
-          </div>
+          {filterMode === 'harga' ? (
+            <>
+              <div className="p-3.5 rounded-2xl bg-[#071914] border border-amber-500/30">
+                <span className="text-[10px] text-amber-400 uppercase tracking-wider block font-mono font-bold">
+                  NJOP Resmi (PBB-P2)
+                </span>
+                <span className="text-xs sm:text-sm font-bold text-white block mt-1 tabular-nums">
+                  {activeRegion.njopPrice}
+                </span>
+                <span className="text-[10px] text-neutral-400 block mt-0.5">Ketetapan Pemkab/Pemkot</span>
+              </div>
 
-          <div className="p-3.5 rounded-2xl bg-[#071914] border border-white/10">
-            <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-mono">
-              Tingkat Okupansi
-            </span>
-            <span className="text-xs sm:text-sm font-bold text-emerald-400 block mt-1 tabular-nums">
-              {activeRegion.occupancy}
-            </span>
-          </div>
+              <div className="p-3.5 rounded-2xl bg-[#071914] border border-white/10">
+                <span className="text-[10px] text-emerald-400 uppercase tracking-wider block font-mono font-bold">
+                  Harga Transaksi Pasar
+                </span>
+                <span className="text-xs sm:text-sm font-bold text-white block mt-1 tabular-nums">
+                  {activeRegion.landPrice}
+                </span>
+                <span className="text-[10px] text-neutral-400 block mt-0.5">Rata-rata 2024/2025</span>
+              </div>
 
-          <div className="p-3.5 rounded-2xl bg-[#071914] border border-white/10">
-            <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-mono">
-              Aturan KDB
-            </span>
-            <span className="text-xs sm:text-sm font-bold text-blue-300 block mt-1 truncate">
-              {activeRegion.kdb}
-            </span>
-          </div>
+              <div className="p-3.5 rounded-2xl bg-[#071914] border border-white/10">
+                <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-mono">
+                  Rasio NJOP vs Pasar
+                </span>
+                <span className="text-xs sm:text-sm font-bold text-[#d5a864] block mt-1 truncate">
+                  {activeRegion.njopRatio}
+                </span>
+                <span className="text-[10px] text-neutral-400 block mt-0.5">Ruang apresiasi nilai</span>
+              </div>
 
-          <div className="p-3.5 rounded-2xl bg-[#071914] border border-white/10">
-            <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-mono">
-              Rekomendasi
-            </span>
-            <span className="text-xs sm:text-sm font-bold text-[#d5a864] block mt-1 truncate">
-              {activeRegion.recommended}
-            </span>
-          </div>
+              <div className="p-3.5 rounded-2xl bg-[#071914] border border-white/10">
+                <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-mono">
+                  Rekomendasi Aset
+                </span>
+                <span className="text-xs sm:text-sm font-bold text-[#d5a864] block mt-1 truncate">
+                  {activeRegion.recommended}
+                </span>
+                <span className="text-[10px] text-neutral-400 block mt-0.5">Best Investment Fit</span>
+              </div>
+            </>
+          ) : filterMode === 'akses' ? (
+            <>
+              <div className="p-3.5 rounded-2xl bg-[#071914] border border-amber-500/30">
+                <span className="text-[10px] text-amber-400 uppercase tracking-wider block font-mono font-bold">
+                  Konektivitas Tol
+                </span>
+                <span className="text-xs sm:text-sm font-bold text-white block mt-1 truncate">
+                  {activeRegion.id === 'sleman' ? '5 Exit Tol' : activeRegion.id === 'kulonprogo' ? 'Tol YIA Bandara' : activeRegion.id === 'kota' ? '12-15 mnt ke Exit' : activeRegion.id === 'bantul' ? 'Ring Road Sltn' : 'Jalur JJLS'}
+                </span>
+                <span className="text-[10px] text-neutral-400 block mt-0.5">Akses Cepat Trans-Jawa</span>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-[#071914] border border-white/10">
+                <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-mono">
+                  Harga Lahan Pasar
+                </span>
+                <span className="text-xs sm:text-sm font-bold text-white block mt-1 tabular-nums">
+                  {activeRegion.landPrice}
+                </span>
+                <span className="text-[10px] text-neutral-400 block mt-0.5">Entry Price Lahan</span>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-[#071914] border border-white/10">
+                <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-mono">
+                  Tingkat Okupansi
+                </span>
+                <span className="text-xs sm:text-sm font-bold text-emerald-400 block mt-1 tabular-nums">
+                  {activeRegion.occupancy}
+                </span>
+                <span className="text-[10px] text-neutral-400 block mt-0.5">Daya Serap Pasar</span>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-[#071914] border border-white/10">
+                <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-mono">
+                  Rekomendasi
+                </span>
+                <span className="text-xs sm:text-sm font-bold text-[#d5a864] block mt-1 truncate">
+                  {activeRegion.recommended}
+                </span>
+                <span className="text-[10px] text-neutral-400 block mt-0.5">Pemanfaatan Lahan</span>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="p-3.5 rounded-2xl bg-[#071914] border border-white/10">
+                <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-mono">
+                  Harga Lahan Pasar
+                </span>
+                <span className="text-xs sm:text-sm font-bold text-white block mt-1 tabular-nums">
+                  {activeRegion.landPrice}
+                </span>
+                <span className="text-[10px] text-neutral-400 block mt-0.5">NJOP: {activeRegion.njopPrice}</span>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-[#071914] border border-white/10">
+                <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-mono">
+                  Tingkat Okupansi
+                </span>
+                <span className="text-xs sm:text-sm font-bold text-emerald-400 block mt-1 tabular-nums">
+                  {activeRegion.occupancy}
+                </span>
+                <span className="text-[10px] text-neutral-400 block mt-0.5">Target Pasar Stabil</span>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-[#071914] border border-white/10">
+                <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-mono">
+                  Aturan KDB
+                </span>
+                <span className="text-xs sm:text-sm font-bold text-blue-300 block mt-1 truncate">
+                  {activeRegion.kdb}
+                </span>
+                <span className="text-[10px] text-neutral-400 block mt-0.5">RTRW Resmi DIY</span>
+              </div>
+
+              <div className="p-3.5 rounded-2xl bg-[#071914] border border-white/10">
+                <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-mono">
+                  Rekomendasi
+                </span>
+                <span className="text-xs sm:text-sm font-bold text-[#d5a864] block mt-1 truncate">
+                  {activeRegion.recommended}
+                </span>
+                <span className="text-[10px] text-neutral-400 block mt-0.5">Model Investasi Terbaik</span>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Action Button & Landmarks */}

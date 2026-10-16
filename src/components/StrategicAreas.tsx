@@ -57,12 +57,13 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
       subtitle: 'Lihat seluruh 5 kabupaten/kota',
       badge: '🗺️ Comprehensive',
       bestFor: 'Portfolio Diversifikasi',
-      priceBadge: 'Rp 1,5 - 22 jt/m²',
+      priceBadge: 'Pasar Rp 1,5 - 25 jt/m²',
       region: 'semua',
       blockId: 'semua',
       fullName: 'Daerah Istimewa Yogyakarta (Seluruh Kawasan)',
       description: 'Mencakup 5 kabupaten/kota dengan beragam karakteristik investasi dari perkotaan, koridor universitas, hingga kawasan pariwisata heritage dan bahari.',
       priceRange: 'Rp 2,5 - 18 jt/m²',
+      njopPrice: 'Rp 450 Rb - 22 Jt/m²',
       growthRate: '+8% - 15%',
       roi: '8% - 14% / tahun',
     },
@@ -72,12 +73,13 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
       subtitle: 'UGM, UNY, Seturan, UPN, UII',
       badge: '🔥 Hot Demand',
       bestFor: 'Kost Eksklusif & Co-Living',
-      priceBadge: 'Rp 5,5 - 14 jt/m²',
+      priceBadge: 'Pasar Rp 5,5 - 16 jt/m²',
       region: 'sleman',
       blockId: 'block-kampus',
       fullName: 'Kabupaten Sleman (Kawasan Kampus & Pelajar)',
       description: 'Didukung oleh 300.000+ mahasiswa aktif dan ekosistem pendidikan terbaik, menjadikan area ini target utama untuk kos eksklusif dan hunian komersial berokupansi tinggi.',
-      priceRange: 'Rp 5,5 - 14 jt/m²',
+      priceRange: 'Rp 5,5 - 16 jt/m²',
+      njopPrice: 'Rp 3,5 - 14 jt/m²',
       growthRate: '+11% - 16%',
       roi: '12% - 18% / tahun',
     },
@@ -87,12 +89,13 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
       subtitle: 'Malioboro, Parangtritis, Kaliurang',
       badge: '🏖️ High Yield',
       bestFor: 'Villa & Boutique Homestay',
-      priceBadge: 'Rp 4,0 - 16 jt/m²',
+      priceBadge: 'Pasar Rp 4,0 - 16 jt/m²',
       region: 'bantul',
       blockId: 'block-wisata',
       fullName: 'Kawasan Wisata & Budaya (Kota Jogja, Sleman Utara, Bantul)',
       description: 'Koridor dengan kunjungan 7.2+ juta wisatawan per tahun, sangat potensial untuk villa sewa harian, homestay estetik, dan cafe komersial bernilai sewa prima.',
       priceRange: 'Rp 4,0 - 16 jt/m²',
+      njopPrice: 'Rp 1,5 - 7,5 jt/m²',
       growthRate: '+10% - 14%',
       roi: '14% - 22% / tahun',
     },
@@ -102,12 +105,13 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
       subtitle: 'Kotabaru, Ring Road Utara, Elit Pusat',
       badge: '💎 Prime Capital',
       bestFor: 'Luxury Townhouse & Komersial',
-      priceBadge: 'Rp 9,0 - 22 jt/m²',
+      priceBadge: 'Pasar Rp 9,0 - 25 jt/m²',
       region: 'kota',
       blockId: 'block-premium',
       fullName: 'Kota Yogyakarta & Sleman Tengah (Kawasan Elit)',
       description: 'Aksesibilitas terbaik dan fasilitas kota terlengkap dengan nilai apresiasi tanah tertinggi dan likuiditas kuat untuk aset keluarga jangka panjang.',
-      priceRange: 'Rp 9,0 - 22 jt/m²',
+      priceRange: 'Rp 9,0 - 25 jt/m²',
+      njopPrice: 'Rp 6,0 - 22 jt/m²',
       growthRate: '+12% - 18%',
       roi: '9% - 13% / tahun',
     },
@@ -117,12 +121,13 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
       subtitle: 'Kulon Progo YIA, Sleman Barat',
       badge: '🚀 High Growth',
       bestFor: 'Land Banking & Ruko Transit',
-      priceBadge: 'Rp 1,8 - 5,5 jt/m²',
+      priceBadge: 'Pasar Rp 1,8 - 6,5 jt/m²',
       region: 'kulonprogo',
       blockId: 'block-kota',
       fullName: 'Kawasan Pertumbuhan Baru (Akses YIA & Tol Baru)',
       description: 'Pertumbuhan pesat terdorong Bandara Internasional YIA dan proyek trase jalan tol baru Solo-Jogja-YIA dengan harga lahan masuk yang masih sangat atraktif.',
-      priceRange: 'Rp 1,8 - 5,5 jt/m²',
+      priceRange: 'Rp 1,8 - 6,5 jt/m²',
+      njopPrice: 'Rp 850 Rb - 4,5 jt/m²',
       growthRate: '+14% - 20%',
       roi: '9% - 15% / tahun',
     },
@@ -132,12 +137,13 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
       subtitle: 'Pakem, Cangkringan, Lereng Merapi',
       badge: '🌿 Eco Living',
       bestFor: 'Resort Villa & Glamping Cafe',
-      priceBadge: 'Rp 2,0 - 6,0 jt/m²',
+      priceBadge: 'Pasar Rp 2,0 - 6,0 jt/m²',
       region: 'sleman',
       blockId: 'block-wisata',
       fullName: 'Sleman Utara (Kawasan Wisata Alam & Wellness Retreat)',
       description: 'Lingkungan sejuk dengan view Gunung Merapi, udara bersih, dan air melimpah. Menjadi primadona baru bagi konsep wellness living, healing villa, dan resto alam.',
       priceRange: 'Rp 2,0 - 6,0 jt/m²',
+      njopPrice: 'Rp 1,2 - 4,0 jt/m²',
       growthRate: '+10% - 15%',
       roi: '11% - 17% / tahun',
     },
@@ -147,12 +153,13 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
       subtitle: 'Kotagede, Prawirotaman, Kasihan',
       badge: '🏛️ Art & Culture',
       bestFor: 'Boutique Guesthouse & Galeri',
-      priceBadge: 'Rp 3,5 - 9,5 jt/m²',
+      priceBadge: 'Pasar Rp 3,5 - 9,5 jt/m²',
       region: 'bantul',
       blockId: 'block-bantul',
       fullName: 'Bantul Utara & Jogja Selatan (Sentra Heritage & Seni Kreatif)',
       description: 'Pusat komunitas ekspatriat, desainer, dan seniman. Sangat diminati turis mancanegara untuk guest house bernuansa etnik Jawa modern.',
       priceRange: 'Rp 3,5 - 9,5 jt/m²',
+      njopPrice: 'Rp 1,5 - 7,5 jt/m²',
       growthRate: '+9% - 14%',
       roi: '12% - 16% / tahun',
     },
@@ -215,60 +222,71 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
             </h2>
 
             <p className="text-sm text-neutral-300 max-w-2xl leading-relaxed font-light">
-              Analisis komprehensif wilayah administratif, trase mega proyek jalan tol, exit gate, dan titik magnet kampus/RS
+              Analisis komprehensif wilayah administratif, data NJOP (PBB-P2) resmi, trase mega proyek jalan tol, exit gate, dan titik magnet kampus/RS
               untuk keputusan investasi properti yang presisi dan menguntungkan.
             </p>
           </div>
 
-          {/* Filter Pills (Zonasi, Harga Tanah, Aksesibilitas & Tol) */}
-          <div className="flex items-center gap-2 bg-[#0a231c] p-1.5 rounded-full border border-white/10 shrink-0 self-start lg:self-auto">
-            <button
-              type="button"
-              onClick={() => {
-                setActiveMapTab('zonasi');
-                setActiveFilterTab('zonasi');
-              }}
-              className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
-                activeFilterTab === 'zonasi' && activeMapTab === 'zonasi'
-                  ? 'bg-[#d5a864] text-[#071914] shadow-md'
-                  : 'text-neutral-300 hover:text-white'
-              }`}
-            >
-              <Layers className="w-3.5 h-3.5" />
-              <span>Zonasi RTRW</span>
-            </button>
+          {/* Filter Pills (Zonasi RTRW, Harga Lahan / NJOP, Aksesibilitas & Tol) */}
+          <div className="flex flex-col sm:items-end gap-2 shrink-0 self-start lg:self-auto">
+            <div className="flex items-center gap-2 bg-[#0a231c] p-1.5 rounded-full border border-white/10">
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveMapTab('zonasi');
+                  setActiveFilterTab('zonasi');
+                }}
+                className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                  activeFilterTab === 'zonasi' && activeMapTab === 'zonasi'
+                    ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
+                    : 'text-neutral-300 hover:text-white'
+                }`}
+              >
+                <Layers className="w-3.5 h-3.5" />
+                <span>Zonasi RTRW</span>
+              </button>
 
-            <button
-              type="button"
-              onClick={() => {
-                setActiveMapTab('zonasi');
-                setActiveFilterTab('harga');
-              }}
-              className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
-                activeFilterTab === 'harga' && activeMapTab === 'zonasi'
-                  ? 'bg-[#d5a864] text-[#071914] shadow-md'
-                  : 'text-neutral-300 hover:text-white'
-              }`}
-            >
-              <DollarSign className="w-3.5 h-3.5" />
-              <span>Harga Lahan</span>
-            </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveMapTab('zonasi');
+                  setActiveFilterTab('harga');
+                }}
+                className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                  activeFilterTab === 'harga' && activeMapTab === 'zonasi'
+                    ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
+                    : 'text-neutral-300 hover:text-white'
+                }`}
+              >
+                <DollarSign className="w-3.5 h-3.5" />
+                <span>Harga Lahan (NJOP)</span>
+              </button>
 
-            <button
-              type="button"
-              onClick={() => {
-                setActiveMapTab('zonasi');
-                setActiveFilterTab('akses');
-              }}
-              className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
-                activeFilterTab === 'akses' && activeMapTab === 'zonasi'
-                  ? 'bg-[#d5a864] text-[#071914] shadow-md'
-                  : 'text-neutral-300 hover:text-white'
-              }`}
-            >
-              <Navigation className="w-3.5 h-3.5" />
-              <span>Akses &amp; Jalur Tol</span>
-            </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveMapTab('zonasi');
+                  setActiveFilterTab('akses');
+                }}
+                className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                  activeFilterTab === 'akses' && activeMapTab === 'zonasi'
+                    ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
+                    : 'text-neutral-300 hover:text-white'
+                }`}
+              >
+                <Navigation className="w-3.5 h-3.5" />
+                <span>Akses &amp; Jalur Tol</span>
+              </button>
+            </div>
+
+            {/* Active Mode Sub-Notice */}
+            <span className="text-[11px] font-mono text-neutral-400">
+              {activeFilterTab === 'harga'
+                ? '📊 Menampilkan Heatmap Nilai Jual Objek Pajak (NJOP) Resmi DIY vs Nilai Pasar Bebas'
+                : activeFilterTab === 'akses'
+                ? '🛣️ Menampilkan Trase Jalan Tol Solo-Yogyakarta-YIA & Tol Bawen + 5 Exit Gate'
+                : '🗺️ Menampilkan Batas Administratif 5 Kab/Kota & Peruntukan Zonasi RTRW'}
+            </span>
           </div>
         </div>
 
@@ -333,9 +351,11 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                         <span className="text-neutral-500">Cocok: </span>
                         <strong className="text-emerald-300 font-semibold">{c.bestFor}</strong>
                       </span>
-                      <span className="font-mono text-neutral-400 shrink-0 font-medium ml-2">
-                        {c.priceBadge}
-                      </span>
+                      <div className="text-right shrink-0 ml-2">
+                        <span className="font-mono text-amber-300 font-semibold block">
+                          NJOP: {c.njopPrice}
+                        </span>
+                      </div>
                     </div>
                   </button>
                 );
@@ -346,7 +366,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
             <div className="text-xs text-neutral-300 bg-[#0a231c]/90 p-4 rounded-2xl border border-white/10 flex items-start gap-2.5 backdrop-blur-md">
               <Sparkles className="w-4 h-4 text-[#d5a864] shrink-0 mt-0.5" />
               <p className="leading-relaxed font-light">
-                Gunakan tab <strong className="text-white">Zonasi</strong> untuk 5 Kab/Kota &amp; rute tol, atau tab <strong className="text-white">Blok</strong> untuk analisis mikro koridor komersial (BLK-01 s/d BLK-05).
+                Gunakan tab <strong className="text-white">Zonasi</strong> untuk 5 Kab/Kota, NJOP resmi &amp; rute tol, atau tab <strong className="text-white">Blok</strong> untuk analisis mikro koridor komersial (BLK-01 s/d BLK-05).
               </p>
             </div>
           </div>
@@ -379,7 +399,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                   }`}
                 >
                   <Layers className="w-3.5 h-3.5" />
-                  <span>Zonasi</span>
+                  <span>Zonasi &amp; NJOP</span>
                 </button>
 
                 {/* Tab Kanan: Blok */}
@@ -398,7 +418,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
               </div>
             </div>
 
-            {/* TAB 1: Peta Zonasi Administratif DIY & Infrastruktur Tol */}
+            {/* TAB 1: Peta Zonasi Administratif DIY, NJOP & Infrastruktur Tol */}
             {activeMapTab === 'zonasi' && (
               <div className="transition-opacity duration-300">
                 <JogjaRealMap
@@ -429,7 +449,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
 
         </div>
 
-        {/* Bottom Box: Analisis Kawasan Terpilih & 3 Metrik Utama */}
+        {/* Bottom Box: Analisis Kawasan Terpilih & Metrik Dinamis */}
         <div id="analisis-kawasan-detail" className="bg-[#0a231c]/90 rounded-3xl p-6 sm:p-8 border border-white/15 space-y-6 backdrop-blur-md scroll-mt-24">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-white/10 pb-5">
             <div className="space-y-1">
@@ -440,6 +460,16 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                 <span className="px-2 py-0.5 bg-[#071914] text-[10px] font-bold text-emerald-400 rounded-md border border-emerald-500/30">
                   {currentData.badge}
                 </span>
+                {activeFilterTab === 'harga' && (
+                  <span className="px-2 py-0.5 bg-amber-500/20 text-[10px] font-mono text-amber-300 rounded-md border border-amber-500/40">
+                    MODE DATA NJOP RESMI PBB-P2
+                  </span>
+                )}
+                {activeFilterTab === 'akses' && (
+                  <span className="px-2 py-0.5 bg-blue-500/20 text-[10px] font-mono text-blue-300 rounded-md border border-blue-500/40">
+                    MODE KONEKTIVITAS AKSES JALAN TOL
+                  </span>
+                )}
                 {activeMapTab === 'blok' && (
                   <span className="px-2 py-0.5 bg-amber-500/20 text-[10px] font-mono text-amber-300 rounded-md border border-amber-500/40">
                     MODE KORIDOR BLOK MIKRO
@@ -464,36 +494,93 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
             </button>
           </div>
 
-          {/* 3 Metric Cards */}
+          {/* 3 Metric Cards (Reaktif sesuai mode filter) */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {/* Metric 1 */}
-            <div className="bg-[#071914] p-4.5 rounded-2xl border border-white/10">
-              <span className="text-xs text-neutral-400 block mb-1">Harga Tanah Rata-rata</span>
-              <span className="text-xl sm:text-2xl font-black text-white tabular-nums block">
-                {currentData.priceRange}
-              </span>
-              <span className="text-[11px] text-neutral-500 block mt-1">Data pasar transaksi 2024</span>
-            </div>
+            {activeFilterTab === 'harga' ? (
+              <>
+                <div className="bg-[#071914] p-4.5 rounded-2xl border border-amber-500/30">
+                  <span className="text-xs text-amber-400 font-bold block mb-1">NJOP Resmi (PBB-P2)</span>
+                  <span className="text-xl sm:text-2xl font-black text-white tabular-nums block">
+                    {currentData.njopPrice}
+                  </span>
+                  <span className="text-[11px] text-neutral-400 block mt-1">Ketetapan Pemkab/Pemkot DIY</span>
+                </div>
 
-            {/* Metric 2 */}
-            <div className="bg-[#071914] p-4.5 rounded-2xl border border-white/10">
-              <span className="text-xs text-neutral-400 block mb-1">Pertumbuhan Tahunan</span>
-              <span className="text-xl sm:text-2xl font-black text-emerald-400 tabular-nums block">
-                {currentData.growthRate}
-              </span>
-              <span className="text-[11px] text-neutral-500 block mt-1">Historis apresiasi 5 tahun</span>
-            </div>
+                <div className="bg-[#071914] p-4.5 rounded-2xl border border-white/10">
+                  <span className="text-xs text-emerald-400 font-bold block mb-1">Harga Transaksi Bebas Pasar</span>
+                  <span className="text-xl sm:text-2xl font-black text-emerald-400 tabular-nums block">
+                    {currentData.priceRange}
+                  </span>
+                  <span className="text-[11px] text-neutral-400 block mt-1">Nilai Transaksi Riil Lapangan</span>
+                </div>
 
-            {/* Metric 3 */}
-            <div className="bg-[#071914] p-4.5 rounded-2xl border border-white/10">
-              <span className="text-xs text-neutral-400 block mb-1">Potensi ROI Operasional</span>
-              <span className="text-xl sm:text-2xl font-black text-[#d5a864] tabular-nums block">
-                {currentData.roi}
-              </span>
-              <span className="text-[11px] text-neutral-500 block mt-1">
-                Rekomendasi: <strong className="text-neutral-300 font-semibold">{currentData.bestFor}</strong>
-              </span>
-            </div>
+                <div className="bg-[#071914] p-4.5 rounded-2xl border border-white/10">
+                  <span className="text-xs text-neutral-400 block mb-1">Potensi ROI &amp; Rekomendasi</span>
+                  <span className="text-xl sm:text-2xl font-black text-[#d5a864] tabular-nums block">
+                    {currentData.roi}
+                  </span>
+                  <span className="text-[11px] text-neutral-400 block mt-1">
+                    Apresiasi: <strong className="text-emerald-400">{currentData.growthRate}</strong>
+                  </span>
+                </div>
+              </>
+            ) : activeFilterTab === 'akses' ? (
+              <>
+                <div className="bg-[#071914] p-4.5 rounded-2xl border border-amber-500/30">
+                  <span className="text-xs text-amber-400 font-bold block mb-1">Konektivitas Exit Tol</span>
+                  <span className="text-lg sm:text-xl font-bold text-white block">
+                    {currentData.region === 'sleman' ? '5 Exit Tol Langsung' : currentData.region === 'kulonprogo' ? 'Tol YIA & Bandara' : currentData.region === 'kota' ? '12-15 mnt ke Exit' : currentData.region === 'bantul' ? 'Ring Road Selatan' : 'Jalur JJLS'}
+                  </span>
+                  <span className="text-[11px] text-neutral-400 block mt-1">Koridor Cepat Trans-Jawa</span>
+                </div>
+
+                <div className="bg-[#071914] p-4.5 rounded-2xl border border-white/10">
+                  <span className="text-xs text-neutral-400 block mb-1">Pertumbuhan Nilai Lahan</span>
+                  <span className="text-xl sm:text-2xl font-black text-emerald-400 tabular-nums block">
+                    {currentData.growthRate}
+                  </span>
+                  <span className="text-[11px] text-neutral-400 block mt-1">Terdorong infrastruktur tol</span>
+                </div>
+
+                <div className="bg-[#071914] p-4.5 rounded-2xl border border-white/10">
+                  <span className="text-xs text-neutral-400 block mb-1">Potensi ROI Operasional</span>
+                  <span className="text-xl sm:text-2xl font-black text-[#d5a864] tabular-nums block">
+                    {currentData.roi}
+                  </span>
+                  <span className="text-[11px] text-neutral-400 block mt-1">
+                    Best Fit: <strong className="text-neutral-200">{currentData.bestFor}</strong>
+                  </span>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="bg-[#071914] p-4.5 rounded-2xl border border-white/10">
+                  <span className="text-xs text-neutral-400 block mb-1">Harga Lahan Rata-rata</span>
+                  <span className="text-xl sm:text-2xl font-black text-white tabular-nums block">
+                    {currentData.priceRange}
+                  </span>
+                  <span className="text-[11px] text-neutral-500 block mt-1">NJOP: {currentData.njopPrice}</span>
+                </div>
+
+                <div className="bg-[#071914] p-4.5 rounded-2xl border border-white/10">
+                  <span className="text-xs text-neutral-400 block mb-1">Pertumbuhan Tahunan</span>
+                  <span className="text-xl sm:text-2xl font-black text-emerald-400 tabular-nums block">
+                    {currentData.growthRate}
+                  </span>
+                  <span className="text-[11px] text-neutral-500 block mt-1">Historis apresiasi 5 tahun</span>
+                </div>
+
+                <div className="bg-[#071914] p-4.5 rounded-2xl border border-white/10">
+                  <span className="text-xs text-neutral-400 block mb-1">Potensi ROI Operasional</span>
+                  <span className="text-xl sm:text-2xl font-black text-[#d5a864] tabular-nums block">
+                    {currentData.roi}
+                  </span>
+                  <span className="text-[11px] text-neutral-500 block mt-1">
+                    Rekomendasi: <strong className="text-neutral-300 font-semibold">{currentData.bestFor}</strong>
+                  </span>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
