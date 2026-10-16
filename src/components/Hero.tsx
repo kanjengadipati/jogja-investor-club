@@ -45,27 +45,28 @@ export const Hero: React.FC<HeroProps> = ({ onStartCalculator, onOpenConsultatio
             <div className="inline-flex items-center gap-2.5 bg-[#d5a864]/15 border border-[#d5a864]/40 rounded-full px-4 py-1.5 backdrop-blur-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-[#d5a864] animate-pulse" />
               <span className="text-xs font-bold uppercase tracking-widest text-[#d5a864]">
-                Jogja Investor Club
+                Jogja Investor Club · Private Network
               </span>
             </div>
 
             {/* Headline */}
             <h1 className="text-5xl sm:text-6xl lg:text-[5.5rem] font-extrabold tracking-tight text-white leading-[1.05]"
                 style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}>
-              Punya Tanah di{' '}
+              Investasi Properti{' '}
               <br />
               <span
                 className="italic font-semibold text-[#d5a864]"
                 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
               >
-                Jogja?
+                di Jogja.
               </span>
+              {' '}Lebih Cerdas.
             </h1>
 
             {/* Subheading */}
             <p className="text-base sm:text-lg text-neutral-200 font-normal max-w-lg leading-relaxed">
-              Wujudkan menjadi <strong className="text-white font-semibold">rumah, villa, atau homestay</strong> yang
-              bernilai tinggi. Didampingi tim profesional dengan analisis data dan strategi investasi yang tepat.
+              Bergabunglah bersama <strong className="text-white font-semibold">jaringan investor properti eksklusif</strong> di Yogyakarta.
+              Akses deal terkurasi, analisis GIS presisi, dan pendampingan penuh — dari lahan hingga passive income.
             </p>
 
             {/* CTA row */}
@@ -75,7 +76,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartCalculator, onOpenConsultatio
                 onClick={onOpenConsultation}
                 className="group px-7 py-4 text-sm font-bold text-[#071914] bg-[#d5a864] hover:bg-[#e2b772] active:bg-[#c49855] rounded-xl transition-all shadow-[0_8px_32px_rgba(213,168,100,0.35)] flex items-center gap-2.5 cursor-pointer hover:-translate-y-0.5"
               >
-                <span>Konsultasi Awal Gratis</span>
+                <span>Daftar Konsultasi Gratis</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </button>
 
@@ -86,7 +87,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartCalculator, onOpenConsultatio
                 className="group px-7 py-4 text-sm font-semibold text-white/90 hover:text-white border border-white/25 hover:border-white/50 rounded-xl transition-all backdrop-blur-sm flex items-center gap-2.5 cursor-pointer hover:-translate-y-0.5"
               >
                 <MapPin className="w-4 h-4 text-[#d5a864] group-hover:scale-110 transition-transform" />
-                <span>Lihat Potensi Tanah</span>
+                <span>Analisis Peluang Lahan</span>
               </button>
             </div>
 
@@ -104,7 +105,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartCalculator, onOpenConsultatio
                 ))}
               </div>
               <p className="text-xs text-neutral-300">
-                <strong className="text-white">120+ pemilik tanah</strong> sudah berkonsultasi tahun ini
+                <strong className="text-white">80+ investor aktif</strong> telah bergabung di JIC
               </p>
             </div>
           </div>
@@ -113,8 +114,8 @@ export const Hero: React.FC<HeroProps> = ({ onStartCalculator, onOpenConsultatio
         {/* Floating elegant serif quote — right side desktop */}
         <div className="hidden lg:flex absolute bottom-10 right-10 z-10 flex-col items-end gap-1 pointer-events-none">
           <p className="font-['Playfair_Display'] italic text-neutral-300/80 text-lg tracking-wide drop-shadow-md text-right leading-snug">
-            "Dari tanah kosong <br />
-            menjadi properti bernilai"
+            "Akses eksklusif ke peluang <br />
+            properti terbaik di Jogja"
           </p>
           <span className="w-16 h-[1px] bg-[#d5a864]/50" />
         </div>
@@ -130,8 +131,8 @@ export const Hero: React.FC<HeroProps> = ({ onStartCalculator, onOpenConsultatio
                 <MapPin className="w-4.5 h-4.5 text-[#d5a864]" />
               </div>
               <div>
-                <p className="text-sm font-bold text-white leading-tight">Lokasi Strategis</p>
-                <p className="text-[11px] text-neutral-400 leading-tight mt-0.5">Di Yogyakarta &amp; sekitarnya</p>
+                <p className="text-sm font-bold text-white leading-tight">Deal Eksklusif Jogja</p>
+                <p className="text-[11px] text-neutral-400 leading-tight mt-0.5">Aset terkurasi, bukan pasar terbuka</p>
               </div>
             </div>
 
@@ -140,8 +141,8 @@ export const Hero: React.FC<HeroProps> = ({ onStartCalculator, onOpenConsultatio
                 <BarChart3 className="w-4.5 h-4.5 text-[#d5a864]" />
               </div>
               <div>
-                <p className="text-sm font-bold text-white leading-tight">Analisis Potensi</p>
-                <p className="text-[11px] text-neutral-400 leading-tight mt-0.5">Berbasis data &amp; pengalaman</p>
+                <p className="text-sm font-bold text-white leading-tight">GIS Intelligence</p>
+                <p className="text-[11px] text-neutral-400 leading-tight mt-0.5">Data spasial & NJOP resmi DIY</p>
               </div>
             </div>
 
@@ -150,8 +151,8 @@ export const Hero: React.FC<HeroProps> = ({ onStartCalculator, onOpenConsultatio
                 <Users className="w-4.5 h-4.5 text-[#d5a864]" />
               </div>
               <div>
-                <p className="text-sm font-bold text-white leading-tight">Tim Profesional</p>
-                <p className="text-[11px] text-neutral-400 leading-tight mt-0.5">Siap membantu Anda</p>
+                <p className="text-sm font-bold text-white leading-tight">Member Network</p>
+                <p className="text-[11px] text-neutral-400 leading-tight mt-0.5">80+ investor aktif se-DIY</p>
               </div>
             </div>
 
@@ -160,8 +161,8 @@ export const Hero: React.FC<HeroProps> = ({ onStartCalculator, onOpenConsultatio
                 <ShieldCheck className="w-4.5 h-4.5 text-[#d5a864]" />
               </div>
               <div>
-                <p className="text-sm font-bold text-white leading-tight">Investasi Aman</p>
-                <p className="text-[11px] text-neutral-400 leading-tight mt-0.5">Dengan legalitas jelas</p>
+                <p className="text-sm font-bold text-white leading-tight">Due Diligence Penuh</p>
+                <p className="text-[11px] text-neutral-400 leading-tight mt-0.5">Legalitas & feasibility study</p>
               </div>
             </div>
 
