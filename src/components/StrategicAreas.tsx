@@ -386,23 +386,48 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
               {isClusterPanelOpen ? (
                 <div className="flex flex-col bg-[#071914]/94 backdrop-blur-xl rounded-2xl border border-white/20 shadow-[0_16px_40px_rgba(0,0,0,0.65)] overflow-hidden">
                   
-                  {/* Header Panel Melayang */}
+                  {/* Header Panel Melayang (Memuat Title Header Peta) */}
                   <div className="p-3 bg-[#081e18]/95 border-b border-white/10 flex items-center justify-between shrink-0">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-[#d5a864] animate-pulse" />
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-200 font-mono">
-                        Klaster Kawasan
-                      </span>
-                      <span className="text-[9.5px] text-[#d5a864] font-mono bg-[#071914] px-1.5 py-0.5 rounded border border-white/10">
-                        {clusters.length}
-                      </span>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className={`w-2 h-2 rounded-full shrink-0 ${
+                        activeMapTab === 'zonasi' && activeFilterTab === 'harga'
+                          ? 'bg-amber-400 animate-pulse'
+                          : activeMapTab === 'zonasi' && activeFilterTab === 'akses'
+                          ? 'bg-blue-400 animate-ping'
+                          : 'bg-emerald-400 animate-pulse'
+                      }`} />
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[11px] font-bold uppercase tracking-wider text-[#d5a864] font-mono truncate">
+                            {activeMapTab === 'zonasi'
+                              ? activeFilterTab === 'harga'
+                                ? 'NJOP RESMI (PBB-P2)'
+                                : activeFilterTab === 'akses'
+                                ? 'KORIDOR & TRASE TOL'
+                                : 'ZONASI SPASIAL DIY'
+                              : 'KORIDOR INVESTASI'}
+                          </span>
+                          <span className="text-[9px] text-neutral-300 font-mono bg-[#071914] px-1.5 py-0.5 rounded border border-white/10 shrink-0">
+                            {clusters.length} KAWASAN
+                          </span>
+                        </div>
+                        <span className="text-[9.5px] text-neutral-400 font-mono block truncate">
+                          {activeMapTab === 'zonasi'
+                            ? activeFilterTab === 'harga'
+                              ? 'Heatmap Nilai Tanah Pemda'
+                              : activeFilterTab === 'akses'
+                              ? 'Trase Tol & 5 Exit Gate'
+                              : '5 Kabupaten/Kota Terpadu'
+                            : 'Polygon Analytics Mikro'}
+                        </span>
+                      </div>
                     </div>
 
                     <button
                       type="button"
                       onClick={() => setIsClusterPanelOpen(false)}
                       title="Sembunyikan panel klaster (lihat peta penuh)"
-                      className="p-1 rounded-lg text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer flex items-center gap-1 text-[10px]"
+                      className="p-1 rounded-lg text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer flex items-center gap-1 text-[10px] shrink-0 ml-1.5"
                     >
                       <span className="text-[10px] hidden sm:inline">Tutup</span>
                       <ChevronLeft className="w-3.5 h-3.5" />
@@ -641,23 +666,48 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                 {isClusterPanelOpen ? (
                   <div className="flex flex-col bg-[#071914]/94 backdrop-blur-xl rounded-2xl border border-white/20 shadow-[0_16px_40px_rgba(0,0,0,0.7)] overflow-hidden">
                     
-                    {/* Header Panel Melayang */}
+                    {/* Header Panel Melayang (Memuat Title Header Peta) */}
                     <div className="p-3 bg-[#081e18]/95 border-b border-white/10 flex items-center justify-between shrink-0">
-                      <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-[#d5a864] animate-pulse" />
-                        <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-200 font-mono">
-                          Klaster Kawasan
-                        </span>
-                        <span className="text-[9.5px] text-[#d5a864] font-mono bg-[#071914] px-1.5 py-0.5 rounded border border-white/10">
-                          {clusters.length}
-                        </span>
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className={`w-2 h-2 rounded-full shrink-0 ${
+                          activeMapTab === 'zonasi' && activeFilterTab === 'harga'
+                            ? 'bg-amber-400 animate-pulse'
+                            : activeMapTab === 'zonasi' && activeFilterTab === 'akses'
+                            ? 'bg-blue-400 animate-ping'
+                            : 'bg-emerald-400 animate-pulse'
+                        }`} />
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[11px] font-bold uppercase tracking-wider text-[#d5a864] font-mono truncate">
+                              {activeMapTab === 'zonasi'
+                                ? activeFilterTab === 'harga'
+                                  ? 'NJOP RESMI (PBB-P2)'
+                                  : activeFilterTab === 'akses'
+                                  ? 'KORIDOR & TRASE TOL'
+                                  : 'ZONASI SPASIAL DIY'
+                                : 'KORIDOR INVESTASI'}
+                            </span>
+                            <span className="text-[9px] text-neutral-300 font-mono bg-[#071914] px-1.5 py-0.5 rounded border border-white/10 shrink-0">
+                              {clusters.length} KAWASAN
+                            </span>
+                          </div>
+                          <span className="text-[9.5px] text-neutral-400 font-mono block truncate">
+                            {activeMapTab === 'zonasi'
+                              ? activeFilterTab === 'harga'
+                                ? 'Heatmap Nilai Tanah Pemda'
+                              : activeFilterTab === 'akses'
+                                ? 'Trase Tol & 5 Exit Gate'
+                                : '5 Kabupaten/Kota Terpadu'
+                              : 'Polygon Analytics Mikro'}
+                          </span>
+                        </div>
                       </div>
 
                       <button
                         type="button"
                         onClick={() => setIsClusterPanelOpen(false)}
                         title="Sembunyikan panel klaster (lihat peta penuh)"
-                        className="p-1 rounded-lg text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer flex items-center gap-1 text-[10px]"
+                        className="p-1 rounded-lg text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer flex items-center gap-1 text-[10px] shrink-0 ml-1.5"
                       >
                         <span className="text-[10px] hidden sm:inline">Tutup</span>
                         <ChevronLeft className="w-3.5 h-3.5" />
