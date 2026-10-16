@@ -39,9 +39,11 @@ export default function HomePage() {
     scrollToCalculator();
   };
 
-  const handleSelectZone = (zoneName: string) => {
+  const handleSelectZone = (zoneName: string, shouldScroll = true) => {
     setSelectedZone(zoneName);
-    scrollToCalculator();
+    if (shouldScroll) {
+      scrollToCalculator();
+    }
   };
 
   const handleConsultMedicalStudy = (notes: string) => {

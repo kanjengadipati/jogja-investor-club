@@ -23,7 +23,7 @@ const JogjaRealMap = dynamic(
 );
 
 interface StrategicAreasProps {
-  onSelectZone: (zoneName: string) => void;
+  onSelectZone: (zoneName: string, shouldScroll?: boolean) => void;
 }
 
 export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) => {
@@ -94,7 +94,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
     setSelectedCluster(clusterId);
     const item = clusters.find((c) => c.id === clusterId);
     if (item) {
-      onSelectZone(item.fullName);
+      onSelectZone(item.fullName, false);
     }
   };
 
@@ -196,6 +196,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                 const isActive = selectedCluster === c.id;
                 return (
                   <button
+                    type="button"
                     key={c.id}
                     onClick={() => handleSelectCluster(c.id)}
                     className={`w-full text-left p-4 rounded-2xl border transition-all duration-200 flex items-center justify-between group cursor-pointer ${
@@ -245,7 +246,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                   const match = clusters.find((c) => c.region === reg.id);
                   if (match) setSelectedCluster(match.id);
                 }}
-                onApplyZoneToCalculator={onSelectZone}
+                onApplyZoneToCalculator={(zoneName) => onSelectZone(zoneName, true)}
                 height="460px"
               />
 
@@ -283,7 +284,13 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                 </div>
 
                 <button
-                  onClick={() => onSelectZone(currentData.fullName)}
+                  type="button"
+                  onClick={() => {
+                    const el = document.getElementById('analisis-kawasan-detail');
+                    if (el) {
+                      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                  }}
                   className="w-full py-2 px-3 text-[11px] font-bold text-[#071914] bg-[#d5a864] hover:bg-[#e2b772] rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                 >
                   <span>Lihat Detail</span>
@@ -296,7 +303,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
         </div>
 
         {/* Bottom Box: Analisis Kawasan Terpilih & 3 Metrik Utama (Sesuai Mockup Poin 4) */}
-        <div className="bg-[#0a231c]/90 rounded-3xl p-6 sm:p-8 border border-white/15 space-y-6 backdrop-blur-md">
+        <div id="analisis-kawasan-detail" className="bg-[#0a231c]/90 rounded-3xl p-6 sm:p-8 border border-white/15 space-y-6 backdrop-blur-md scroll-mt-24">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-white/10 pb-5">
             <div className="space-y-1">
               <span className="text-[11px] font-mono uppercase tracking-wider text-[#d5a864]">
@@ -311,7 +318,8 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
             </div>
 
             <button
-              onClick={() => onSelectZone(currentData.fullName)}
+              type="button"
+              onClick={() => onSelectZone(currentData.fullName, true)}
               className="self-start lg:self-center px-5 py-2.5 text-xs font-bold text-[#071914] bg-[#d5a864] hover:bg-[#e2b772] rounded-xl flex items-center gap-2 shrink-0 transition-all cursor-pointer shadow-md"
             >
               <span>Hitung Potensi Tanah</span>
