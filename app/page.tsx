@@ -75,14 +75,14 @@ export default function HomePage() {
         {/* 3. Satu Lahan, Banyak Kemungkinan (3 Core Property Models) */}
         <PropertyArchetypes onSelectArchetype={handleSelectArchetype} />
 
-        {/* 4. Studi Kasus & Blueprint Investasi Riil (Kost Eksekutif Kawasan Kedokteran UGM/UII/UAD) */}
-        <MedicalCampusCaseStudy onConsultCaseStudy={handleConsultMedicalStudy} />
+        {/* 4. Kawasan Strategis di Yogyakarta (GIS SPATIAL INTELLIGENCE & INFRASTRUKTUR) */}
+        <StrategicAreas onSelectZone={handleSelectZone} />
 
         {/* 5. Proses Mudah Langkah Demi Langkah (4 Connected Steps) */}
         <ProcessSteps />
 
-        {/* 6. Kawasan Strategis di Yogyakarta (Interactive Map with OSM) */}
-        <StrategicAreas onSelectZone={handleSelectZone} />
+        {/* 6. Studi Kasus & Blueprint Investasi Riil (BLUEPRINT STUDI KELAYAKAN RIIL · YOGYAKARTA) */}
+        <MedicalCampusCaseStudy onConsultCaseStudy={handleConsultMedicalStudy} />
 
         {/* 7. Hitung Potensi Tanah Anda (Lead Form Banner + Calculator) */}
         <LeadCalculatorBanner

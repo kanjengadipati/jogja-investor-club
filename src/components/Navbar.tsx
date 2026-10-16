@@ -51,13 +51,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation, activeSectio
             Solusi Properti
           </a>
           <a
-            href="#studi-kasus-kedokteran"
-            className="hover:text-white transition-colors py-1 flex items-center gap-1.5 text-[#d5a864]"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Studi Kasus Kos</span>
-          </a>
-          <a
             href="#area-potensial"
             className="hover:text-white transition-colors py-1"
           >
@@ -68,6 +61,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation, activeSectio
             className="hover:text-white transition-colors py-1"
           >
             Proses &amp; Layanan
+          </a>
+          <a
+            href="#studi-kasus-kedokteran"
+            className="hover:text-white transition-colors py-1 flex items-center gap-1.5 text-[#d5a864]"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Studi Kasus Kos</span>
           </a>
         </nav>
 
@@ -112,13 +112,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation, activeSectio
             Solusi Properti
           </a>
           <a
-            href="#studi-kasus-kedokteran"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-emerald-400 font-semibold hover:text-white py-1"
-          >
-            Studi Kasus: Kos Kedokteran
-          </a>
-          <a
             href="#area-potensial"
             onClick={() => setMobileMenuOpen(false)}
             className="block text-neutral-300 hover:text-white py-1"
@@ -131,6 +124,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation, activeSectio
             className="block text-neutral-300 hover:text-white py-1"
           >
             Proses &amp; Layanan
+          </a>
+          <a
+            href="#studi-kasus-kedokteran"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-emerald-400 font-semibold hover:text-white py-1"
+          >
+            Studi Kasus: Kos Kedokteran
           </a>
           <a
             href="#hitung-potensi"
