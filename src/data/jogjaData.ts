@@ -10,11 +10,11 @@ import {
 } from '../types/property';
 
 export const JOGJA_IMAGES = {
-  heroLandscape: '/src/assets/images/hero_jogja_landscape_1792108229283.jpg',
-  rumah: '/src/assets/images/arch_jogja_rumah_1792108230130.jpg',
-  villa: '/src/assets/images/arch_jogja_villa_1792108231919.jpg',
-  kos: '/src/assets/images/arch_jogja_kos_1792108231318.jpg',
-  heritage: '/src/assets/images/jogja_heritage_tugu_prambanan_1792109052483.jpg',
+  heroLandscape: '/images/hero_jogja_landscape_1792108229283.jpg',
+  rumah: '/images/arch_jogja_rumah_1792108230130.jpg',
+  villa: '/images/arch_jogja_villa_1792108231919.jpg',
+  kos: '/images/arch_jogja_kos_1792108231318.jpg',
+  heritage: '/images/jogja_heritage_tugu_prambanan_1792109052483.jpg',
 };
 
 export const PROPERTY_ARCHETYPES: PropertyArchetype[] = [

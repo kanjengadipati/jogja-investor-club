@@ -13,7 +13,7 @@
   }
 }
 
-/* Custom scrollbar and subtle pattern utility */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }

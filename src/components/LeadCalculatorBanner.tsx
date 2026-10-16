@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useMemo } from 'react';
 import { JOGJA_IMAGES } from '../data/jogjaData';
 import { LeadFormData, PropertyType } from '../types/property';

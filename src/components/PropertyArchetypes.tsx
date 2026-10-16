@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { JOGJA_IMAGES } from '../data/jogjaData';
 import { PropertyType } from '../types/property';

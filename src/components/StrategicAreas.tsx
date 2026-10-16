@@ -1,7 +1,35 @@
+'use client';
+
 import React, { useState } from 'react';
-import { JogjaOsmMap, InvestmentBlock } from './JogjaOsmMap';
-import { JogjaRealMap, YogyakartaRegion } from './JogjaRealMap';
+import dynamic from 'next/dynamic';
+import type { InvestmentBlock } from './JogjaOsmMap';
+import type { YogyakartaRegion } from './JogjaRealMap';
 import { Check, MapPin, Globe, Layers, Sparkles, TrendingUp, Users, Compass, ShieldCheck } from 'lucide-react';
+
+// Dynamically import Leaflet-based map components with SSR disabled
+const JogjaRealMap = dynamic(
+  () => import('./JogjaRealMap').then((m) => ({ default: m.JogjaRealMap })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-[440px] bg-[#051410] rounded-2xl animate-pulse flex items-center justify-center">
+        <span className="text-neutral-500 text-sm font-mono">Memuat peta...</span>
+      </div>
+    ),
+  }
+);
+
+const JogjaOsmMap = dynamic(
+  () => import('./JogjaOsmMap').then((m) => ({ default: m.JogjaOsmMap })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-[440px] bg-[#051410] rounded-2xl animate-pulse flex items-center justify-center">
+        <span className="text-neutral-500 text-sm font-mono">Memuat peta...</span>
+      </div>
+    ),
+  }
+);
 
 interface StrategicAreasProps {
   onSelectZone: (zoneName: string) => void;

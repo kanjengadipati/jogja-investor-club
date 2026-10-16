@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
-import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
-import { PropertyArchetypes } from './components/PropertyArchetypes';
-import { ProcessSteps } from './components/ProcessSteps';
-import { StrategicAreas } from './components/StrategicAreas';
-import { LeadCalculatorBanner } from './components/LeadCalculatorBanner';
-import { Footer } from './components/Footer';
-import { WhatsAppFloatingCTA } from './components/WhatsAppFloatingCTA';
-import { PropertyType } from './types/property';
+'use client';
 
-export default function App() {
+import React, { useState } from 'react';
+import { Navbar } from '../src/components/Navbar';
+import { Hero } from '../src/components/Hero';
+import { PropertyArchetypes } from '../src/components/PropertyArchetypes';
+import { ProcessSteps } from '../src/components/ProcessSteps';
+import { StrategicAreas } from '../src/components/StrategicAreas';
+import { LeadCalculatorBanner } from '../src/components/LeadCalculatorBanner';
+import { Footer } from '../src/components/Footer';
+import { WhatsAppFloatingCTA } from '../src/components/WhatsAppFloatingCTA';
+import { PropertyType } from '../src/types/property';
+
+export default function HomePage() {
   const [selectedPropertyType, setSelectedPropertyType] = useState<PropertyType>('kos');
   const [selectedZone, setSelectedZone] = useState<string>(
     'Sleman - Kawasan Kampus (Seturan / Condongcatur / UGM)'
@@ -41,7 +43,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#fbf9f5] text-[#1a221f] selection:bg-[#d5a864] selection:text-[#071914]">
-      {/* 1. Header / Navbar matching screenshot */}
+      {/* 1. Header / Navbar */}
       <Navbar onOpenConsultation={scrollToCalculator} />
 
       {/* Main Content Sections */}
@@ -58,20 +60,20 @@ export default function App() {
         {/* 4. Proses Mudah Langkah Demi Langkah (4 Connected Steps) */}
         <ProcessSteps />
 
-        {/* 5. Kawasan Strategis di Yogyakarta (Landscape + Categories + Interactive Map with OSM) */}
+        {/* 5. Kawasan Strategis di Yogyakarta (Interactive Map with OSM) */}
         <StrategicAreas onSelectZone={handleSelectZone} />
 
-        {/* 6. Hitung Potensi Tanah Anda (Lead Form Banner + Expandable Calculation Engine) */}
+        {/* 6. Hitung Potensi Tanah Anda (Lead Form Banner + Calculator) */}
         <LeadCalculatorBanner
           initialPropertyType={selectedPropertyType}
           initialZone={selectedZone}
         />
       </main>
 
-      {/* 7. Footer Bottom Bar matching screenshot */}
+      {/* 7. Footer */}
       <Footer onOpenWhatsApp={handleOpenWhatsAppDirect} />
 
-      {/* Discrete Floating WhatsApp Action */}
+      {/* Floating WhatsApp CTA */}
       <WhatsAppFloatingCTA onOpenWhatsApp={handleOpenWhatsAppDirect} />
     </div>
   );
