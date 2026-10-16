@@ -1,0 +1,6 @@
+{
+  "name": "Wujudkan Jogja — Properti & Land ROI Appraisal",
+  "description": "Platform pengembangan tanah kosong di Yogyakarta menjadi rumah, villa, dan kos eksklusif bernilai tinggi dengan kalkulator potensi lahan & RAB instan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
