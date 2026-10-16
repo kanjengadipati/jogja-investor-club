@@ -118,27 +118,27 @@ export const MedicalCampusCaseStudy: React.FC<MedicalCampusCaseStudyProps> = ({
   };
 
   return (
-    <section id="studi-kasus-kedokteran" className="py-20 lg:py-28 bg-[#051611] text-white relative overflow-hidden border-t border-[#d5a864]/20">
+    <section id="studi-kasus-kedokteran" className="py-8 sm:py-10 lg:py-12 bg-[#051611] text-white relative overflow-hidden border-t border-[#d5a864]/20">
       {/* Background Ambience */}
       <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-[#d5a864]/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-10 w-[500px] h-[500px] bg-emerald-600/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(#d5a864_1px,transparent_1px)] [background-size:28px_28px] opacity-[0.03] pointer-events-none" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      <div className="relative max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 space-y-4 lg:space-y-5">
 
         {/* Section Top Header & Banner */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b border-white/10">
-          <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#d5a864] bg-[#071914] border border-[#d5a864]/40 px-3.5 py-1.5 rounded-full shadow-inner">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-3.5 border-b border-white/10">
+          <div className="space-y-1 flex-1">
+            <div className="inline-flex items-center gap-2 text-[11px] font-mono font-bold uppercase tracking-wider text-[#d5a864] bg-[#071914] border border-[#d5a864]/40 px-3 py-1 rounded-full shadow-inner">
               <Stethoscope className="w-3.5 h-3.5 text-emerald-400" />
               <span>BLUEPRINT STUDI KELAYAKAN RIIL · YOGYAKARTA</span>
             </div>
 
             <h2
-              className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight"
+              className="text-xl sm:text-2xl lg:text-[1.85rem] xl:text-[2.1rem] font-bold text-white tracking-tight leading-tight"
               style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
             >
-              Investasi Kost Eksekutif Mewah <br className="hidden sm:inline" />
+              Investasi Kost Eksekutif Mewah{' '}
               <span
                 className="font-normal italic text-[#d5a864]"
                 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
@@ -147,19 +147,19 @@ export const MedicalCampusCaseStudy: React.FC<MedicalCampusCaseStudyProps> = ({
               </span>
             </h2>
 
-            <p className="text-sm sm:text-base text-neutral-300 max-w-3xl leading-relaxed font-light">
+            <p className="text-xs sm:text-[13px] text-neutral-300 max-w-2xl leading-relaxed font-light">
               Analisis komprehensif instrumen *passive income* dengan pasar paling tahan krisis di Jogja:
               Mahasiswa Kedokteran, Dokter Residen (PPDS), dan Tenaga Medis Rumah Sakit Rujukan Nasional.
             </p>
           </div>
 
           {/* Tab Switcher: Finansial vs Peta Klaster */}
-          <div className="flex items-center gap-2 bg-[#09221b] p-1.5 rounded-full border border-white/15 shrink-0 self-start lg:self-auto shadow-lg">
+          <div className="flex items-center gap-1.5 bg-[#09221b] p-1 rounded-full border border-white/15 shrink-0 shadow-lg">
             <button
               onClick={() => setActiveTab('financial')}
-              className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+              className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'financial'
-                  ? 'bg-[#d5a864] text-[#071914] shadow-md'
+                  ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
                   : 'text-neutral-300 hover:text-white'
               }`}
             >
@@ -169,9 +169,9 @@ export const MedicalCampusCaseStudy: React.FC<MedicalCampusCaseStudyProps> = ({
 
             <button
               onClick={() => setActiveTab('spatial')}
-              className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+              className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'spatial'
-                  ? 'bg-[#d5a864] text-[#071914] shadow-md'
+                  ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
                   : 'text-neutral-300 hover:text-white'
               }`}
             >
@@ -182,51 +182,51 @@ export const MedicalCampusCaseStudy: React.FC<MedicalCampusCaseStudyProps> = ({
         </div>
 
         {/* 3 Key Selling Metrics Pills */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-[#09221b]/90 border border-white/10 rounded-2xl p-4.5 flex items-center gap-4 shadow-lg">
-            <div className="w-12 h-12 rounded-xl bg-[#d5a864]/15 border border-[#d5a864]/30 flex items-center justify-center text-[#d5a864] shrink-0">
-              <MapPin className="w-6 h-6" />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+          <div className="bg-[#09221b]/90 border border-white/10 rounded-2xl p-3 sm:p-3.5 flex items-center gap-3 shadow-lg">
+            <div className="w-10 h-10 rounded-xl bg-[#d5a864]/15 border border-[#d5a864]/30 flex items-center justify-center text-[#d5a864] shrink-0">
+              <MapPin className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-[11px] font-mono uppercase text-neutral-400 block">Pilar 1</span>
-              <h4 className="text-base font-bold text-white">Lokasi Strategis</h4>
-              <p className="text-xs text-neutral-400">Dekat FK UGM, RSUP Sardjito, UAD &amp; UII</p>
+              <span className="text-[10px] font-mono uppercase text-neutral-400 block leading-tight">Pilar 1</span>
+              <h4 className="text-xs sm:text-sm font-bold text-white leading-snug">Lokasi Strategis</h4>
+              <p className="text-[11px] text-neutral-400 leading-tight mt-0.5">Dekat FK UGM, RSUP Sardjito, UAD &amp; UII</p>
             </div>
           </div>
 
-          <div className="bg-[#09221b]/90 border border-white/10 rounded-2xl p-4.5 flex items-center gap-4 shadow-lg">
-            <div className="w-12 h-12 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
-              <Building2 className="w-6 h-6" />
+          <div className="bg-[#09221b]/90 border border-white/10 rounded-2xl p-3 sm:p-3.5 flex items-center gap-3 shadow-lg">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+              <Building2 className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-[11px] font-mono uppercase text-neutral-400 block">Pilar 2</span>
-              <h4 className="text-base font-bold text-white">Permintaan Tinggi</h4>
-              <p className="text-xs text-neutral-400">Target Co-ass, PPDS &amp; Dokter Muda</p>
+              <span className="text-[10px] font-mono uppercase text-neutral-400 block leading-tight">Pilar 2</span>
+              <h4 className="text-xs sm:text-sm font-bold text-white leading-snug">Permintaan Tinggi</h4>
+              <p className="text-[11px] text-neutral-400 leading-tight mt-0.5">Target Co-ass, PPDS &amp; Dokter Muda</p>
             </div>
           </div>
 
-          <div className="bg-[#09221b]/90 border border-white/10 rounded-2xl p-4.5 flex items-center gap-4 shadow-lg">
-            <div className="w-12 h-12 rounded-xl bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-blue-400 shrink-0">
-              <TrendingUp className="w-6 h-6" />
+          <div className="bg-[#09221b]/90 border border-white/10 rounded-2xl p-3 sm:p-3.5 flex items-center gap-3 shadow-lg">
+            <div className="w-10 h-10 rounded-xl bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-blue-400 shrink-0">
+              <TrendingUp className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-[11px] font-mono uppercase text-neutral-400 block">Pilar 3</span>
-              <h4 className="text-base font-bold text-white">Return Menarik</h4>
-              <p className="text-xs text-neutral-400">ROI ± 18,5% / thn, BEP 14–16 Bulan</p>
+              <span className="text-[10px] font-mono uppercase text-neutral-400 block leading-tight">Pilar 3</span>
+              <h4 className="text-xs sm:text-sm font-bold text-white leading-snug">Return Menarik</h4>
+              <p className="text-[11px] text-neutral-400 leading-tight mt-0.5">ROI ± 18,5% / thn, BEP 14–16 Bulan</p>
             </div>
           </div>
         </div>
 
         {/* TAB CONTENT 1: FINANCIAL & PROJECTION */}
         {activeTab === 'financial' && (
-          <div className="space-y-8 animate-fadeIn">
+          <div className="space-y-5 animate-fadeIn">
 
             {/* Top Row: Rincian Investasi & Skenario 20 Kamar */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
 
               {/* Skenario Perhitungan 20 Kamar (lg:col-span-5) */}
-              <div className="lg:col-span-5 bg-[#09221b] border border-[#d5a864]/30 rounded-3xl p-6 sm:p-8 flex flex-col justify-between shadow-2xl">
-                <div className="space-y-5">
+              <div className="lg:col-span-5 bg-[#09221b] border border-[#d5a864]/30 rounded-3xl p-5 sm:p-6 flex flex-col justify-between shadow-2xl">
+                <div className="space-y-4">
                   <div className="flex items-center justify-between border-b border-white/10 pb-4">
                     <div>
                       <span className="text-[10px] font-mono text-[#d5a864] uppercase font-bold tracking-wider">
@@ -418,7 +418,7 @@ export const MedicalCampusCaseStudy: React.FC<MedicalCampusCaseStudyProps> = ({
             </div>
 
             {/* Bottom Row: 5 Alasan Menjanjikan & Timeline Roadmap */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
 
               {/* 5 Alasan Kenapa Menjanjikan (lg:col-span-5) */}
               <div className="lg:col-span-5 bg-[#09221b] border border-white/10 rounded-3xl p-6 sm:p-7 space-y-4">
