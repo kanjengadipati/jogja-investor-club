@@ -387,8 +387,8 @@ export const JogjaOsmMap: React.FC<JogjaOsmMapProps> = ({
 
   return (
     <div className="space-y-3.5">
-      {/* Modern High-Tech GIS Frame */}
-      <div className="relative rounded-2xl overflow-hidden border border-white/15 shadow-2xl bg-[#051410] ring-1 ring-white/10">
+      {/* Modern High-Tech GIS Frame (No round, flush with outer terminal) */}
+      <div className="relative overflow-hidden bg-[#051410]">
         
         {/* HUD Top Bar */}
         <div className="absolute top-3 left-3 right-3 z-[400] flex flex-wrap items-center justify-between gap-2 pointer-events-none">
