@@ -205,29 +205,28 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
   return (
     <section
       id="gis-spatial-intelligence"
-      className="relative py-20 lg:py-28 bg-[#071914] text-white border-y border-[#d5a864]/20 overflow-hidden scroll-mt-12"
+      className="relative py-8 sm:py-10 lg:py-12 bg-[#071914] text-white border-y border-[#d5a864]/20 overflow-hidden scroll-mt-12"
     >
       <div id="area-potensial" className="absolute -top-16" />
       {/* Background Glows */}
       <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[#d5a864]/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-[#1a4a39]/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      <div className="relative max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 space-y-4 lg:space-y-5">
 
-        {/* Top Header Row with Intelligence Tag and Filter Tabs */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-6 border-b border-white/10">
-          <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-widest text-[#d5a864]">
+        {/* Top Header Row — High density & streamlined to save vertical space */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-3.5 border-b border-white/10">
+          <div className="space-y-1 flex-1">
+            <div className="inline-flex items-center gap-2 text-[11px] font-mono font-bold uppercase tracking-widest text-[#d5a864]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#d5a864] animate-pulse" />
               <span>GIS SPATIAL INTELLIGENCE &amp; INFRASTRUKTUR</span>
             </div>
 
             <h2
-              className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight leading-tight"
+              className="text-xl sm:text-2xl lg:text-[1.85rem] xl:text-[2.1rem] font-bold text-white tracking-tight leading-tight"
               style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
             >
               Pemetaan Spasial &amp;{' '}
-              <br className="hidden sm:inline" />
               <span
                 className="italic font-normal text-[#d5a864]"
                 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
@@ -237,22 +236,21 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
               di Jogja
             </h2>
 
-            <p className="text-sm text-neutral-300 max-w-2xl leading-relaxed font-light">
-              Analisis komprehensif wilayah administratif, data NJOP (PBB-P2) resmi, trase mega proyek jalan tol, exit gate, dan titik magnet kampus/RS
-              untuk keputusan investasi properti yang presisi dan menguntungkan.
+            <p className="text-xs sm:text-[13px] text-neutral-300 max-w-2xl leading-relaxed font-light">
+              Analisis data NJOP (PBB-P2) resmi, batas administratif 5 Kab/Kota, trase mega proyek tol Solo-Jogja-YIA, dan titik magnet kampus/RS.
             </p>
           </div>
 
           {/* Filter Pills (Zonasi RTRW, Harga Lahan / NJOP, Aksesibilitas & Tol) */}
-          <div className="flex flex-col sm:items-end gap-2 shrink-0 self-start lg:self-auto">
-            <div className="flex items-center gap-2 bg-[#0a231c] p-1.5 rounded-full border border-white/10">
+          <div className="flex flex-col sm:items-end gap-1 shrink-0">
+            <div className="flex items-center gap-1.5 bg-[#0a231c] p-1 rounded-full border border-white/10">
               <button
                 type="button"
                 onClick={() => {
                   setActiveMapTab('zonasi');
                   setActiveFilterTab('zonasi');
                 }}
-                className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                   activeFilterTab === 'zonasi' && activeMapTab === 'zonasi'
                     ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
                     : 'text-neutral-300 hover:text-white'
@@ -268,7 +266,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                   setActiveMapTab('zonasi');
                   setActiveFilterTab('harga');
                 }}
-                className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                   activeFilterTab === 'harga' && activeMapTab === 'zonasi'
                     ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
                     : 'text-neutral-300 hover:text-white'
@@ -284,7 +282,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                   setActiveMapTab('zonasi');
                   setActiveFilterTab('akses');
                 }}
-                className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                   activeFilterTab === 'akses' && activeMapTab === 'zonasi'
                     ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
                     : 'text-neutral-300 hover:text-white'
@@ -296,22 +294,22 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
             </div>
 
             {/* Active Mode Sub-Notice */}
-            <span className="text-[11px] font-mono text-neutral-400">
+            <span className="text-[10px] sm:text-[11px] font-mono text-[#d5a864]/90">
               {activeFilterTab === 'harga'
-                ? '📊 Menampilkan Heatmap Nilai Jual Objek Pajak (NJOP) Resmi DIY vs Nilai Pasar Bebas'
+                ? '📊 Heatmap NJOP Resmi PBB-P2 vs Nilai Transaksi Pasar'
                 : activeFilterTab === 'akses'
-                ? '🛣️ Menampilkan Trase Jalan Tol Solo-Yogyakarta-YIA & Tol Bawen + 5 Exit Gate'
-                : '🗺️ Menampilkan Batas Administratif 5 Kab/Kota & Peruntukan Zonasi RTRW'}
+                ? '🛣️ Trase Tol Solo-Jogja-YIA & Tol Bawen + 5 Exit Gate'
+                : '🗺️ Batas Administratif 5 Kab/Kota & Peruntukan Zonasi RTRW'}
             </span>
           </div>
         </div>
 
         {/* Main Interactive Map & Selection Area */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
 
           {/* Left Column: Pilih Kawasan List (Enhanced UI with Badges & Best-fit Archetypes) */}
-          <div className="lg:col-span-4 space-y-3">
-            <div className="flex items-center justify-between px-1 pb-1">
+          <div className="lg:col-span-4 space-y-2.5">
+            <div className="flex items-center justify-between px-1 pb-0.5">
               <span className="text-xs font-bold uppercase tracking-wider text-neutral-400">
                 Pilih Klaster Kawasan
               </span>
@@ -320,7 +318,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
               </span>
             </div>
 
-            <div className="space-y-2.5 max-h-[580px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-white/10">
+            <div className="space-y-2 max-h-[500px] lg:max-h-[540px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-white/10">
               {clusters.map((c) => {
                 const isActive = selectedCluster === c.id;
                 return (
@@ -328,47 +326,47 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                     type="button"
                     key={c.id}
                     onClick={() => handleSelectCluster(c.id)}
-                    className={`w-full text-left p-3.5 sm:p-4 rounded-2xl border transition-all duration-200 flex flex-col gap-2 group cursor-pointer ${
+                    className={`w-full text-left p-3 rounded-xl border transition-all duration-200 flex flex-col gap-1.5 group cursor-pointer ${
                       isActive
-                        ? 'bg-[#0f2e25] border-[#d5a864] ring-1 ring-[#d5a864] shadow-[0_4px_20px_rgba(213,168,100,0.18)]'
+                        ? 'bg-[#0f2e25] border-[#d5a864] ring-1 ring-[#d5a864] shadow-[0_4px_16px_rgba(213,168,100,0.18)]'
                         : 'bg-[#0a231c]/70 border-white/10 hover:border-white/20 hover:bg-[#0c2a22]'
                     }`}
                   >
                     {/* Top Row: Title, Radio Check, and Status Badge */}
                     <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-start gap-2.5">
+                      <div className="flex items-start gap-2">
                         <div
-                          className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
+                          className={`w-4.5 h-4.5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
                             isActive ? 'bg-[#d5a864] text-[#071914]' : 'bg-white/10 text-neutral-400'
                           }`}
                         >
                           {isActive ? (
-                            <Check className="w-3 h-3 stroke-[3]" />
+                            <Check className="w-2.5 h-2.5 stroke-[3]" />
                           ) : (
                             <span className="w-1.5 h-1.5 rounded-full bg-neutral-400" />
                           )}
                         </div>
                         <div>
-                          <h4 className="text-sm font-bold text-white group-hover:text-[#d5a864] transition-colors leading-tight">
+                          <h4 className="text-xs sm:text-sm font-bold text-white group-hover:text-[#d5a864] transition-colors leading-tight">
                             {c.title}
                           </h4>
-                          <p className="text-[11px] text-neutral-400 mt-0.5 line-clamp-1">{c.subtitle}</p>
+                          <p className="text-[10px] sm:text-[11px] text-neutral-400 mt-0.5 line-clamp-1">{c.subtitle}</p>
                         </div>
                       </div>
 
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#071914] border border-white/15 text-[#d5a864] whitespace-nowrap shrink-0">
+                      <span className="text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-[#071914] border border-white/15 text-[#d5a864] whitespace-nowrap shrink-0">
                         {c.badge}
                       </span>
                     </div>
 
                     {/* Bottom Row: Best For Archetype Tag & Price Range */}
-                    <div className="flex items-center justify-between text-[10px] pt-1 border-t border-white/10 pl-7">
+                    <div className="flex items-center justify-between text-[10px] pt-1 border-t border-white/10 pl-6.5">
                       <span className="text-neutral-300 truncate">
                         <span className="text-neutral-500">Cocok: </span>
                         <strong className="text-emerald-300 font-semibold">{c.bestFor}</strong>
                       </span>
                       <div className="text-right shrink-0 ml-2">
-                        <span className="font-mono text-amber-300 font-semibold block">
+                        <span className="font-mono text-amber-300 font-semibold block text-[10px]">
                           NJOP: {c.njopPrice}
                         </span>
                       </div>
@@ -378,22 +376,22 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
               })}
             </div>
 
-            {/* Hint Box for Dual Layer Radar */}
-            <div className="text-xs text-neutral-300 bg-[#0a231c]/90 p-4 rounded-2xl border border-white/10 flex items-start gap-2.5 backdrop-blur-md">
-              <Sparkles className="w-4 h-4 text-[#d5a864] shrink-0 mt-0.5" />
-              <p className="leading-relaxed font-light">
-                Gunakan tab <strong className="text-white">Zonasi</strong> untuk 5 Kab/Kota, NJOP resmi &amp; rute tol, atau tab <strong className="text-white">Blok</strong> untuk analisis mikro koridor komersial (BLK-01 s/d BLK-05).
+            {/* Micro Hint for Dual Layer Radar */}
+            <div className="text-[11px] text-neutral-300 bg-[#0a231c]/80 py-2 px-3 rounded-xl border border-white/10 flex items-center gap-2">
+              <Sparkles className="w-3.5 h-3.5 text-[#d5a864] shrink-0" />
+              <p className="font-light leading-tight">
+                Tab <strong className="text-white">Zonasi</strong>: 5 Kab/Kota &amp; NJOP · Tab <strong className="text-white">Blok</strong>: Koridor mikro BLK-01 s/d BLK-05
               </p>
             </div>
           </div>
 
           {/* Right Column: GIS Interactive Map with Dual-Layer Radar Toolbar */}
-          <div className="lg:col-span-8 space-y-3">
+          <div className="lg:col-span-8 space-y-2.5">
             
             {/* Terminal Peta GIS Yogyakarta Header & Tab Switcher (Zonasi vs Blok) */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#0a231c]/90 p-2 sm:p-2.5 rounded-2xl border border-white/15 shadow-xl backdrop-blur-md">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 bg-[#0a231c]/90 p-2 rounded-xl border border-white/15 shadow-xl backdrop-blur-md">
               <div className="flex items-center gap-2 px-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#d5a864] animate-ping" />
+                <span className="w-2 h-2 rounded-full bg-[#d5a864] animate-ping" />
                 <span className="text-xs sm:text-sm font-extrabold text-white tracking-tight">
                   Terminal Peta GIS Yogyakarta
                 </span>
@@ -404,18 +402,18 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
 
               <div className="flex items-center gap-2">
                 {/* Segmented Tab Buttons: Zonasi (Kiri) | Blok (Kanan) */}
-                <div className="flex items-center gap-1.5 bg-[#071914] p-1 rounded-xl border border-white/15">
+                <div className="flex items-center gap-1 bg-[#071914] p-1 rounded-lg border border-white/15">
                   {/* Tab Kiri: Zonasi */}
                   <button
                     type="button"
                     onClick={() => setActiveMapTab('zonasi')}
-                    className={`px-4 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all flex items-center gap-2 ${
+                    className={`px-3 py-1 rounded-md text-xs font-bold cursor-pointer transition-all flex items-center gap-1.5 ${
                       activeMapTab === 'zonasi'
                         ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
                         : 'text-neutral-300 hover:text-white hover:bg-white/5'
                     }`}
                   >
-                    <Layers className="w-3.5 h-3.5" />
+                    <Layers className="w-3 h-3" />
                     <span>Zonasi &amp; NJOP</span>
                   </button>
 
@@ -423,13 +421,13 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                   <button
                     type="button"
                     onClick={() => setActiveMapTab('blok')}
-                    className={`px-4 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all flex items-center gap-2 ${
+                    className={`px-3 py-1 rounded-md text-xs font-bold cursor-pointer transition-all flex items-center gap-1.5 ${
                       activeMapTab === 'blok'
                         ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
                         : 'text-neutral-300 hover:text-white hover:bg-white/5'
                     }`}
                   >
-                    <Globe className="w-3.5 h-3.5" />
+                    <Globe className="w-3 h-3" />
                     <span>Blok</span>
                   </button>
                 </div>
@@ -439,9 +437,9 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                   type="button"
                   onClick={() => setIsFullscreen(true)}
                   title="Buka peta layar penuh (Full Screen)"
-                  className="p-2 rounded-xl bg-[#d5a864]/15 hover:bg-[#d5a864]/30 border border-[#d5a864]/40 text-[#d5a864] transition-all cursor-pointer flex items-center gap-1.5 text-xs font-bold"
+                  className="px-2.5 py-1 rounded-lg bg-[#d5a864]/15 hover:bg-[#d5a864]/30 border border-[#d5a864]/40 text-[#d5a864] transition-all cursor-pointer flex items-center gap-1.5 text-xs font-bold"
                 >
-                  <Maximize2 className="w-3.5 h-3.5" />
+                  <Maximize2 className="w-3 h-3" />
                   <span className="hidden sm:inline">Full Map</span>
                 </button>
               </div>
@@ -458,7 +456,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                     if (match) setSelectedCluster(match.id);
                   }}
                   onApplyZoneToCalculator={(zoneName) => onSelectZone(zoneName, true)}
-                  height="480px"
+                  height="500px"
                 />
               </div>
             )}
@@ -470,7 +468,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                   selectedLocationId={selectedBlockId}
                   onSelectBlock={handleBlockSelect}
                   onApplyZoneToCalculator={(zoneName) => onSelectZone(zoneName, true)}
-                  height="480px"
+                  height="500px"
                 />
               </div>
             )}
