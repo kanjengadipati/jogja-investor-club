@@ -392,7 +392,7 @@ export const JogjaOsmMap: React.FC<JogjaOsmMapProps> = ({
         
         {/* HUD Top Bar */}
         <div className="absolute top-3 left-3 right-3 z-[400] flex flex-wrap items-center justify-between gap-2 pointer-events-none">
-          <div className="bg-[#071914]/90 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-white/15 text-white flex items-center gap-2 text-xs shadow-lg pointer-events-auto">
+          <div className="bg-[#071914]/90 backdrop-blur-md px-3.5 py-1.5 rounded-none border border-white/15 text-white flex items-center gap-2 text-xs shadow-lg pointer-events-auto">
             <Crosshair className="w-3.5 h-3.5 text-emerald-400" />
             <span className="font-extrabold text-[#d5a864] tracking-tight">KORIDOR INVESTASI</span>
             <span className="text-[10px] text-neutral-400 font-mono hidden sm:inline">
