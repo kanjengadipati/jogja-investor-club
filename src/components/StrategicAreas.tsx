@@ -99,7 +99,11 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
   };
 
   return (
-    <section id="area-potensial" className="relative py-20 lg:py-28 bg-[#071914] text-white border-y border-[#d5a864]/20 overflow-hidden">
+    <section
+      id="gis-spatial-intelligence"
+      className="relative py-20 lg:py-28 bg-[#071914] text-white border-y border-[#d5a864]/20 overflow-hidden scroll-mt-12"
+    >
+      <div id="area-potensial" className="absolute -top-16" />
       {/* Background Glows */}
       <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[#d5a864]/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-[#1a4a39]/10 rounded-full blur-3xl pointer-events-none" />

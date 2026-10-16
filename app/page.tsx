@@ -25,6 +25,15 @@ export default function HomePage() {
     }
   };
 
+  const scrollToGISSpatial = () => {
+    const el =
+      document.getElementById('gis-spatial-intelligence') ||
+      document.getElementById('area-potensial');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const handleSelectArchetype = (type: PropertyType) => {
     setSelectedPropertyType(type);
     scrollToCalculator();
@@ -57,7 +66,7 @@ export default function HomePage() {
       <main className="flex-1">
         {/* 2. Hero Section + 4 Core Pillars Trust Bar */}
         <Hero
-          onStartCalculator={scrollToCalculator}
+          onStartCalculator={scrollToGISSpatial}
           onOpenConsultation={handleOpenWhatsAppDirect}
         />
 

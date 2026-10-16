@@ -82,9 +82,10 @@ export const Hero: React.FC<HeroProps> = ({ onStartCalculator, onOpenConsultatio
               <button
                 id="hero-cta-potensi"
                 onClick={onStartCalculator}
+                title="Buka Peta GIS Spatial Intelligence"
                 className="group px-7 py-4 text-sm font-semibold text-white/90 hover:text-white border border-white/25 hover:border-white/50 rounded-xl transition-all backdrop-blur-sm flex items-center gap-2.5 cursor-pointer hover:-translate-y-0.5"
               >
-                <BarChart3 className="w-4 h-4 text-[#d5a864]" />
+                <MapPin className="w-4 h-4 text-[#d5a864] group-hover:scale-110 transition-transform" />
                 <span>Lihat Potensi Tanah</span>
               </button>
             </div>
