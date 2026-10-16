@@ -3,8 +3,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Compass, MapPin, ArrowRight } from 'lucide-react';
+import {
+  Compass, MapPin, ArrowRight, Route, GraduationCap,
+  Sparkles, MessageSquare, Check, X, Info, Zap
+} from 'lucide-react';
 import jogjaGeoDataRaw from '../data/jogjaGeoData.json';
+import {
+  TOLL_ROUTES, TOLL_EXITS, INVESTMENT_POIS,
+  TollExit, InvestmentPOI
+} from '../data/jogjaInfrastructure';
 
 const jogjaGeoData = jogjaGeoDataRaw as {
   sleman: [number, number][];
@@ -151,8 +158,34 @@ export const YOGYAKARTA_REGIONS: YogyakartaRegion[] = [
   },
 ];
 
+// Helper kalkulasi jarak Haversine (km)
+function calcDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return parseFloat((R * c).toFixed(1));
+}
+
+interface InspectedPointInfo {
+  lat: number;
+  lng: number;
+  regionName: string;
+  nearestExit: { name: string; dist: number; toll: string };
+  nearestPoi: { name: string; dist: number; badge: string };
+  estPrice: string;
+  recommended: string;
+}
+
 interface JogjaRealMapProps {
   selectedRegionId?: string;
+  filterMode?: 'zonasi' | 'harga' | 'akses';
   onSelectRegion: (reg: YogyakartaRegion) => void;
   onApplyZoneToCalculator: (zoneName: string) => void;
   compact?: boolean;
@@ -161,36 +194,127 @@ interface JogjaRealMapProps {
 
 export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
   selectedRegionId = 'semua',
+  filterMode = 'zonasi',
   onSelectRegion,
   onApplyZoneToCalculator,
-  height = '460px',
+  height = '480px',
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersRef = useRef<{ [key: string]: L.Marker }>({});
   const polygonsRef = useRef<{ [key: string]: L.Polygon }>({});
   const outerBorderRef = useRef<L.Polygon | null>(null);
+  const tollLayerGroupRef = useRef<L.LayerGroup | null>(null);
+  const poiLayerGroupRef = useRef<L.LayerGroup | null>(null);
+  const inspectMarkerRef = useRef<L.Marker | null>(null);
 
   const [mapTheme, setMapTheme] = useState<'dark-hud' | 'light' | 'street'>('dark-hud');
   const [activeRegionId, setActiveRegionId] = useState(selectedRegionId);
 
+  // Layer Toggles
+  const [showTollLayer, setShowTollLayer] = useState(true);
+  const [showPoiLayer, setShowPoiLayer] = useState(true);
+  const [isPinModeActive, setIsPinModeActive] = useState(false);
+  const [inspectedPoint, setInspectedPoint] = useState<InspectedPointInfo | null>(null);
+
+  // Sync prop changes
   useEffect(() => {
     if (selectedRegionId && selectedRegionId !== activeRegionId) {
       setActiveRegionId(selectedRegionId);
     }
   }, [selectedRegionId]);
 
+  // Sync filter mode with layer visibility
+  useEffect(() => {
+    if (filterMode === 'akses') {
+      setShowTollLayer(true);
+    }
+  }, [filterMode]);
+
   const isAll = activeRegionId === 'semua';
   const activeRegion = isAll
     ? DIY_ALL_REGION
     : YOGYAKARTA_REGIONS.find((r) => r.id === activeRegionId) || DIY_ALL_REGION;
 
-  // Exact Bounding Box of DIY Land Territory:
-  // South: -8.22 (Sadeng/Wediombo coast)
-  // North: -7.53 (Puncak Merapi)
-  // West: 110.00 (Congot / Bogowonto)
-  // East: 110.85 (Wonogiri border)
   const diyBounds = L.latLngBounds([-8.22, 110.00], [-7.53, 110.85]);
+
+  // Handle Point Inspection Logic
+  const handleInspectCoordinates = (lat: number, lng: number, map: L.Map) => {
+    // 1. Tentukan Region Terdekat
+    let closestReg = YOGYAKARTA_REGIONS[0];
+    let minRegDist = 9999;
+    YOGYAKARTA_REGIONS.forEach((reg) => {
+      const d = calcDistanceKm(lat, lng, reg.lat, reg.lng);
+      if (d < minRegDist) {
+        minRegDist = d;
+        closestReg = reg;
+      }
+    });
+
+    // 2. Tentukan Exit Tol Terdekat
+    let closestExit = TOLL_EXITS[0];
+    let minExitDist = 9999;
+    TOLL_EXITS.forEach((ex) => {
+      const d = calcDistanceKm(lat, lng, ex.lat, ex.lng);
+      if (d < minExitDist) {
+        minExitDist = d;
+        closestExit = ex;
+      }
+    });
+
+    // 3. Tentukan POI Kampus / RS Terdekat
+    let closestPoi = INVESTMENT_POIS[0];
+    let minPoiDist = 9999;
+    INVESTMENT_POIS.forEach((poi) => {
+      const d = calcDistanceKm(lat, lng, poi.lat, poi.lng);
+      if (d < minPoiDist) {
+        minPoiDist = d;
+        closestPoi = poi;
+      }
+    });
+
+    const info: InspectedPointInfo = {
+      lat: parseFloat(lat.toFixed(5)),
+      lng: parseFloat(lng.toFixed(5)),
+      regionName: closestReg.name,
+      nearestExit: {
+        name: closestExit.name,
+        dist: minExitDist,
+        toll: closestExit.tollName,
+      },
+      nearestPoi: {
+        name: closestPoi.name,
+        dist: minPoiDist,
+        badge: closestPoi.badge,
+      },
+      estPrice: closestReg.landPrice,
+      recommended: closestReg.recommended,
+    };
+
+    setInspectedPoint(info);
+
+    // Update marker on map
+    if (inspectMarkerRef.current) {
+      inspectMarkerRef.current.remove();
+    }
+
+    const pinIcon = L.divIcon({
+      className: 'inspect-land-pin',
+      html: `
+        <div style="position: relative; transform: translate(-16px, -32px); cursor: pointer;">
+          <div style="width: 32px; height: 32px; border-radius: 9999px; background: #d5a864; border: 3px solid #071914; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(213,168,100,0.8); animation: bounce 1s infinite alternate;">
+            <span style="font-size: 16px;">📍</span>
+          </div>
+          <div style="width: 8px; height: 8px; background: #d5a864; border-radius: 9999px; position: absolute; bottom: -4px; left: 12px; box-shadow: 0 0 6px #d5a864;"></div>
+        </div>
+      `,
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+    });
+
+    const marker = L.marker([lat, lng], { icon: pinIcon }).addTo(map);
+    inspectMarkerRef.current = marker;
+  };
 
   useEffect(() => {
     if (!mapContainerRef.current) return;
@@ -210,7 +334,6 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
       scrollWheelZoom: false,
     });
 
-    // Place zoom controls at bottom-left to prevent overlap
     L.control.zoom({ position: 'bottomleft' }).addTo(map);
     mapInstanceRef.current = map;
 
@@ -232,29 +355,33 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
       }
     }
 
-    // 1. Draw Individual Official Administrative Regions
+    // 1. Draw Official Region Boundaries
     YOGYAKARTA_REGIONS.forEach((reg) => {
       const isSelected = reg.id === activeRegionId;
 
       const polygon = L.polygon(reg.polygon, {
         color: reg.color,
         fillColor: reg.color,
-        fillOpacity: isAll ? 0.25 : isSelected ? 0.45 : 0.12,
+        fillOpacity: isAll ? 0.22 : isSelected ? 0.42 : 0.10,
         weight: isAll ? 1.5 : isSelected ? 3 : 1.2,
         opacity: isAll ? 0.85 : isSelected ? 1 : 0.65,
         lineCap: 'round',
         lineJoin: 'round',
       }).addTo(map);
 
-      polygon.on('click', () => {
-        setActiveRegionId(reg.id);
-        onSelectRegion(reg);
-        map.fitBounds(polygon.getBounds(), { padding: [30, 30], maxZoom: 12, duration: 0.6 });
+      polygon.on('click', (e) => {
+        if (isPinModeActive) {
+          handleInspectCoordinates(e.latlng.lat, e.latlng.lng, map);
+        } else {
+          setActiveRegionId(reg.id);
+          onSelectRegion(reg);
+          map.fitBounds(polygon.getBounds(), { padding: [30, 30], maxZoom: 12, duration: 0.6 });
+        }
       });
 
       polygonsRef.current[reg.id] = polygon;
 
-      // Interactive label pin
+      // Region Pin Marker
       const pinIcon = L.divIcon({
         className: 'custom-diy-pin',
         html: `
@@ -272,15 +399,17 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
       const marker = L.marker([reg.lat, reg.lng], { icon: pinIcon }).addTo(map);
 
       marker.on('click', () => {
-        setActiveRegionId(reg.id);
-        onSelectRegion(reg);
-        map.fitBounds(polygon.getBounds(), { padding: [30, 30], maxZoom: 12, duration: 0.6 });
+        if (!isPinModeActive) {
+          setActiveRegionId(reg.id);
+          onSelectRegion(reg);
+          map.fitBounds(polygon.getBounds(), { padding: [30, 30], maxZoom: 12, duration: 0.6 });
+        }
       });
 
       markersRef.current[reg.id] = marker;
     });
 
-    // 2. Draw Unified Outer Perimeter of D.I. Yogyakarta (Garis Luar Nyata 100% Presisi)
+    // 2. Draw Unified Outer Perimeter
     const outerBorder = L.polygon(DIY_OUTER_PERIMETER, {
       color: '#e6c378',
       weight: 2.6,
@@ -292,7 +421,114 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
     }).addTo(map);
     outerBorderRef.current = outerBorder;
 
-    // Initial fit bounds to fit 100% of DIY completely in view
+    // 3. Toll Infrastructure Layer
+    const tollGroup = L.layerGroup();
+    TOLL_ROUTES.forEach((route) => {
+      // Glow background line
+      L.polyline(route.path, {
+        color: route.color,
+        weight: 6,
+        opacity: 0.35,
+        lineCap: 'round',
+      }).addTo(tollGroup);
+
+      // Main dashed toll line
+      const polyline = L.polyline(route.path, {
+        color: route.color,
+        weight: 3.2,
+        opacity: 0.95,
+        dashArray: '8, 6',
+        lineCap: 'round',
+      }).addTo(tollGroup);
+
+      polyline.bindTooltip(
+        `<div style="font-family: sans-serif; font-size: 11px; font-weight: bold; color: #fff; background: #071914; padding: 4px 8px; border-radius: 6px; border: 1px solid ${route.color};">
+          🛣️ ${route.name}<br/><span style="font-size: 9px; color: #cbd5e1;">Status: ${route.status}</span>
+        </div>`,
+        { sticky: true, opacity: 0.95 }
+      );
+    });
+
+    // Toll Exit Markers
+    TOLL_EXITS.forEach((exit) => {
+      const exitIcon = L.divIcon({
+        className: 'toll-exit-pin',
+        html: `
+          <div style="background: #071914; border: 2px solid #eab308; color: #eab308; border-radius: 8px; padding: 2px 6px; font-size: 10px; font-weight: 800; font-family: monospace; display: flex; align-items: center; gap: 4px; box-shadow: 0 0 8px rgba(234,179,8,0.5); cursor: pointer; white-space: nowrap;">
+            <span>🚧</span>
+            <span>${exit.name.replace('Exit Tol ', '')}</span>
+          </div>
+        `,
+        iconSize: [120, 22],
+        iconAnchor: [60, 11],
+      });
+
+      const exitMarker = L.marker([exit.lat, exit.lng], { icon: exitIcon }).addTo(tollGroup);
+      exitMarker.bindPopup(`
+        <div style="font-family: sans-serif; color: #fff; background: #071914; padding: 10px; border-radius: 10px; border: 1px solid #eab308; min-width: 200px;">
+          <div style="font-size: 10px; color: #eab308; font-weight: bold; text-transform: uppercase;">Exit Gerbang Tol Strategis</div>
+          <div style="font-size: 13px; font-weight: bold; margin: 2px 0 4px 0;">${exit.name}</div>
+          <div style="font-size: 11px; color: #cbd5e1; line-height: 1.4;">${exit.impactZone}</div>
+          <div style="margin-top: 6px; font-size: 10px; font-family: monospace; color: #10b981;">Target Siap: ${exit.completion}</div>
+        </div>
+      `);
+    });
+    tollLayerGroupRef.current = tollGroup;
+    if (showTollLayer) {
+      tollGroup.addTo(map);
+    }
+
+    // 4. POI Magnet Investasi Layer (Kampus & RS)
+    const poiGroup = L.layerGroup();
+    INVESTMENT_POIS.forEach((poi) => {
+      // Radius buffer circle
+      L.circle([poi.lat, poi.lng], {
+        radius: poi.catchmentRadius,
+        color: poi.category === 'kampus' ? '#10b981' : poi.category === 'kesehatan' ? '#ef4444' : '#06b6d4',
+        fillColor: poi.category === 'kampus' ? '#10b981' : poi.category === 'kesehatan' ? '#ef4444' : '#06b6d4',
+        fillOpacity: 0.05,
+        weight: 1,
+        dashArray: '4, 4',
+      }).addTo(poiGroup);
+
+      const categoryEmoji =
+        poi.category === 'kampus' ? '🎓' :
+        poi.category === 'kesehatan' ? '🏥' :
+        poi.category === 'transport' ? '✈️' : '🌲';
+
+      const poiIcon = L.divIcon({
+        className: 'poi-pin',
+        html: `
+          <div style="background: rgba(7,25,20,0.92); border: 1.5px solid #d5a864; color: #fff; border-radius: 9999px; padding: 2px 7px; font-size: 10px; font-weight: bold; font-family: sans-serif; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.8); cursor: pointer; white-space: nowrap;">
+            <span>${categoryEmoji}</span>
+            <span>${poi.name.split(' (')[0]}</span>
+          </div>
+        `,
+        iconSize: [110, 20],
+        iconAnchor: [55, 10],
+      });
+
+      const poiMarker = L.marker([poi.lat, poi.lng], { icon: poiIcon }).addTo(poiGroup);
+      poiMarker.bindPopup(`
+        <div style="font-family: sans-serif; color: #fff; background: #071914; padding: 10px; border-radius: 10px; border: 1px solid #d5a864; min-width: 210px;">
+          <div style="font-size: 10px; color: #d5a864; font-weight: bold;">MAGNET INVESTASI · RADIUS TANGKAPAN</div>
+          <div style="font-size: 13px; font-weight: bold; margin: 3px 0 4px 0;">${categoryEmoji} ${poi.name}</div>
+          <div style="font-size: 11px; color: #cbd5e1; line-height: 1.4;">${poi.detail}</div>
+          <div style="margin-top: 6px; font-size: 10px; color: #10b981; font-weight: bold;">Captive Market: ${poi.badge}</div>
+        </div>
+      `);
+    });
+    poiLayerGroupRef.current = poiGroup;
+    if (showPoiLayer) {
+      poiGroup.addTo(map);
+    }
+
+    // 5. Global Map Click Listener for Pin Inspection
+    map.on('click', (e) => {
+      handleInspectCoordinates(e.latlng.lat, e.latlng.lng, map);
+    });
+
+    // Fit Initial Bounds
     map.fitBounds(diyBounds, {
       padding: [16, 16],
       animate: false,
@@ -312,7 +548,35 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
     };
   }, [mapTheme]);
 
-  // Adjust bounds & highlights when activeRegionId changes
+  // Toggle Toll Layer dynamically
+  useEffect(() => {
+    if (!mapInstanceRef.current || !tollLayerGroupRef.current) return;
+    if (showTollLayer) {
+      if (!mapInstanceRef.current.hasLayer(tollLayerGroupRef.current)) {
+        tollLayerGroupRef.current.addTo(mapInstanceRef.current);
+      }
+    } else {
+      if (mapInstanceRef.current.hasLayer(tollLayerGroupRef.current)) {
+        tollLayerGroupRef.current.remove();
+      }
+    }
+  }, [showTollLayer]);
+
+  // Toggle POI Layer dynamically
+  useEffect(() => {
+    if (!mapInstanceRef.current || !poiLayerGroupRef.current) return;
+    if (showPoiLayer) {
+      if (!mapInstanceRef.current.hasLayer(poiLayerGroupRef.current)) {
+        poiLayerGroupRef.current.addTo(mapInstanceRef.current);
+      }
+    } else {
+      if (mapInstanceRef.current.hasLayer(poiLayerGroupRef.current)) {
+        poiLayerGroupRef.current.remove();
+      }
+    }
+  }, [showPoiLayer]);
+
+  // Adjust highlights & bounds when activeRegionId changes
   useEffect(() => {
     Object.keys(polygonsRef.current).forEach((regId) => {
       const poly = polygonsRef.current[regId];
@@ -320,7 +584,7 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
       const reg = YOGYAKARTA_REGIONS.find((r) => r.id === regId);
       if (poly && reg) {
         poly.setStyle({
-          fillOpacity: isAll ? 0.25 : isSelected ? 0.45 : 0.12,
+          fillOpacity: isAll ? 0.22 : isSelected ? 0.42 : 0.10,
           weight: isAll ? 1.5 : isSelected ? 3 : 1.2,
           color: reg.color,
           fillColor: reg.color,
@@ -355,28 +619,69 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
     onSelectRegion(DIY_ALL_REGION);
   };
 
+  // WhatsApp consultation link for inspected point
+  const getInspectWaLink = () => {
+    if (!inspectedPoint) return 'https://wa.me/6281215447788';
+    const msg = `Halo Tim Jogja Investor Club, saya menandai titik tanah di peta GIS (${inspectedPoint.lat}, ${inspectedPoint.lng} - Wilayah ${inspectedPoint.regionName}). Lokasi berjarak ~${inspectedPoint.nearestExit.dist} km dari ${inspectedPoint.nearestExit.name} dan ~${inspectedPoint.nearestPoi.dist} km dari ${inspectedPoint.nearestPoi.name}. Mohon info kelayakan dan potensi pengembangan lahannya.`;
+    return `https://wa.me/6281215447788?text=${encodeURIComponent(msg)}`;
+  };
+
   return (
-    <div className="space-y-3.5">
+    <div className="space-y-4">
       {/* Modern High-Tech GIS Frame */}
-      <div className="relative rounded-2xl overflow-hidden border border-white/15 shadow-2xl bg-[#051410] ring-1 ring-white/10">
+      <div className="relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl bg-[#051410] ring-1 ring-white/10">
         
         {/* HUD Top Bar Floating Over Map */}
         <div className="absolute top-3 left-3 right-3 z-[400] flex flex-wrap items-center justify-between gap-2 pointer-events-none">
-          <div className="bg-[#071914]/90 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-white/15 text-white flex items-center gap-2 text-xs shadow-lg pointer-events-auto">
+          <div className="bg-[#071914]/92 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-white/15 text-white flex items-center gap-2 text-xs shadow-lg pointer-events-auto">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="font-extrabold text-[#d5a864] tracking-tight">GIS SPATIAL DIY</span>
-            <span className="text-[10px] text-neutral-400 font-mono hidden sm:inline">
-              BATAS RESMI · 5 WILAYAH PRESISI
+            <span className="font-extrabold text-[#d5a864] tracking-tight">GIS SPATIAL INTELLIGENCE</span>
+            <span className="text-[10px] text-neutral-400 font-mono hidden md:inline">
+              5 WILAYAH · MEGA PROYEK TOL · POI INVESTASI
             </span>
           </div>
 
-          <div className="flex items-center gap-1 bg-[#071914]/90 backdrop-blur-md p-1 rounded-xl border border-white/15 text-[11px] shadow-lg pointer-events-auto">
+          {/* Map Layer Controls & Theme */}
+          <div className="flex flex-wrap items-center gap-1.5 bg-[#071914]/92 backdrop-blur-md p-1 rounded-xl border border-white/15 text-[11px] shadow-lg pointer-events-auto">
+            {/* Toggle Tol */}
+            <button
+              type="button"
+              onClick={() => setShowTollLayer(!showTollLayer)}
+              className={`px-2.5 py-1 rounded-lg font-bold cursor-pointer transition-all flex items-center gap-1.5 ${
+                showTollLayer
+                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-xs'
+                  : 'text-neutral-400 hover:text-white'
+              }`}
+              title="Tampilkan / Sembunyikan Jalur & Exit Tol"
+            >
+              <Route className="w-3 h-3 text-amber-400" />
+              <span>Jalur Tol</span>
+            </button>
+
+            {/* Toggle POI */}
+            <button
+              type="button"
+              onClick={() => setShowPoiLayer(!showPoiLayer)}
+              className={`px-2.5 py-1 rounded-lg font-bold cursor-pointer transition-all flex items-center gap-1.5 ${
+                showPoiLayer
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-xs'
+                  : 'text-neutral-400 hover:text-white'
+              }`}
+              title="Tampilkan Kampus & Titik Magnet Investasi"
+            >
+              <GraduationCap className="w-3 h-3 text-emerald-400" />
+              <span>Kampus & RS</span>
+            </button>
+
+            {/* Theme switcher */}
+            <div className="h-3.5 w-px bg-white/20 mx-0.5" />
+
             <button
               type="button"
               onClick={() => setMapTheme('dark-hud')}
-              className={`px-2.5 py-1 rounded-lg font-bold cursor-pointer transition-colors ${
+              className={`px-2 py-1 rounded-lg font-bold cursor-pointer transition-colors ${
                 mapTheme === 'dark-hud'
-                  ? 'bg-[#d5a864] text-[#071914] shadow-xs'
+                  ? 'bg-[#d5a864] text-[#071914]'
                   : 'text-neutral-300 hover:text-white'
               }`}
             >
@@ -384,26 +689,25 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
             </button>
             <button
               type="button"
-              onClick={() => setMapTheme('light')}
-              className={`px-2.5 py-1 rounded-lg font-bold cursor-pointer transition-colors ${
-                mapTheme === 'light'
-                  ? 'bg-[#d5a864] text-[#071914] shadow-xs'
-                  : 'text-neutral-300 hover:text-white'
-              }`}
-            >
-              Minimalis
-            </button>
-            <button
-              type="button"
               onClick={() => setMapTheme('street')}
-              className={`px-2.5 py-1 rounded-lg font-bold cursor-pointer transition-colors ${
+              className={`px-2 py-1 rounded-lg font-bold cursor-pointer transition-colors ${
                 mapTheme === 'street'
-                  ? 'bg-[#d5a864] text-[#071914] shadow-xs'
+                  ? 'bg-[#d5a864] text-[#071914]'
                   : 'text-neutral-300 hover:text-white'
               }`}
             >
-              OSM Jalan
+              Jalan
             </button>
+          </div>
+        </div>
+
+        {/* Floating Hint "Klik Peta untuk Analisis Titik Lahan" */}
+        <div className="absolute bottom-16 right-3 z-[400] pointer-events-auto">
+          <div className="bg-[#071914]/90 backdrop-blur-md px-3 py-1.5 rounded-xl border border-[#d5a864]/30 text-white text-[11px] shadow-lg flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#d5a864] animate-ping" />
+            <span className="text-neutral-300">
+              💡 <span className="text-white font-medium">Klik sembarang titik di peta</span> untuk cek potensi lahan
+            </span>
           </div>
         </div>
 
@@ -411,7 +715,7 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
         <div
           ref={mapContainerRef}
           style={{ height }}
-          className="w-full z-0 bg-[#071914]"
+          className="w-full z-0 bg-[#071914] cursor-crosshair"
         />
 
         {/* Region Selector Toolbar under map */}
@@ -459,14 +763,98 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
             })}
           </div>
 
-          <span className="text-[11px] text-neutral-400 hidden sm:inline italic">
-            💡 Seluruh 5 wilayah terhubung menyatu
-          </span>
+          <div className="flex items-center gap-3 text-[11px] text-neutral-400">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-0.5 bg-amber-400 inline-block border-t border-dashed" />
+              <span>Trase Tol</span>
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block" />
+              <span>Kampus & RS</span>
+            </span>
+          </div>
         </div>
       </div>
 
+      {/* POPUP / DRAWER: Real-Time Inspected Land Point (Ketika User Klik Titik Peta) */}
+      {inspectedPoint && (
+        <div className="bg-gradient-to-r from-[#0a271f] via-[#0d2e24] to-[#0a231c] border-2 border-[#d5a864]/60 rounded-2xl p-5 shadow-2xl space-y-4 text-white relative animate-in fade-in slide-in-from-top-3 duration-300">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/15 pb-3">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded-md bg-[#d5a864] text-[#071914] text-[10px] font-black uppercase tracking-wider">
+                  TITIK LAHAN TERPILIH
+                </span>
+                <span className="font-mono text-xs text-neutral-300">
+                  [{inspectedPoint.lat}, {inspectedPoint.lng}] · Wilayah {inspectedPoint.regionName}
+                </span>
+              </div>
+              <h4 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-[#d5a864]" />
+                Hasil Analisis Kelayakan Spasial Instan
+              </h4>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setInspectedPoint(null)}
+              className="self-end sm:self-center p-1.5 text-neutral-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* 3 Metric Box Analisis Titik */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="p-3 bg-[#071914] rounded-xl border border-white/10 space-y-1">
+              <span className="text-[10px] uppercase font-mono text-amber-400 flex items-center gap-1">
+                <Route className="w-3 h-3" /> Gerbang Tol Terdekat
+              </span>
+              <p className="text-sm font-bold text-white truncate">{inspectedPoint.nearestExit.name}</p>
+              <p className="text-xs text-neutral-300 font-mono">
+                ~{inspectedPoint.nearestExit.dist} km ({inspectedPoint.nearestExit.toll})
+              </p>
+            </div>
+
+            <div className="p-3 bg-[#071914] rounded-xl border border-white/10 space-y-1">
+              <span className="text-[10px] uppercase font-mono text-emerald-400 flex items-center gap-1">
+                <GraduationCap className="w-3 h-3" /> Magnet / POI Terdekat
+              </span>
+              <p className="text-sm font-bold text-white truncate">{inspectedPoint.nearestPoi.name}</p>
+              <p className="text-xs text-neutral-300 font-mono">
+                ~{inspectedPoint.nearestPoi.dist} km · {inspectedPoint.nearestPoi.badge}
+              </p>
+            </div>
+
+            <div className="p-3 bg-[#071914] rounded-xl border border-white/10 space-y-1">
+              <span className="text-[10px] uppercase font-mono text-[#d5a864] flex items-center gap-1">
+                <Zap className="w-3 h-3" /> Rekomendasi Pemanfaatan
+              </span>
+              <p className="text-sm font-bold text-[#d5a864] truncate">{inspectedPoint.recommended}</p>
+              <p className="text-xs text-neutral-300 font-mono">Range: {inspectedPoint.estPrice}</p>
+            </div>
+          </div>
+
+          {/* Action CTA */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
+            <p className="text-xs text-neutral-300">
+              Tertarik mengembangkan tanah di koordinat ini? Tim riset JIC siap membuatkan studi kelayakan legalitas & ROI.
+            </p>
+            <a
+              href={getInspectWaLink()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto px-5 py-2.5 bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold rounded-xl flex items-center justify-center gap-2 transition-all shadow-md shrink-0 cursor-pointer"
+            >
+              <MessageSquare className="w-4 h-4" />
+              <span>Konsultasi Titik Lahan Ini via WA</span>
+            </a>
+          </div>
+        </div>
+      )}
+
       {/* Selected Region Profile Detail HUD Card */}
-      <div className="bg-[#0a231c]/90 border border-white/15 rounded-2xl p-5 shadow-xl space-y-4 text-white backdrop-blur-md">
+      <div className="bg-[#0a231c]/90 border border-white/15 rounded-3xl p-5 sm:p-6 shadow-xl space-y-4 text-white backdrop-blur-md">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
           <div>
             <div className="flex items-center gap-2">
@@ -484,7 +872,7 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="px-3 py-1.5 bg-[#071914] border border-[#d5a864]/40 text-[#d5a864] text-xs font-bold rounded-xl shadow-xs tabular-nums">
+            <span className="px-3.5 py-1.5 bg-[#071914] border border-[#d5a864]/40 text-[#d5a864] text-xs font-bold rounded-xl shadow-xs tabular-nums">
               Est. Yield: {activeRegion.yieldEst}
             </span>
           </div>
@@ -496,7 +884,7 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
 
         {/* 4 High-Tech Data Grid Tiles */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
-          <div className="p-3 rounded-xl bg-[#071914] border border-white/10">
+          <div className="p-3.5 rounded-2xl bg-[#071914] border border-white/10">
             <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-mono">
               Harga Lahan
             </span>
@@ -505,7 +893,7 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
             </span>
           </div>
 
-          <div className="p-3 rounded-xl bg-[#071914] border border-white/10">
+          <div className="p-3.5 rounded-2xl bg-[#071914] border border-white/10">
             <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-mono">
               Tingkat Okupansi
             </span>
@@ -514,7 +902,7 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
             </span>
           </div>
 
-          <div className="p-3 rounded-xl bg-[#071914] border border-white/10">
+          <div className="p-3.5 rounded-2xl bg-[#071914] border border-white/10">
             <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-mono">
               Aturan KDB
             </span>
@@ -523,7 +911,7 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
             </span>
           </div>
 
-          <div className="p-3 rounded-xl bg-[#071914] border border-white/10">
+          <div className="p-3.5 rounded-2xl bg-[#071914] border border-white/10">
             <span className="text-[10px] text-neutral-400 uppercase tracking-wider block font-mono">
               Rekomendasi
             </span>
@@ -537,7 +925,7 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
         <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-white/10">
           <div className="text-xs text-neutral-300 flex items-center gap-1.5 truncate">
             <MapPin className="w-3.5 h-3.5 text-[#d5a864] shrink-0" />
-            <span className="truncate">Landmark: {activeRegion.highlights.join(' · ')}</span>
+            <span className="truncate">Landmark Kunci: {activeRegion.highlights.join(' · ')}</span>
           </div>
 
           <button

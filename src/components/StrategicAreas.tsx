@@ -4,10 +4,9 @@ import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import {
   MapPin, Layers, DollarSign, Navigation, ArrowRight,
-  TrendingUp, BarChart2, ShieldCheck, Check
+  TrendingUp, BarChart2, ShieldCheck, Check, Sparkles, Building
 } from 'lucide-react';
 import type { YogyakartaRegion } from './JogjaRealMap';
-import type { InvestmentBlock } from './JogjaOsmMap';
 
 // Dynamically import Leaflet maps
 const JogjaRealMap = dynamic(
@@ -15,8 +14,11 @@ const JogjaRealMap = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="h-[460px] bg-[#051410] rounded-2xl animate-pulse flex items-center justify-center">
-        <span className="text-neutral-500 text-sm font-mono">Memuat visualisasi peta GIS...</span>
+      <div className="h-[480px] bg-[#051410] rounded-3xl animate-pulse flex items-center justify-center border border-white/10">
+        <div className="flex flex-col items-center gap-2">
+          <span className="w-6 h-6 border-2 border-[#d5a864] border-t-transparent rounded-full animate-spin" />
+          <span className="text-neutral-400 text-xs font-mono">Memuat visualisasi GIS spasial DIY...</span>
+        </div>
       </div>
     ),
   }
@@ -28,13 +30,16 @@ interface StrategicAreasProps {
 
 export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) => {
   const [activeFilterTab, setActiveFilterTab] = useState<'zonasi' | 'harga' | 'akses'>('zonasi');
-  const [selectedCluster, setSelectedCluster] = useState<string>('sleman');
+  const [selectedCluster, setSelectedCluster] = useState<string>('kampus');
 
   const clusters = [
     {
       id: 'semua',
-      title: 'Semua Kawasan',
-      subtitle: 'Lihat semua kawasan di DIY',
+      title: 'Semua Kawasan DIY',
+      subtitle: 'Lihat seluruh 5 kabupaten/kota',
+      badge: '🗺️ Comprehensive',
+      bestFor: 'Portfolio Diversifikasi',
+      priceBadge: 'Rp 1,5 - 22 jt/m²',
       region: 'semua',
       fullName: 'Daerah Istimewa Yogyakarta (Seluruh Kawasan)',
       description: 'Mencakup 5 kabupaten/kota dengan beragam karakteristik investasi dari perkotaan, koridor universitas, hingga kawasan pariwisata heritage dan bahari.',
@@ -45,46 +50,86 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
     {
       id: 'kampus',
       title: 'Kawasan Kampus',
-      subtitle: 'UGM, UNY, Sanata Dharma, dll.',
+      subtitle: 'UGM, UNY, Seturan, UPN, UII',
+      badge: '🔥 Hot Demand',
+      bestFor: 'Kost Eksklusif & Co-Living',
+      priceBadge: 'Rp 5,5 - 14 jt/m²',
       region: 'sleman',
       fullName: 'Kabupaten Sleman (Kawasan Kampus & Pelajar)',
-      description: 'Didukung oleh 300.000+ mahasiswa aktif dan ekosistem pendidikan terbaik, menjadikan area ini target utama untuk kos eksklusif dan hunian komersial.',
+      description: 'Didukung oleh 300.000+ mahasiswa aktif dan ekosistem pendidikan terbaik, menjadikan area ini target utama untuk kos eksklusif dan hunian komersial berokupansi tinggi.',
       priceRange: 'Rp 5,5 - 14 jt/m²',
       growthRate: '+11% - 16%',
       roi: '12% - 18% / tahun',
     },
     {
       id: 'wisata',
-      title: 'Kawasan Wisata',
-      subtitle: 'Malioboro, Parangtritis, Kaliurang, dll.',
+      title: 'Kawasan Wisata & Staycation',
+      subtitle: 'Malioboro, Parangtritis, Kaliurang',
+      badge: '🏖️ High Yield',
+      bestFor: 'Villa & Boutique Homestay',
+      priceBadge: 'Rp 4,0 - 16 jt/m²',
       region: 'bantul',
       fullName: 'Kawasan Wisata & Budaya (Kota Jogja, Sleman Utara, Bantul)',
-      description: 'Koridor dengan kunjungan 7.2+ juta wisatawan per tahun, sangat potensial untuk villa sewa harian, homestay estetik, dan cafe komersial.',
+      description: 'Koridor dengan kunjungan 7.2+ juta wisatawan per tahun, sangat potensial untuk villa sewa harian, homestay estetik, dan cafe komersial bernilai sewa prima.',
       priceRange: 'Rp 4,0 - 16 jt/m²',
       growthRate: '+10% - 14%',
       roi: '14% - 22% / tahun',
     },
     {
       id: 'premium',
-      title: 'Kawasan Premium',
-      subtitle: 'Area elit, dekat pusat kota',
+      title: 'Kawasan Premium Kota',
+      subtitle: 'Kotabaru, Ring Road Utara, Elit Pusat',
+      badge: '💎 Prime Capital',
+      bestFor: 'Luxury Townhouse & Komersial',
+      priceBadge: 'Rp 9,0 - 22 jt/m²',
       region: 'kota',
       fullName: 'Kota Yogyakarta & Sleman Tengah (Kawasan Elit)',
-      description: 'Aksesibilitas terbaik dan fasilitas kota terlengkap dengan nilai apresiasi tanah tertinggi dan stabil untuk hunian mewah keluarga.',
+      description: 'Aksesibilitas terbaik dan fasilitas kota terlengkap dengan nilai apresiasi tanah tertinggi dan likuiditas kuat untuk aset keluarga jangka panjang.',
       priceRange: 'Rp 9,0 - 22 jt/m²',
       growthRate: '+12% - 18%',
       roi: '9% - 13% / tahun',
     },
     {
       id: 'pertumbuhan',
-      title: 'Kawasan Pertumbuhan',
-      subtitle: 'Kulon Progo, Sleman Barat, dll.',
+      title: 'Kawasan Pertumbuhan & Tol',
+      subtitle: 'Kulon Progo YIA, Sleman Barat',
+      badge: '🚀 High Growth',
+      bestFor: 'Land Banking & Ruko Transit',
+      priceBadge: 'Rp 1,8 - 5,5 jt/m²',
       region: 'kulonprogo',
-      fullName: 'Kawasan Pertumbuhan Baru (Akses YIA & Tol)',
-      description: 'Pertumbuhan pesat terdorong Bandara Internasional YIA dan proyek jalan tol baru dengan harga lahan awal yang masih sangat terjangkau.',
+      fullName: 'Kawasan Pertumbuhan Baru (Akses YIA & Tol Baru)',
+      description: 'Pertumbuhan pesat terdorong Bandara Internasional YIA dan proyek trase jalan tol baru Solo-Jogja-YIA dengan harga lahan masuk yang masih sangat atraktif.',
       priceRange: 'Rp 1,8 - 5,5 jt/m²',
       growthRate: '+14% - 20%',
       roi: '9% - 15% / tahun',
+    },
+    {
+      id: 'eco-wellness',
+      title: 'Kawasan Eco & Wellness',
+      subtitle: 'Pakem, Cangkringan, Lereng Merapi',
+      badge: '🌿 Eco Living',
+      bestFor: 'Resort Villa & Glamping Cafe',
+      priceBadge: 'Rp 2,0 - 6,0 jt/m²',
+      region: 'sleman',
+      fullName: 'Sleman Utara (Kawasan Wisata Alam & Wellness Retreat)',
+      description: 'Lingkungan sejuk dengan view Gunung Merapi, udara bersih, dan air melimpah. Menjadi primadona baru bagi konsep wellness living, healing villa, dan resto alam.',
+      priceRange: 'Rp 2,0 - 6,0 jt/m²',
+      growthRate: '+10% - 15%',
+      roi: '11% - 17% / tahun',
+    },
+    {
+      id: 'heritage-art',
+      title: 'Kawasan Heritage & Seni',
+      subtitle: 'Kotagede, Prawirotaman, Kasihan',
+      badge: '🏛️ Art & Culture',
+      bestFor: 'Boutique Guesthouse & Galeri',
+      priceBadge: 'Rp 3,5 - 9,5 jt/m²',
+      region: 'bantul',
+      fullName: 'Bantul Utara & Jogja Selatan (Sentra Heritage & Seni Kreatif)',
+      description: 'Pusat komunitas ekspatriat, desainer, dan seniman. Sangat diminati turis mancanegara untuk guest house bernuansa etnik Jawa modern.',
+      priceRange: 'Rp 3,5 - 9,5 jt/m²',
+      growthRate: '+9% - 14%',
+      roi: '12% - 16% / tahun',
     },
   ];
 
@@ -115,7 +160,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
           <div className="space-y-3">
             <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-widest text-[#d5a864]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#d5a864] animate-pulse" />
-              <span>GIS SPATIAL INTELLIGENCE</span>
+              <span>GIS SPATIAL INTELLIGENCE &amp; INFRASTRUKTUR</span>
             </div>
 
             <h2
@@ -134,14 +179,15 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
             </h2>
 
             <p className="text-sm text-neutral-300 max-w-2xl leading-relaxed font-light">
-              Analisis komprehensif 5 wilayah administratif dan koridor investasi kunci di DIY. Dilengkapi data zonasi,
-              infrastruktur, dan proyeksi pertumbuhan untuk keputusan investasi yang lebih tepat.
+              Analisis komprehensif wilayah administratif, trase mega proyek jalan tol, exit gate, dan titik magnet kampus/RS
+              untuk keputusan investasi properti yang presisi dan menguntungkan.
             </p>
           </div>
 
-          {/* Filter Pills (Zonasi, Harga Tanah, Aksesibilitas) */}
+          {/* Filter Pills (Zonasi, Harga Tanah, Aksesibilitas & Tol) */}
           <div className="flex items-center gap-2 bg-[#0a231c] p-1.5 rounded-full border border-white/10 shrink-0 self-start lg:self-auto">
             <button
+              type="button"
               onClick={() => setActiveFilterTab('zonasi')}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
                 activeFilterTab === 'zonasi'
@@ -150,10 +196,11 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
-              <span>Zonasi</span>
+              <span>Zonasi RTRW</span>
             </button>
 
             <button
+              type="button"
               onClick={() => setActiveFilterTab('harga')}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
                 activeFilterTab === 'harga'
@@ -162,10 +209,11 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
               }`}
             >
               <DollarSign className="w-3.5 h-3.5" />
-              <span>Harga Tanah</span>
+              <span>Harga Lahan</span>
             </button>
 
             <button
+              type="button"
               onClick={() => setActiveFilterTab('akses')}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
                 activeFilterTab === 'akses'
@@ -174,7 +222,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
               }`}
             >
               <Navigation className="w-3.5 h-3.5" />
-              <span>Aksesibilitas</span>
+              <span>Akses &amp; Jalur Tol</span>
             </button>
           </div>
         </div>
@@ -182,16 +230,18 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
         {/* Main Interactive Map & Selection Area */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-          {/* Left Column: Pilih Kawasan List */}
+          {/* Left Column: Pilih Kawasan List (Enhanced UI with Badges & Best-fit Archetypes) */}
           <div className="lg:col-span-4 space-y-3">
             <div className="flex items-center justify-between px-1 pb-1">
               <span className="text-xs font-bold uppercase tracking-wider text-neutral-400">
-                Pilih Kawasan
+                Pilih Klaster Kawasan
               </span>
-              <span className="text-[10px] text-[#d5a864] font-mono">5 KLASTER DIY</span>
+              <span className="text-[10px] text-[#d5a864] font-mono bg-[#0a231c] px-2 py-0.5 rounded-full border border-white/10">
+                {clusters.length} KLASTER STRATEGIS
+              </span>
             </div>
 
-            <div className="space-y-2.5">
+            <div className="space-y-2.5 max-h-[580px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-white/10">
               {clusters.map((c) => {
                 const isActive = selectedCluster === c.id;
                 return (
@@ -199,116 +249,83 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                     type="button"
                     key={c.id}
                     onClick={() => handleSelectCluster(c.id)}
-                    className={`w-full text-left p-4 rounded-2xl border transition-all duration-200 flex items-center justify-between group cursor-pointer ${
+                    className={`w-full text-left p-3.5 sm:p-4 rounded-2xl border transition-all duration-200 flex flex-col gap-2 group cursor-pointer ${
                       isActive
-                        ? 'bg-[#0f2e25] border-[#d5a864] ring-1 ring-[#d5a864] shadow-[0_4px_20px_rgba(213,168,100,0.15)]'
+                        ? 'bg-[#0f2e25] border-[#d5a864] ring-1 ring-[#d5a864] shadow-[0_4px_20px_rgba(213,168,100,0.18)]'
                         : 'bg-[#0a231c]/70 border-white/10 hover:border-white/20 hover:bg-[#0c2a22]'
                     }`}
                   >
-                    <div className="flex items-start gap-3">
-                      <div
-                        className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-                          isActive ? 'bg-[#d5a864] text-[#071914]' : 'bg-white/10 text-neutral-400'
-                        }`}
-                      >
-                        {isActive ? (
-                          <Check className="w-3 h-3 stroke-[3]" />
-                        ) : (
-                          <span className="w-1.5 h-1.5 rounded-full bg-neutral-400" />
-                        )}
+                    {/* Top Row: Title, Radio Check, and Status Badge */}
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-start gap-2.5">
+                        <div
+                          className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
+                            isActive ? 'bg-[#d5a864] text-[#071914]' : 'bg-white/10 text-neutral-400'
+                          }`}
+                        >
+                          {isActive ? (
+                            <Check className="w-3 h-3 stroke-[3]" />
+                          ) : (
+                            <span className="w-1.5 h-1.5 rounded-full bg-neutral-400" />
+                          )}
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-bold text-white group-hover:text-[#d5a864] transition-colors leading-tight">
+                            {c.title}
+                          </h4>
+                          <p className="text-[11px] text-neutral-400 mt-0.5 line-clamp-1">{c.subtitle}</p>
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="text-sm font-bold text-white group-hover:text-[#d5a864] transition-colors leading-tight">
-                          {c.title}
-                        </h4>
-                        <p className="text-xs text-neutral-400 mt-0.5">{c.subtitle}</p>
-                      </div>
+
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#071914] border border-white/15 text-[#d5a864] whitespace-nowrap shrink-0">
+                        {c.badge}
+                      </span>
                     </div>
 
-                    <ArrowRight
-                      className={`w-4 h-4 shrink-0 transition-transform ${
-                        isActive ? 'text-[#d5a864] translate-x-1' : 'text-neutral-500 group-hover:translate-x-1'
-                      }`}
-                    />
+                    {/* Bottom Row: Best For Archetype Tag & Price Range */}
+                    <div className="flex items-center justify-between text-[10px] pt-1 border-t border-white/10 pl-7">
+                      <span className="text-neutral-300 truncate">
+                        <span className="text-neutral-500">Cocok: </span>
+                        <strong className="text-emerald-300 font-semibold">{c.bestFor}</strong>
+                      </span>
+                      <span className="font-mono text-neutral-400 shrink-0 font-medium ml-2">
+                        {c.priceBadge}
+                      </span>
+                    </div>
                   </button>
                 );
               })}
             </div>
           </div>
 
-          {/* Right Column: Large Interactive Map with Floating Summary Card */}
-          <div className="lg:col-span-8 relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl bg-[#051410]">
-            {/* Real Map Viewer */}
-            <div className="relative">
-              <JogjaRealMap
-                selectedRegionId={currentData.region}
-                onSelectRegion={(reg) => {
-                  const match = clusters.find((c) => c.region === reg.id);
-                  if (match) setSelectedCluster(match.id);
-                }}
-                onApplyZoneToCalculator={(zoneName) => onSelectZone(zoneName, true)}
-                height="460px"
-              />
-
-              {/* Floating Intelligence Card on top right of map matching screenshot */}
-              <div className="absolute top-4 right-4 z-[400] w-72 bg-[#071914]/90 backdrop-blur-md p-4 rounded-2xl border border-white/20 shadow-xl space-y-3">
-                <div className="flex items-center justify-between border-b border-white/10 pb-2">
-                  <span className="text-[10px] font-mono text-[#d5a864] uppercase font-bold tracking-wider">
-                    Analisis Kawasan
-                  </span>
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                </div>
-
-                <div>
-                  <h4 className="text-sm font-extrabold text-white leading-tight">
-                    {currentData.fullName.split('(')[0]}
-                  </h4>
-                  <p className="text-[11px] text-neutral-400">
-                    {currentData.subtitle}
-                  </p>
-                </div>
-
-                <div className="space-y-2 pt-1 border-t border-white/10 text-xs">
-                  <div className="flex justify-between items-center">
-                    <span className="text-neutral-400">Harga Tanah:</span>
-                    <span className="font-bold text-[#d5a864]">{currentData.priceRange}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-neutral-400">Pertumbuhan:</span>
-                    <span className="font-bold text-emerald-400">{currentData.growthRate} /thn</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-neutral-400">Potensi ROI:</span>
-                    <span className="font-bold text-white">{currentData.roi}</span>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    const el = document.getElementById('analisis-kawasan-detail');
-                    if (el) {
-                      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                    }
-                  }}
-                  className="w-full py-2 px-3 text-[11px] font-bold text-[#071914] bg-[#d5a864] hover:bg-[#e2b772] rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer"
-                >
-                  <span>Lihat Detail</span>
-                  <ArrowRight className="w-3 h-3" />
-                </button>
-              </div>
-            </div>
+          {/* Right Column: GIS Interactive Map */}
+          <div className="lg:col-span-8 space-y-4">
+            <JogjaRealMap
+              selectedRegionId={currentData.region}
+              filterMode={activeFilterTab}
+              onSelectRegion={(reg) => {
+                const match = clusters.find((c) => c.region === reg.id);
+                if (match) setSelectedCluster(match.id);
+              }}
+              onApplyZoneToCalculator={(zoneName) => onSelectZone(zoneName, true)}
+              height="480px"
+            />
           </div>
 
         </div>
 
-        {/* Bottom Box: Analisis Kawasan Terpilih & 3 Metrik Utama (Sesuai Mockup Poin 4) */}
+        {/* Bottom Box: Analisis Kawasan Terpilih & 3 Metrik Utama */}
         <div id="analisis-kawasan-detail" className="bg-[#0a231c]/90 rounded-3xl p-6 sm:p-8 border border-white/15 space-y-6 backdrop-blur-md scroll-mt-24">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-white/10 pb-5">
             <div className="space-y-1">
-              <span className="text-[11px] font-mono uppercase tracking-wider text-[#d5a864]">
-                Analisis Kawasan Terpilih:
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-mono uppercase tracking-wider text-[#d5a864]">
+                  Analisis Kawasan Terpilih:
+                </span>
+                <span className="px-2 py-0.5 bg-[#071914] text-[10px] font-bold text-emerald-400 rounded-md border border-emerald-500/30">
+                  {currentData.badge}
+                </span>
+              </div>
               <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
                 {currentData.fullName}
               </h3>
@@ -335,7 +352,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
               <span className="text-xl sm:text-2xl font-black text-white tabular-nums block">
                 {currentData.priceRange}
               </span>
-              <span className="text-[11px] text-neutral-500 block mt-1">Data pasar ±2024</span>
+              <span className="text-[11px] text-neutral-500 block mt-1">Data pasar transaksi 2024</span>
             </div>
 
             {/* Metric 2 */}
@@ -344,16 +361,18 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
               <span className="text-xl sm:text-2xl font-black text-emerald-400 tabular-nums block">
                 {currentData.growthRate}
               </span>
-              <span className="text-[11px] text-neutral-500 block mt-1">Historis 5 tahun terakhir</span>
+              <span className="text-[11px] text-neutral-500 block mt-1">Historis apresiasi 5 tahun</span>
             </div>
 
             {/* Metric 3 */}
             <div className="bg-[#071914] p-4.5 rounded-2xl border border-white/10">
-              <span className="text-xs text-neutral-400 block mb-1">Potensi ROI</span>
+              <span className="text-xs text-neutral-400 block mb-1">Potensi ROI Operasional</span>
               <span className="text-xl sm:text-2xl font-black text-[#d5a864] tabular-nums block">
                 {currentData.roi}
               </span>
-              <span className="text-[11px] text-neutral-500 block mt-1">Estimasi operasional sewa</span>
+              <span className="text-[11px] text-neutral-500 block mt-1">
+                Rekomendasi: <strong className="text-neutral-300 font-semibold">{currentData.bestFor}</strong>
+              </span>
             </div>
           </div>
         </div>
