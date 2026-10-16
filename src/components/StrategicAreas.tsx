@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import type { YogyakartaRegion } from './JogjaRealMap';
 import type { InvestmentBlock } from './JogjaOsmMap';
-import { INVESTMENT_CLUSTERS, getHighlightRegions } from '../data/investmentClusters';
+import { INVESTMENT_CLUSTERS, getHighlightRegions, getHighlightKecamatan } from '../data/investmentClusters';
 
 // Dynamically import Leaflet maps
 const JogjaRealMap = dynamic(
@@ -77,6 +77,8 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
 
   // Derived: region IDs to highlight on the map for the active cluster
   const activeHighlightRegions = getHighlightRegions(selectedCluster);
+  // Derived: kecamatan slugs to highlight at micro-level
+  const activeHighlightKecamatan = getHighlightKecamatan(selectedCluster);
 
   const handleSelectCluster = (clusterId: string) => {
     setSelectedCluster(clusterId);
@@ -410,9 +412,9 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                 <JogjaRealMap
                   selectedRegionId={activeHighlightRegions[0] ?? 'semua'}
                   highlightRegionIds={activeHighlightRegions}
+                  highlightKecamatanSlugs={activeHighlightKecamatan}
                   filterMode={activeFilterTab}
                   onSelectRegion={(reg) => {
-                    // Saat user klik polygon di peta, cari cluster yang paling cocok
                     const match = clusters.find((c) =>
                       c.targetRegions.includes(reg.id as never)
                     );
@@ -693,6 +695,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                 <JogjaRealMap
                   selectedRegionId={activeHighlightRegions[0] ?? 'semua'}
                   highlightRegionIds={activeHighlightRegions}
+                  highlightKecamatanSlugs={activeHighlightKecamatan}
                   filterMode={activeFilterTab}
                   onSelectRegion={(reg) => {
                     const match = clusters.find((c) =>

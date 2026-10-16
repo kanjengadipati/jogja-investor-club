@@ -8,6 +8,7 @@ import {
   Sparkles, MessageSquare, Check, X, Info, Zap, DollarSign, Navigation, ShieldCheck
 } from 'lucide-react';
 import jogjaGeoDataRaw from '../data/jogjaGeoData.json';
+import jogjaKecamatanDataRaw from '../data/jogjaKecamatanGeoData.json';
 import {
   TOLL_ROUTES, TOLL_EXITS, INVESTMENT_POIS,
   TollExit, InvestmentPOI
@@ -21,6 +22,13 @@ const jogjaGeoData = jogjaGeoDataRaw as {
   kulonprogo: [number, number][];
   diy_outer: [number, number][];
 };
+
+interface KecamatanEntry {
+  name: string;
+  kabupaten: string;
+  polygon: [number, number][];
+}
+const jogjaKecamatanData = (jogjaKecamatanDataRaw as unknown as { kecamatan: Record<string, KecamatanEntry> }).kecamatan;
 
 export interface YogyakartaRegion {
   id: string;
@@ -237,11 +245,17 @@ export interface InspectedPointInfo {
 interface JogjaRealMapProps {
   selectedRegionId?: string;
   /**
-   * Daftar region ID yang akan di-highlight sekaligus (multi-polygon).
+   * Daftar region ID (kab/kota) yang akan di-highlight sekaligus (multi-polygon).
    * Digunakan untuk cluster lintas kab/kota. Contoh: ['sleman', 'kota'].
    * Jika ['semua'] atau kosong, semua region tampil normal.
    */
   highlightRegionIds?: string[];
+  /**
+   * Daftar kecamatan slug yang akan di-highlight di level mikro.
+   * Contoh: ['depok', 'mlati', 'gondokusuman'].
+   * Jika kosong atau tidak diisi, tidak ada kecamatan yang di-highlight khusus.
+   */
+  highlightKecamatanSlugs?: string[];
   filterMode?: 'zonasi' | 'harga' | 'akses';
   onSelectRegion: (region: YogyakartaRegion) => void;
   onApplyZoneToCalculator: (zoneName: string) => void;
@@ -253,6 +267,7 @@ interface JogjaRealMapProps {
 export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
   selectedRegionId = 'semua',
   highlightRegionIds,
+  highlightKecamatanSlugs,
   filterMode = 'zonasi',
   onSelectRegion,
   onApplyZoneToCalculator,
@@ -267,12 +282,20 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
     }
     return new Set(highlightRegionIds);
   }, [highlightRegionIds]);
+
+  // Normalised set of kecamatan slugs to highlight at micro level
+  const kecamatanHighlightSet: Set<string> = React.useMemo(() => {
+    if (!highlightKecamatanSlugs || highlightKecamatanSlugs.length === 0) return new Set<string>();
+    return new Set(highlightKecamatanSlugs);
+  }, [highlightKecamatanSlugs]);
+
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const polygonsRef = useRef<{ [key: string]: L.Polygon }>({});
   const markersRef = useRef<{ [key: string]: L.Marker }>({});
   const outerBorderRef = useRef<L.Polygon | null>(null);
   const tollLayerGroupRef = useRef<L.LayerGroup | null>(null);
+  const kecamatanLayerGroupRef = useRef<L.LayerGroup | null>(null);
   const poiLayerGroupRef = useRef<L.LayerGroup | null>(null);
   const inspectMarkerRef = useRef<L.Marker | null>(null);
 
@@ -624,6 +647,33 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
       poiGroup.addTo(map);
     }
 
+    // 5b. Kecamatan Micro-Level Layer (pre-render all, hide until needed)
+    const kecamatanGroup = L.layerGroup();
+    Object.entries(jogjaKecamatanData).forEach(([slug, kec]) => {
+      const poly = L.polygon(kec.polygon as [number, number][], {
+        color: '#d5a864',
+        fillColor: '#d5a864',
+        fillOpacity: 0,   // hidden by default
+        weight: 0,
+        opacity: 0,
+        className: `kec-poly kec-${slug}`,
+      }).addTo(kecamatanGroup);
+
+      poly.bindTooltip(
+        `<div style="font-family: sans-serif; font-size: 11px; font-weight: bold;
+          color: #fff; background: #071914cc; padding: 3px 8px; border-radius: 6px;
+          border: 1px solid #d5a864;">
+          📍 Kec. ${kec.name}
+        </div>`,
+        { sticky: true, opacity: 0.95 }
+      );
+
+      // Store with compound key
+      polygonsRef.current[`kec:${slug}`] = poly;
+    });
+    kecamatanLayerGroupRef.current = kecamatanGroup;
+    kecamatanGroup.addTo(map); // always in DOM, controlled by opacity
+
     // 5. Global Map Click Listener for Pin Inspection
     map.on('click', (e) => {
       handleInspectCoordinates(e.latlng.lat, e.latlng.lng, map);
@@ -723,6 +773,49 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
       }
     }
   }, [filterMode, activeRegionId, isAll, showTollLayer, showPoiLayer]);
+
+  // -------------------------------------------------------------
+  // KECAMATAN LAYER: update styles when highlight set changes
+  // -------------------------------------------------------------
+  useEffect(() => {
+    const hasHighlight = kecamatanHighlightSet.size > 0;
+
+    Object.entries(polygonsRef.current).forEach(([key, poly]) => {
+      if (!key.startsWith('kec:')) return;
+      const slug = key.replace('kec:', '');
+      const isHot = hasHighlight && kecamatanHighlightSet.has(slug);
+      const kec = jogjaKecamatanData[slug];
+      if (!kec) return;
+
+      // Find parent kabupaten color
+      const parentReg = YOGYAKARTA_REGIONS.find(r => r.id === kec.kabupaten);
+      const baseColor = parentReg?.color ?? '#d5a864';
+
+      if (!hasHighlight) {
+        // No cluster selected — hide all kecamatan
+        poly.setStyle({ fillOpacity: 0, weight: 0, opacity: 0 });
+      } else if (isHot) {
+        // Highlighted kecamatan: vibrant glow
+        poly.setStyle({
+          color: '#d5a864',
+          fillColor: baseColor,
+          fillOpacity: 0.55,
+          weight: 2.5,
+          opacity: 1,
+        });
+        poly.bringToFront();
+      } else {
+        // Other kecamatan in same area: very dim
+        poly.setStyle({
+          color: baseColor,
+          fillColor: baseColor,
+          fillOpacity: 0.06,
+          weight: 0.5,
+          opacity: 0.3,
+        });
+      }
+    });
+  }, [kecamatanHighlightSet]);
 
   // Re-fit map bounds when region or highlight changes
   useEffect(() => {

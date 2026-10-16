@@ -4,34 +4,54 @@
  * SINGLE SOURCE OF TRUTH untuk semua cluster kawasan investasi JIC.
  *
  * Cara menambah cluster baru:
- *  1. Tambahkan entry baru di array INVESTMENT_CLUSTERS di bawah.
- *  2. Isi `targetRegions` dengan ID wilayah dari YOGYAKARTA_REGIONS:
- *     'sleman' | 'kota' | 'bantul' | 'gunungkidul' | 'kulonprogo'
- *     Boleh lebih dari satu (lintas kab/kota).
- *  3. Tidak perlu menyentuh file komponen sama sekali.
+ *  1. Tambahkan entry baru di array INVESTMENT_CLUSTERS.
+ *  2. targetRegions → ID kabupaten/kota (highlight polygon kab)
+ *  3. hotspotKecamatanSlugs → slug kecamatan dari jogjaKecamatanGeoData.json
+ *     (highlight presisi kecamatan-level di peta)
+ *
+ * Daftar slug kecamatan yang tersedia:
+ *   Sleman: berbah, cangkringan, depok, gamping, godean, kalasan,
+ *            minggir, mlati, moyudan, ngaglik, ngemplak, pakem,
+ *            prambanan, seyegan, sleman, tempel, turi
+ *   Kota:   danurejan, gedongtengen, gondokusuman, gondomanan, kotagede,
+ *            kraton, mantrijeron, mergangsan, ngampilan, pakualaman,
+ *            tegalrejo, umbulharjo, wirobrajan
+ *   Bantul: bambanglipuro, banguntapan, bantul, dlingo, imogiri, jetis,
+ *            kasihan, kretek, pajangan, pandak, piyungan, pleret,
+ *            pundong, sanden, sedayu, sewon, srandakan
+ *   Gunungkidul: gedangsari, girisubo, karangmojo, ngawen, nglipar,
+ *            paliyan, panggang, patuk, playen, ponjong, purwosari,
+ *            rongkop, saptosari, semanu, semin, tanjungsari, tepus, wonosari
+ *   Kulonprogo: galur, girimulyo, kalibawang, kokap, lendah, nanggulan,
+ *            panjatan, pengasih, samigaluh, sentolo, temon, wates
  * ─────────────────────────────────────────────────────────────
  */
 
 export type RegionId = 'sleman' | 'kota' | 'bantul' | 'gunungkidul' | 'kulonprogo' | 'semua';
 
 export interface InvestmentCluster {
-  /** Unique ID cluster, digunakan sebagai key state */
+  /** Unique ID cluster */
   id: string;
-  /** Judul singkat cluster */
+  /** Judul singkat */
   title: string;
-  /** Sub-judul: lokasi spesifik / kecamatan kunci */
+  /** Sub-judul: area kunci */
   subtitle: string;
-  /** Badge emoji + label, tampil di card list */
+  /** Badge emoji + label */
   badge: string;
-  /** Tipe properti yang paling cocok */
+  /** Tipe properti paling cocok */
   bestFor: string;
   /** Label harga pasar ringkas */
   priceBadge: string;
   /**
-   * Region ID yang akan di-highlight di peta ketika cluster ini aktif.
+   * Kabupaten/kota yang di-highlight (level makro).
    * Bisa lebih dari satu untuk cluster lintas kab/kota.
    */
   targetRegions: RegionId[];
+  /**
+   * Kecamatan yang di-highlight secara presisi (level mikro).
+   * Gunakan slug dari daftar di atas. Kosongkan [] untuk hanya highlight kab-level.
+   */
+  hotspotKecamatanSlugs: string[];
   /** Nama panjang untuk kalkulator / analitik */
   fullName: string;
   /** Deskripsi detail untuk panel info */
@@ -44,8 +64,6 @@ export interface InvestmentCluster {
   growthRate: string;
   /** Estimasi ROI/tahun */
   roi: string;
-  /** Kecamatan/kelurahan prioritas (opsional, untuk detail mikro) */
-  hotspotDistricts?: string[];
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -62,6 +80,7 @@ export const INVESTMENT_CLUSTERS: InvestmentCluster[] = [
     bestFor: 'Portfolio Diversifikasi',
     priceBadge: 'Pasar Rp 1,5 - 25 jt/m²',
     targetRegions: ['semua'],
+    hotspotKecamatanSlugs: [],
     fullName: 'Daerah Istimewa Yogyakarta (Seluruh Kawasan)',
     description: 'Mencakup 5 kabupaten/kota dengan beragam karakteristik investasi dari perkotaan, koridor universitas, hingga kawasan pariwisata heritage dan bahari.',
     priceRange: 'Rp 2,5 - 18 jt/m²',
@@ -70,7 +89,8 @@ export const INVESTMENT_CLUSTERS: InvestmentCluster[] = [
     roi: '8% - 14% / tahun',
   },
 
-  // 1. KAWASAN KAMPUS (Sleman + Kota Jogja)
+  // 1. KAWASAN KAMPUS
+  // Hotspot: Depok & Ngaglik (UGM/UNY/UPN area), Gondokusuman (UA/UAJY)
   {
     id: 'kampus',
     title: 'Kawasan Kampus',
@@ -79,16 +99,17 @@ export const INVESTMENT_CLUSTERS: InvestmentCluster[] = [
     bestFor: 'Kost Eksklusif & Co-Living',
     priceBadge: 'Pasar Rp 5,5 - 16 jt/m²',
     targetRegions: ['sleman', 'kota'],
+    hotspotKecamatanSlugs: ['depok', 'ngaglik', 'mlati', 'ngemplak', 'gondokusuman', 'tegalrejo'],
     fullName: 'Kawasan Kampus & Pelajar (Sleman & Kota Jogja)',
-    description: 'Didukung 300.000+ mahasiswa aktif di UGM, UNY, UPN, UII, Atma Jaya. Zona utama: Depok, Caturtunggal, Seturan (Sleman) + Gondokusuman, Terban (Kota Jogja). Target utama kost eksklusif dan co-living premium.',
+    description: 'Didukung 300.000+ mahasiswa aktif di UGM, UNY, UPN, UII, Atma Jaya. Kec. Depok (Caturtunggal, Seturan, Condongcatur) dan Ngaglik (Babarsari, Jalan Kaliurang) sebagai zona tertinggi. Plus Gondokusuman (Kota) untuk kampus UA & UAJY.',
     priceRange: 'Rp 5,5 - 16 jt/m²',
     njopPrice: 'Rp 3,5 - 14 jt/m²',
     growthRate: '+11% - 16%',
     roi: '12% - 18% / tahun',
-    hotspotDistricts: ['Depok', 'Caturtunggal', 'Seturan', 'Babarsari', 'Gondokusuman', 'Terban'],
   },
 
-  // 2. KAWASAN WISATA & STAYCATION (Bantul + Kota + Sleman)
+  // 2. KAWASAN WISATA & STAYCATION
+  // Hotspot: Kraton/Gondokusuman (Malioboro), Bantul pesisir, Pakem/Turi (Kaliurang)
   {
     id: 'wisata',
     title: 'Kawasan Wisata & Staycation',
@@ -97,16 +118,21 @@ export const INVESTMENT_CLUSTERS: InvestmentCluster[] = [
     bestFor: 'Villa & Boutique Homestay',
     priceBadge: 'Pasar Rp 4,0 - 16 jt/m²',
     targetRegions: ['bantul', 'kota', 'sleman'],
+    hotspotKecamatanSlugs: [
+      'kraton', 'gondomanan', 'mergangsan', 'mantrijeron', // Malioboro-Prawirotaman
+      'pakem', 'turi', 'cangkringan',                      // Kaliurang-Merapi
+      'kretek', 'sanden', 'bambanglipuro',                  // Parangtritis & Pantai Bantul
+    ],
     fullName: 'Kawasan Wisata & Budaya (Bantul, Kota Jogja, Sleman Utara)',
-    description: 'Koridor 7.2+ juta wisatawan/tahun. Zona utama: Parangtritis & Sanden (Bantul), Malioboro/Prawirotaman (Kota Jogja), Kaliurang & Pakem (Sleman Utara). Potensial untuk villa sewa harian dan homestay estetik.',
+    description: 'Koridor 7.2+ juta wisatawan/tahun. Malioboro (Kraton, Gondomanan), Prawirotaman (Mergangsan, Mantrijeron), Kaliurang (Pakem, Turi), Parangtritis & pantai (Kretek, Sanden). Potensial villa sewa harian dan homestay estetik.',
     priceRange: 'Rp 4,0 - 16 jt/m²',
     njopPrice: 'Rp 1,5 - 7,5 jt/m²',
     growthRate: '+10% - 14%',
     roi: '14% - 22% / tahun',
-    hotspotDistricts: ['Parangtritis', 'Kretek', 'Prawirotaman', 'Malioboro', 'Kaliurang', 'Pakem'],
   },
 
-  // 3. KAWASAN PREMIUM KOTA (Kota + Sleman Tengah)
+  // 3. KAWASAN PREMIUM KOTA
+  // Hotspot: Gondokusuman, Umbulharjo, Mlati (RRU)
   {
     id: 'premium',
     title: 'Kawasan Premium Kota',
@@ -115,16 +141,20 @@ export const INVESTMENT_CLUSTERS: InvestmentCluster[] = [
     bestFor: 'Luxury Townhouse & Komersial',
     priceBadge: 'Pasar Rp 9,0 - 25 jt/m²',
     targetRegions: ['kota', 'sleman'],
+    hotspotKecamatanSlugs: [
+      'gondokusuman', 'umbulharjo', 'pakualaman',  // Kota: Kotabaru, Gondokusuman, premium
+      'mlati', 'gamping', 'godean',                // Sleman Tengah: Ring Road Utara
+    ],
     fullName: 'Kota Yogyakarta & Sleman Tengah (Kawasan Premium)',
-    description: 'Aksesibilitas terbaik dan fasilitas kota terlengkap. Zona utama: Kotabaru, Gondokusuman (Kota Jogja) + Mlati, Gamping, Nogotirto (Sleman Tengah/Barat). Nilai apresiasi dan likuiditas aset tertinggi.',
+    description: 'Aksesibilitas terbaik dan fasilitas terlengkap. Gondokusuman (Kotabaru heritage), Umbulharjo (bisnis modern), Pakualaman (elite heritage), Mlati & Gamping (Ring Road Utara hunian premium). Likuiditas aset tertinggi.',
     priceRange: 'Rp 9,0 - 25 jt/m²',
     njopPrice: 'Rp 6,0 - 22 jt/m²',
     growthRate: '+12% - 18%',
     roi: '9% - 13% / tahun',
-    hotspotDistricts: ['Kotabaru', 'Gondokusuman', 'Mlati', 'Gamping', 'Nogotirto'],
   },
 
-  // 4. KORIDOR PERTUMBUHAN & TOL (Kulon Progo + Sleman Barat)
+  // 4. KORIDOR PERTUMBUHAN & TOL
+  // Hotspot: Temon (YIA), Sentolo, Gamping (exit tol Trihanggo)
   {
     id: 'pertumbuhan',
     title: 'Kawasan Pertumbuhan & Tol',
@@ -133,13 +163,16 @@ export const INVESTMENT_CLUSTERS: InvestmentCluster[] = [
     bestFor: 'Land Banking & Ruko Transit',
     priceBadge: 'Pasar Rp 1,8 - 6,5 jt/m²',
     targetRegions: ['kulonprogo', 'sleman'],
+    hotspotKecamatanSlugs: [
+      'temon', 'wates', 'sentolo', 'panjatan',  // Kulon Progo: YIA & koridor tol
+      'gamping', 'mlati', 'seyegan', 'moyudan', // Sleman Barat: exit tol Trihanggo
+    ],
     fullName: 'Koridor Tol YIA (Kulon Progo & Sleman Barat)',
-    description: 'Pertumbuhan pesat terdorong Bandara YIA dan trase tol baru Solo-Jogja-YIA. Zona utama: Temon, Sentolo (Kulon Progo) + Gamping, Trihanggo (Sleman Barat). Harga lahan masuk sangat atraktif, momentum land banking terbaik.',
+    description: 'Pertumbuhan pesat terdorong Bandara YIA dan trase tol Solo-Jogja-YIA. Temon & Wates (aerotropolis YIA), Sentolo (exit interchange), Gamping & Mlati (exit Trihanggo-Sleman). Momentum land banking terbaik saat ini.',
     priceRange: 'Rp 1,8 - 6,5 jt/m²',
     njopPrice: 'Rp 850 Rb - 4,5 jt/m²',
     growthRate: '+14% - 20%',
     roi: '9% - 15% / tahun',
-    hotspotDistricts: ['Temon', 'Sentolo', 'Gamping', 'Trihanggo', 'Kalibawang'],
   },
 
   // 5. ECO & WELLNESS (Sleman Utara)
@@ -151,16 +184,16 @@ export const INVESTMENT_CLUSTERS: InvestmentCluster[] = [
     bestFor: 'Resort Villa & Glamping Cafe',
     priceBadge: 'Pasar Rp 2,0 - 6,0 jt/m²',
     targetRegions: ['sleman'],
+    hotspotKecamatanSlugs: ['pakem', 'cangkringan', 'turi', 'ngemplak', 'tempel'],
     fullName: 'Sleman Utara (Kawasan Wisata Alam & Wellness Retreat)',
-    description: 'Udara sejuk lereng Merapi, view alam terbuka, air melimpah. Zona utama: Pakem, Cangkringan, Turi, Ngemplak (Sleman Utara). Primadona baru: wellness living, healing villa, resort eco, dan café alam.',
+    description: 'Udara sejuk lereng Merapi, view alam terbuka, air melimpah. Pakem (Kaliurang, Bumi Perkemahan), Cangkringan (Kaliadem, lava tour), Turi (agrowisata salak), Ngemplak (Besi, resort eco). Primadona: wellness villa, healing resort, glamping café.',
     priceRange: 'Rp 2,0 - 6,0 jt/m²',
     njopPrice: 'Rp 1,2 - 4,0 jt/m²',
     growthRate: '+10% - 15%',
     roi: '11% - 17% / tahun',
-    hotspotDistricts: ['Pakem', 'Cangkringan', 'Turi', 'Ngemplak', 'Kaliurang'],
   },
 
-  // 6. HERITAGE & SENI (Kota Jogja + Bantul Utara)
+  // 6. HERITAGE & SENI (Kota Selatan + Bantul Utara)
   {
     id: 'heritage-art',
     title: 'Kawasan Heritage & Seni',
@@ -169,13 +202,16 @@ export const INVESTMENT_CLUSTERS: InvestmentCluster[] = [
     bestFor: 'Boutique Guesthouse & Galeri',
     priceBadge: 'Pasar Rp 3,5 - 9,5 jt/m²',
     targetRegions: ['kota', 'bantul'],
+    hotspotKecamatanSlugs: [
+      'kotagede', 'umbulharjo', 'mergangsan',  // Kota: Kotagede perak, Prawirotaman
+      'kasihan', 'sewon', 'banguntapan',       // Bantul Utara: ISI Jogja, Kasongan
+    ],
     fullName: 'Kota Jogja Selatan & Bantul Utara (Heritage & Seni)',
-    description: 'Pusat komunitas ekspatriat, desainer, dan seniman internasional. Zona utama: Kotagede, Prawirotaman (Kota Jogja) + Kasihan, Sewon, ISI (Bantul Utara). Sangat diminati turis mancanegara untuk guest house etnik Jawa modern.',
+    description: 'Pusat komunitas ekspatriat, desainer, dan seniman internasional. Kotagede (kerajinan perak), Prawirotaman (galeri & guest house), Kasihan & Sewon (kampus ISI, kriya), Banguntapan (perumahan premium selatan). Sangat diminati turis mancanegara.',
     priceRange: 'Rp 3,5 - 9,5 jt/m²',
     njopPrice: 'Rp 1,5 - 7,5 jt/m²',
     growthRate: '+9% - 14%',
     roi: '12% - 16% / tahun',
-    hotspotDistricts: ['Kotagede', 'Prawirotaman', 'Kasihan', 'Sewon', 'Banguntapan'],
   },
 
   // 7. PESISIR SELATAN & GEOPARK (Gunungkidul + Bantul Pantai)
@@ -187,13 +223,16 @@ export const INVESTMENT_CLUSTERS: InvestmentCluster[] = [
     bestFor: 'Boutique Resort & Glamping',
     priceBadge: 'Pasar Rp 900 Rb - 4,5 jt/m²',
     targetRegions: ['gunungkidul', 'bantul'],
+    hotspotKecamatanSlugs: [
+      'tepus', 'tanjungsari', 'saptosari', 'girisubo', 'purwosari', // Gunungkidul pantai
+      'kretek', 'sanden', 'bambanglipuro',                            // Bantul pesisir JJLS
+    ],
     fullName: 'Pesisir DIY Selatan (Gunungkidul & Bantul Pantai)',
-    description: 'Kawasan pesisir eksotis dengan destinasi pariwisata pantai tumbuh tercepat di DIY. Zona utama: Indrayanti, Baron, Siung (Gunungkidul) + Parangtritis, Samas (Bantul pesisir). Capital gain agresif dengan demand wisatawan naik via JJLS.',
+    description: 'Kawasan pesisir eksotis tumbuh tercepat di DIY. Tepus (Indrayanti, Greweng), Tanjungsari (Baron, Kukup), Saptosari (Ngrenehan, Gesing), Girisubo (Sadeng, Wediombo) + Parangtritis & Samas (Bantul). Capital gain agresif via JJLS.',
     priceRange: 'Rp 900 Rb - 4,5 jt/m²',
     njopPrice: 'Rp 450 Rb - 3 jt/m²',
     growthRate: '+12% - 18%',
     roi: '13% - 19% / tahun',
-    hotspotDistricts: ['Tepus', 'Tanjungsari', 'Saptosari', 'Parangtritis', 'Samas'],
   },
 ];
 
@@ -206,10 +245,12 @@ export function getClusterById(id: string): InvestmentCluster | undefined {
   return INVESTMENT_CLUSTERS.find((c) => c.id === id);
 }
 
-/**
- * Kembalikan array region ID yang perlu di-highlight untuk cluster aktif.
- * Mengembalikan ['semua'] bila cluster tidak ditemukan.
- */
+/** Kembalikan array region ID (kab-level) untuk highlight di peta */
 export function getHighlightRegions(clusterId: string): RegionId[] {
   return getClusterById(clusterId)?.targetRegions ?? ['semua'];
+}
+
+/** Kembalikan array kecamatan slug untuk highlight presisi di peta */
+export function getHighlightKecamatan(clusterId: string): string[] {
+  return getClusterById(clusterId)?.hotspotKecamatanSlugs ?? [];
 }
