@@ -4,9 +4,10 @@ import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import {
   MapPin, Layers, DollarSign, Navigation, ArrowRight,
-  TrendingUp, BarChart2, ShieldCheck, Check, Sparkles, Building
+  TrendingUp, BarChart2, ShieldCheck, Check, Sparkles, Building, Globe
 } from 'lucide-react';
 import type { YogyakartaRegion } from './JogjaRealMap';
+import type { InvestmentBlock } from './JogjaOsmMap';
 
 // Dynamically import Leaflet maps
 const JogjaRealMap = dynamic(
@@ -24,13 +25,30 @@ const JogjaRealMap = dynamic(
   }
 );
 
+const JogjaOsmMap = dynamic(
+  () => import('./JogjaOsmMap').then((m) => ({ default: m.JogjaOsmMap })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-[480px] bg-[#051410] rounded-3xl animate-pulse flex items-center justify-center border border-white/10">
+        <div className="flex flex-col items-center gap-2">
+          <span className="w-6 h-6 border-2 border-[#d5a864] border-t-transparent rounded-full animate-spin" />
+          <span className="text-neutral-400 text-xs font-mono">Memuat peta koridor blok investasi...</span>
+        </div>
+      </div>
+    ),
+  }
+);
+
 interface StrategicAreasProps {
   onSelectZone: (zoneName: string, shouldScroll?: boolean) => void;
 }
 
 export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) => {
+  const [activeMapTab, setActiveMapTab] = useState<'zonasi' | 'blok'>('zonasi');
   const [activeFilterTab, setActiveFilterTab] = useState<'zonasi' | 'harga' | 'akses'>('zonasi');
   const [selectedCluster, setSelectedCluster] = useState<string>('kampus');
+  const [selectedBlockId, setSelectedBlockId] = useState<string>('block-kampus');
 
   const clusters = [
     {
@@ -41,6 +59,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
       bestFor: 'Portfolio Diversifikasi',
       priceBadge: 'Rp 1,5 - 22 jt/m²',
       region: 'semua',
+      blockId: 'semua',
       fullName: 'Daerah Istimewa Yogyakarta (Seluruh Kawasan)',
       description: 'Mencakup 5 kabupaten/kota dengan beragam karakteristik investasi dari perkotaan, koridor universitas, hingga kawasan pariwisata heritage dan bahari.',
       priceRange: 'Rp 2,5 - 18 jt/m²',
@@ -55,6 +74,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
       bestFor: 'Kost Eksklusif & Co-Living',
       priceBadge: 'Rp 5,5 - 14 jt/m²',
       region: 'sleman',
+      blockId: 'block-kampus',
       fullName: 'Kabupaten Sleman (Kawasan Kampus & Pelajar)',
       description: 'Didukung oleh 300.000+ mahasiswa aktif dan ekosistem pendidikan terbaik, menjadikan area ini target utama untuk kos eksklusif dan hunian komersial berokupansi tinggi.',
       priceRange: 'Rp 5,5 - 14 jt/m²',
@@ -69,6 +89,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
       bestFor: 'Villa & Boutique Homestay',
       priceBadge: 'Rp 4,0 - 16 jt/m²',
       region: 'bantul',
+      blockId: 'block-wisata',
       fullName: 'Kawasan Wisata & Budaya (Kota Jogja, Sleman Utara, Bantul)',
       description: 'Koridor dengan kunjungan 7.2+ juta wisatawan per tahun, sangat potensial untuk villa sewa harian, homestay estetik, dan cafe komersial bernilai sewa prima.',
       priceRange: 'Rp 4,0 - 16 jt/m²',
@@ -83,6 +104,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
       bestFor: 'Luxury Townhouse & Komersial',
       priceBadge: 'Rp 9,0 - 22 jt/m²',
       region: 'kota',
+      blockId: 'block-premium',
       fullName: 'Kota Yogyakarta & Sleman Tengah (Kawasan Elit)',
       description: 'Aksesibilitas terbaik dan fasilitas kota terlengkap dengan nilai apresiasi tanah tertinggi dan likuiditas kuat untuk aset keluarga jangka panjang.',
       priceRange: 'Rp 9,0 - 22 jt/m²',
@@ -97,6 +119,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
       bestFor: 'Land Banking & Ruko Transit',
       priceBadge: 'Rp 1,8 - 5,5 jt/m²',
       region: 'kulonprogo',
+      blockId: 'block-kota',
       fullName: 'Kawasan Pertumbuhan Baru (Akses YIA & Tol Baru)',
       description: 'Pertumbuhan pesat terdorong Bandara Internasional YIA dan proyek trase jalan tol baru Solo-Jogja-YIA dengan harga lahan masuk yang masih sangat atraktif.',
       priceRange: 'Rp 1,8 - 5,5 jt/m²',
@@ -111,6 +134,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
       bestFor: 'Resort Villa & Glamping Cafe',
       priceBadge: 'Rp 2,0 - 6,0 jt/m²',
       region: 'sleman',
+      blockId: 'block-wisata',
       fullName: 'Sleman Utara (Kawasan Wisata Alam & Wellness Retreat)',
       description: 'Lingkungan sejuk dengan view Gunung Merapi, udara bersih, dan air melimpah. Menjadi primadona baru bagi konsep wellness living, healing villa, dan resto alam.',
       priceRange: 'Rp 2,0 - 6,0 jt/m²',
@@ -125,6 +149,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
       bestFor: 'Boutique Guesthouse & Galeri',
       priceBadge: 'Rp 3,5 - 9,5 jt/m²',
       region: 'bantul',
+      blockId: 'block-bantul',
       fullName: 'Bantul Utara & Jogja Selatan (Sentra Heritage & Seni Kreatif)',
       description: 'Pusat komunitas ekspatriat, desainer, dan seniman. Sangat diminati turis mancanegara untuk guest house bernuansa etnik Jawa modern.',
       priceRange: 'Rp 3,5 - 9,5 jt/m²',
@@ -139,7 +164,18 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
     setSelectedCluster(clusterId);
     const item = clusters.find((c) => c.id === clusterId);
     if (item) {
+      if (item.blockId) {
+        setSelectedBlockId(item.blockId);
+      }
       onSelectZone(item.fullName, false);
+    }
+  };
+
+  const handleBlockSelect = (block: InvestmentBlock) => {
+    setSelectedBlockId(block.id);
+    const match = clusters.find((c) => c.blockId === block.id);
+    if (match) {
+      setSelectedCluster(match.id);
     }
   };
 
@@ -188,9 +224,12 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
           <div className="flex items-center gap-2 bg-[#0a231c] p-1.5 rounded-full border border-white/10 shrink-0 self-start lg:self-auto">
             <button
               type="button"
-              onClick={() => setActiveFilterTab('zonasi')}
+              onClick={() => {
+                setActiveMapTab('zonasi');
+                setActiveFilterTab('zonasi');
+              }}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
-                activeFilterTab === 'zonasi'
+                activeFilterTab === 'zonasi' && activeMapTab === 'zonasi'
                   ? 'bg-[#d5a864] text-[#071914] shadow-md'
                   : 'text-neutral-300 hover:text-white'
               }`}
@@ -201,9 +240,12 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
 
             <button
               type="button"
-              onClick={() => setActiveFilterTab('harga')}
+              onClick={() => {
+                setActiveMapTab('zonasi');
+                setActiveFilterTab('harga');
+              }}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
-                activeFilterTab === 'harga'
+                activeFilterTab === 'harga' && activeMapTab === 'zonasi'
                   ? 'bg-[#d5a864] text-[#071914] shadow-md'
                   : 'text-neutral-300 hover:text-white'
               }`}
@@ -214,9 +256,12 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
 
             <button
               type="button"
-              onClick={() => setActiveFilterTab('akses')}
+              onClick={() => {
+                setActiveMapTab('zonasi');
+                setActiveFilterTab('akses');
+              }}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
-                activeFilterTab === 'akses'
+                activeFilterTab === 'akses' && activeMapTab === 'zonasi'
                   ? 'bg-[#d5a864] text-[#071914] shadow-md'
                   : 'text-neutral-300 hover:text-white'
               }`}
@@ -296,20 +341,90 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                 );
               })}
             </div>
+
+            {/* Hint Box for Dual Layer Radar */}
+            <div className="text-xs text-neutral-300 bg-[#0a231c]/90 p-4 rounded-2xl border border-white/10 flex items-start gap-2.5 backdrop-blur-md">
+              <Sparkles className="w-4 h-4 text-[#d5a864] shrink-0 mt-0.5" />
+              <p className="leading-relaxed font-light">
+                Gunakan tab <strong className="text-white">Zonasi</strong> untuk 5 Kab/Kota &amp; rute tol, atau tab <strong className="text-white">Blok</strong> untuk analisis mikro koridor komersial (BLK-01 s/d BLK-05).
+              </p>
+            </div>
           </div>
 
-          {/* Right Column: GIS Interactive Map */}
-          <div className="lg:col-span-8 space-y-4">
-            <JogjaRealMap
-              selectedRegionId={currentData.region}
-              filterMode={activeFilterTab}
-              onSelectRegion={(reg) => {
-                const match = clusters.find((c) => c.region === reg.id);
-                if (match) setSelectedCluster(match.id);
-              }}
-              onApplyZoneToCalculator={(zoneName) => onSelectZone(zoneName, true)}
-              height="480px"
-            />
+          {/* Right Column: GIS Interactive Map with Dual-Layer Radar Toolbar */}
+          <div className="lg:col-span-8 space-y-3">
+            
+            {/* Terminal Peta GIS Yogyakarta Header & Tab Switcher (Zonasi vs Blok) */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#0a231c]/90 p-2 sm:p-2.5 rounded-2xl border border-white/15 shadow-xl backdrop-blur-md">
+              <div className="flex items-center gap-2 px-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#d5a864] animate-ping" />
+                <span className="text-xs sm:text-sm font-extrabold text-white tracking-tight">
+                  Terminal Peta GIS Yogyakarta
+                </span>
+                <span className="text-[10px] text-neutral-400 font-mono hidden md:inline">
+                  · DUAL-LAYER RADAR
+                </span>
+              </div>
+
+              {/* Segmented Tab Buttons: Zonasi (Kiri) | Blok (Kanan) */}
+              <div className="flex items-center gap-1.5 bg-[#071914] p-1 rounded-xl border border-white/15">
+                {/* Tab Kiri: Zonasi */}
+                <button
+                  type="button"
+                  onClick={() => setActiveMapTab('zonasi')}
+                  className={`px-4 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all flex items-center gap-2 ${
+                    activeMapTab === 'zonasi'
+                      ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
+                      : 'text-neutral-300 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  <Layers className="w-3.5 h-3.5" />
+                  <span>Zonasi</span>
+                </button>
+
+                {/* Tab Kanan: Blok */}
+                <button
+                  type="button"
+                  onClick={() => setActiveMapTab('blok')}
+                  className={`px-4 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all flex items-center gap-2 ${
+                    activeMapTab === 'blok'
+                      ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
+                      : 'text-neutral-300 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  <Globe className="w-3.5 h-3.5" />
+                  <span>Blok</span>
+                </button>
+              </div>
+            </div>
+
+            {/* TAB 1: Peta Zonasi Administratif DIY & Infrastruktur Tol */}
+            {activeMapTab === 'zonasi' && (
+              <div className="transition-opacity duration-300">
+                <JogjaRealMap
+                  selectedRegionId={currentData.region}
+                  filterMode={activeFilterTab}
+                  onSelectRegion={(reg) => {
+                    const match = clusters.find((c) => c.region === reg.id);
+                    if (match) setSelectedCluster(match.id);
+                  }}
+                  onApplyZoneToCalculator={(zoneName) => onSelectZone(zoneName, true)}
+                  height="480px"
+                />
+              </div>
+            )}
+
+            {/* TAB 2: Peta Blok Koridor OpenStreetMap (BLK-01 s/d BLK-05) */}
+            {activeMapTab === 'blok' && (
+              <div className="transition-opacity duration-300">
+                <JogjaOsmMap
+                  selectedLocationId={selectedBlockId}
+                  onSelectBlock={handleBlockSelect}
+                  onApplyZoneToCalculator={(zoneName) => onSelectZone(zoneName, true)}
+                  height="480px"
+                />
+              </div>
+            )}
           </div>
 
         </div>
@@ -325,6 +440,11 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                 <span className="px-2 py-0.5 bg-[#071914] text-[10px] font-bold text-emerald-400 rounded-md border border-emerald-500/30">
                   {currentData.badge}
                 </span>
+                {activeMapTab === 'blok' && (
+                  <span className="px-2 py-0.5 bg-amber-500/20 text-[10px] font-mono text-amber-300 rounded-md border border-amber-500/40">
+                    MODE KORIDOR BLOK MIKRO
+                  </span>
+                )}
               </div>
               <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
                 {currentData.fullName}
