@@ -15,26 +15,29 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation, activeSectio
     <header className="sticky top-0 z-50 bg-[#071914]/95 backdrop-blur-md border-b border-[#c5a25d]/20 text-white transition-all">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-6 px-4 sm:px-6 lg:px-8 h-20">
         {/* Zone 1: Logo & Brand */}
-        <a href="#" className="flex items-center gap-3 shrink-0 group">
-          <div className="w-10 h-10 rounded-lg bg-[#c5a25d]/10 border border-[#c5a25d]/40 flex items-center justify-center text-[#c5a25d] group-hover:scale-105 transition-transform">
-            {/* Elegant House Icon matching screenshot */}
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-5 h-5">
-              <path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1v-9.5z" />
-              <path d="M9 21v-6h6v6" />
-            </svg>
+        <a href="#" className="flex items-center gap-3.5 shrink-0 group">
+          <div className="h-11 flex items-center justify-center group-hover:scale-105 transition-transform">
+            <img
+              src="/images/logo-jic-dark-navbar.png"
+              alt="Jogja Investor Club (JIC)"
+              className="h-10 w-auto object-contain"
+            />
           </div>
           <div className="flex flex-col text-left">
-            <span className="text-sm font-extrabold tracking-tight text-white leading-tight">
-              Jogja Property
+            <span
+              className="text-sm sm:text-base font-extrabold tracking-tight text-white leading-tight"
+              style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
+            >
+              Jogja Investor
             </span>
-            <span className="text-[11px] font-medium tracking-wider text-[#c5a25d] uppercase leading-tight">
-              Consultant
+            <span className="text-[10px] font-mono tracking-widest text-[#d5a864] uppercase leading-tight font-bold">
+              Club
             </span>
           </div>
         </a>
 
         {/* Zone 2: Navigation Links */}
-        <nav className="hidden md:flex items-center gap-7 lg:gap-9 text-sm font-medium text-neutral-300">
+        <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium text-neutral-300">
           <a
             href="#"
             className="text-white relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-[#c5a25d]"
@@ -48,6 +51,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation, activeSectio
             Solusi Properti
           </a>
           <a
+            href="#studi-kasus-kedokteran"
+            className="hover:text-white transition-colors py-1 flex items-center gap-1.5 text-[#d5a864]"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Studi Kasus Kos</span>
+          </a>
+          <a
             href="#area-potensial"
             className="hover:text-white transition-colors py-1"
           >
@@ -57,13 +67,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation, activeSectio
             href="#proses-layanan"
             className="hover:text-white transition-colors py-1"
           >
-            Proses & Layanan
-          </a>
-          <a
-            href="#hitung-potensi"
-            className="hover:text-white transition-colors py-1"
-          >
-            Tentang Kami
+            Proses &amp; Layanan
           </a>
         </nav>
 
@@ -71,7 +75,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation, activeSectio
         <div className="hidden sm:flex items-center gap-3 shrink-0">
           <button
             onClick={onOpenConsultation}
-            className="px-5 py-2.5 text-xs sm:text-sm font-bold text-[#071914] bg-[#d5a864] hover:bg-[#e2b772] active:bg-[#c49855] rounded-lg transition-all shadow-md flex items-center gap-2 cursor-pointer"
+            className="px-5 py-2.5 text-xs sm:text-sm font-bold text-[#071914] bg-[#d5a864] hover:bg-[#e2b772] active:bg-[#c49855] rounded-xl transition-all shadow-md flex items-center gap-2 cursor-pointer"
           >
             <span>Konsultasi Gratis</span>
             <ArrowRight className="w-4 h-4" />
@@ -82,7 +86,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation, activeSectio
         <div className="flex md:hidden">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-neutral-300 hover:text-white"
+            className="p-2 text-neutral-300 hover:text-white cursor-pointer"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -108,6 +112,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation, activeSectio
             Solusi Properti
           </a>
           <a
+            href="#studi-kasus-kedokteran"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-emerald-400 font-semibold hover:text-white py-1"
+          >
+            Studi Kasus: Kos Kedokteran
+          </a>
+          <a
             href="#area-potensial"
             onClick={() => setMobileMenuOpen(false)}
             className="block text-neutral-300 hover:text-white py-1"
@@ -119,7 +130,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation, activeSectio
             onClick={() => setMobileMenuOpen(false)}
             className="block text-neutral-300 hover:text-white py-1"
           >
-            Proses & Layanan
+            Proses &amp; Layanan
           </a>
           <a
             href="#hitung-potensi"
@@ -133,7 +144,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation, activeSectio
               setMobileMenuOpen(false);
               onOpenConsultation();
             }}
-            className="w-full mt-2 py-3 text-center text-xs font-bold text-[#071914] bg-[#d5a864] rounded-lg"
+            className="w-full mt-2 py-3 text-center text-xs font-bold text-[#071914] bg-[#d5a864] rounded-xl cursor-pointer"
           >
             Konsultasi Gratis via WhatsApp
           </button>

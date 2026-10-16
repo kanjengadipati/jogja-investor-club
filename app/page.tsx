@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Navbar } from '../src/components/Navbar';
 import { Hero } from '../src/components/Hero';
 import { PropertyArchetypes } from '../src/components/PropertyArchetypes';
+import { MedicalCampusCaseStudy } from '../src/components/MedicalCampusCaseStudy';
 import { ProcessSteps } from '../src/components/ProcessSteps';
 import { StrategicAreas } from '../src/components/StrategicAreas';
 import { LeadCalculatorBanner } from '../src/components/LeadCalculatorBanner';
@@ -34,9 +35,15 @@ export default function HomePage() {
     scrollToCalculator();
   };
 
+  const handleConsultMedicalStudy = (notes: string) => {
+    setSelectedPropertyType('kos');
+    setSelectedZone('Sleman - Kawasan Kampus (Seturan / Condongcatur / UGM)');
+    scrollToCalculator();
+  };
+
   const handleOpenWhatsAppDirect = () => {
     const defaultText = encodeURIComponent(
-      'Halo Tim Jogja Property Consultant, saya memiliki tanah di Yogyakarta dan ingin berkonsultasi mengenai potensi pengembangan menjadi Rumah / Villa / Homestay & Kos Eksklusif. Mohon info jadwal konsultasi awal gratis. Terima kasih!'
+      'Halo Tim Jogja Investor Club, saya memiliki tanah di Yogyakarta dan ingin berkonsultasi mengenai potensi pengembangan menjadi Rumah / Villa / Homestay & Kos Eksklusif. Mohon info jadwal konsultasi awal gratis. Terima kasih!'
     );
     window.open(`https://wa.me/6282137000888?text=${defaultText}`, '_blank', 'noopener,noreferrer');
   };
@@ -57,20 +64,23 @@ export default function HomePage() {
         {/* 3. Satu Lahan, Banyak Kemungkinan (3 Core Property Models) */}
         <PropertyArchetypes onSelectArchetype={handleSelectArchetype} />
 
-        {/* 4. Proses Mudah Langkah Demi Langkah (4 Connected Steps) */}
+        {/* 4. Studi Kasus & Blueprint Investasi Riil (Kost Eksekutif Kawasan Kedokteran UGM/UII/UAD) */}
+        <MedicalCampusCaseStudy onConsultCaseStudy={handleConsultMedicalStudy} />
+
+        {/* 5. Proses Mudah Langkah Demi Langkah (4 Connected Steps) */}
         <ProcessSteps />
 
-        {/* 5. Kawasan Strategis di Yogyakarta (Interactive Map with OSM) */}
+        {/* 6. Kawasan Strategis di Yogyakarta (Interactive Map with OSM) */}
         <StrategicAreas onSelectZone={handleSelectZone} />
 
-        {/* 6. Hitung Potensi Tanah Anda (Lead Form Banner + Calculator) */}
+        {/* 7. Hitung Potensi Tanah Anda (Lead Form Banner + Calculator) */}
         <LeadCalculatorBanner
           initialPropertyType={selectedPropertyType}
           initialZone={selectedZone}
         />
       </main>
 
-      {/* 7. Footer */}
+      {/* 8. Footer */}
       <Footer onOpenWhatsApp={handleOpenWhatsAppDirect} />
 
       {/* Floating WhatsApp CTA */}

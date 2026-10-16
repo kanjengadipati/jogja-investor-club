@@ -26,13 +26,23 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'Punya Tanah di Jogja? Wujudkan Menjadi Properti Bernilai',
+  title: 'Jogja Investor Club (JIC) — Wujudkan Tanah Anda Menjadi Properti Bernilai',
   description:
-    'Ubah tanah kosong di Yogyakarta menjadi Rumah, Villa, atau Kos Eksklusif bernilai tinggi. Dapatkan estimasi RAB & ROI gratis serta pendampingan bangun profesional.',
+    'Jogja Investor Club (JIC): ubah tanah kosong di Yogyakarta menjadi Rumah, Villa, atau Kos Eksklusif bernilai tinggi. Dapatkan estimasi RAB & ROI gratis serta pendampingan bangun profesional.',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.png', type: 'image/png' },
+      { url: '/icon.png', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-icon.png' },
+    ],
+  },
   openGraph: {
-    title: 'Punya Tanah di Jogja? Wujudkan Menjadi Properti Bernilai',
+    title: 'Jogja Investor Club (JIC) — Wujudkan Tanah Anda Menjadi Properti Bernilai',
     description:
-      'Kalkulator potensi tanah dan konsultasi bangun Rumah, Villa, dan Kos Eksklusif di Jogja dengan biaya transparan dan hasil berkualitas.',
+      'Kalkulator potensi tanah dan konsultasi bangun Rumah, Villa, dan Kos Eksklusif di Jogja bersama Jogja Investor Club.',
     type: 'website',
   },
   twitter: {
@@ -51,6 +61,9 @@ export default function RootLayout({
       className={`scroll-smooth ${playfairDisplay.variable} ${plusJakartaSans.variable} ${dmSans.variable}`}
     >
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/apple-icon.png" />
         {/* Leaflet CSS — loaded globally so it's available for dynamically imported map components */}
         <link
           rel="stylesheet"

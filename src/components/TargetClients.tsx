@@ -134,7 +134,7 @@ export const TargetClients: React.FC<TargetClientsProps> = ({ onSelectClientType
 
                 <div className="md:col-span-7">
                   <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 uppercase mb-1">
-                    <span>Solusi Turnkey dari Wujudkan Jogja</span>
+                    <span>Solusi Turnkey dari Jogja Investor Club</span>
                   </div>
                   <div className="flex items-start gap-2.5 text-xs sm:text-sm text-neutral-800">
                     <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />

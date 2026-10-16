@@ -137,7 +137,7 @@ export function calculateLandPotential(formData: LeadFormData): CalculationResul
 
   const waLines = [
     `*KONSULTASI POTENSI TANAH JOGJA*`,
-    `Halo Tim Arsitek & Kontraktor Wujudkan Jogja,`,
+    `Halo Tim Jogja Investor Club,`,
     `Saya telah mengisi simulasi potensi tanah di website dengan rincian berikut:`,
     ``,
     `👤 *Nama Lengkap:* ${formData.fullName || 'Pemilik Tanah'}`,
