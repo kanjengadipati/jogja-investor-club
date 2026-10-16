@@ -2,18 +2,28 @@
 
 import React, { useState } from 'react';
 import { ArrowRight, Menu, X } from 'lucide-react';
+import type { SiteSettingsData } from './PageClient';
 
 interface NavbarProps {
   onOpenConsultation: () => void;
   activeSection?: string;
+  siteSettings?: SiteSettingsData | null;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation, activeSection = 'beranda' }) => {
+export const Navbar: React.FC<NavbarProps> = ({
+  onOpenConsultation,
+  activeSection = 'beranda',
+  siteSettings,
+}) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const brandName   = siteSettings?.brandName   ?? 'Jogja Investor';
+  const brandSuffix = siteSettings?.brandSuffix ?? 'Club';
 
   return (
     <header className="sticky top-0 z-50 bg-[#071914]/95 backdrop-blur-md border-b border-[#c5a25d]/20 text-white transition-all">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-6 px-4 sm:px-6 lg:px-8 h-20">
+
         {/* Zone 1: Logo & Brand */}
         <a href="#" className="flex items-center gap-3.5 shrink-0 group">
           <div className="h-11 flex items-center justify-center group-hover:scale-105 transition-transform">
@@ -28,10 +38,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation, activeSectio
               className="text-sm sm:text-base font-extrabold tracking-tight text-white leading-tight"
               style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
             >
-              Jogja Investor
+              {brandName}
             </span>
             <span className="text-[10px] font-mono tracking-widest text-[#d5a864] uppercase leading-tight font-bold">
-              Club
+              {brandSuffix}
             </span>
           </div>
         </a>
@@ -44,22 +54,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation, activeSectio
           >
             Beranda
           </a>
-          <a
-            href="#solusi-properti"
-            className="hover:text-white transition-colors py-1"
-          >
+          <a href="#solusi-properti" className="hover:text-white transition-colors py-1">
             Solusi Properti
           </a>
-          <a
-            href="#area-potensial"
-            className="hover:text-white transition-colors py-1"
-          >
+          <a href="#area-potensial" className="hover:text-white transition-colors py-1">
             Area Potensial
           </a>
-          <a
-            href="#proses-layanan"
-            className="hover:text-white transition-colors py-1"
-          >
+          <a href="#proses-layanan" className="hover:text-white transition-colors py-1">
             Proses &amp; Layanan
           </a>
           <a

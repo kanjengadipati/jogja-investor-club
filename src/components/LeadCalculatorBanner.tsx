@@ -75,57 +75,60 @@ export const LeadCalculatorBanner: React.FC<LeadCalculatorBannerProps> = ({
 
         {/* Main Consultation Box Container matching Mockup Section 5 */}
         <div className="bg-[#0a221b] border border-[#d5a864]/25 rounded-3xl p-6 sm:p-10 lg:p-12 shadow-2xl">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
 
             {/* Left Column: Heritage Photo & Value Proposition (lg:col-span-6) */}
-            <div className="lg:col-span-6 space-y-6">
+            <div className="lg:col-span-6 flex flex-col justify-between h-full space-y-5">
 
-              {/* Photo Box */}
-              <div className="relative rounded-2xl overflow-hidden aspect-[16/9] shadow-lg border border-white/10 group">
-                <img
-                  src={JOGJA_IMAGES.heritage}
-                  alt="Candi Prambanan dan Warisan Sejarah Yogyakarta"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#d5a864] font-bold">
-                    YOGYAKARTA INVESTMENT HUB
-                  </span>
-                  <p className="text-sm font-semibold text-white drop-shadow-md">
-                    Nilai tanah strategis dengan potensi yield tinggi se-DIY
+              {/* Top part: Photo & Headline */}
+              <div className="space-y-4">
+                {/* Photo Box */}
+                <div className="relative rounded-2xl overflow-hidden aspect-[16/9] shadow-lg border border-white/10 group">
+                  <img
+                    src={JOGJA_IMAGES.heritage}
+                    alt="Candi Prambanan dan Warisan Sejarah Yogyakarta"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#d5a864] font-bold">
+                      YOGYAKARTA INVESTMENT HUB
+                    </span>
+                    <p className="text-sm font-semibold text-white drop-shadow-md">
+                      Nilai tanah strategis dengan potensi yield tinggi se-DIY
+                    </p>
+                  </div>
+                </div>
+
+                {/* Headline & Description */}
+                <div className="space-y-2.5">
+                  <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#d5a864]">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>KONSULTASI &amp; ANALISIS</span>
+                  </div>
+
+                  <h2
+                    className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight"
+                    style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
+                  >
+                    Hitung Potensi{' '}
+                    <span
+                      className="italic font-normal text-[#d5a864]"
+                      style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
+                    >
+                      Tanah Anda
+                    </span>
+                  </h2>
+
+                  <p className="text-sm text-neutral-300 leading-relaxed font-light">
+                    Dapatkan estimasi nilai, rekomendasi pengembangan, dan peluang investasi terbaik sesuai dengan lokasi dan tujuan Anda.
                   </p>
                 </div>
               </div>
 
-              {/* Headline & Description */}
-              <div className="space-y-3">
-                <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#d5a864]">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>KONSULTASI &amp; ANALISIS</span>
-                </div>
-
-                <h2
-                  className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight"
-                  style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
-                >
-                  Hitung Potensi{' '}
-                  <span
-                    className="italic font-normal text-[#d5a864]"
-                    style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
-                  >
-                    Tanah Anda
-                  </span>
-                </h2>
-
-                <p className="text-sm text-neutral-300 leading-relaxed font-light">
-                  Dapatkan estimasi nilai, rekomendasi pengembangan, dan peluang investasi terbaik sesuai dengan lokasi dan tujuan Anda.
-                </p>
-              </div>
-
-              {/* 3 Value Pillars matching Mockup */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+              {/* Bottom part: 3 Value Pillars */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
                 <div className="flex items-center gap-2.5 p-3 rounded-xl bg-[#061712]/80 border border-white/10">
                   <FileText className="w-4 h-4 text-[#d5a864] shrink-0" />
                   <span className="text-xs font-semibold text-neutral-200 leading-snug">
@@ -148,22 +151,11 @@ export const LeadCalculatorBanner: React.FC<LeadCalculatorBannerProps> = ({
                 </div>
               </div>
 
-              {/* Parameter & Simulation Anchor Indicator */}
-              <div className="pt-1">
-                <a
-                  href="#simulasi-potensi"
-                  className="inline-flex items-center gap-2 text-xs font-semibold text-[#d5a864] hover:text-white transition-colors cursor-pointer"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-[#d5a864]" />
-                  <span>Parameter &amp; Simulasi Anggaran Aktif di Bawah &darr;</span>
-                </a>
-              </div>
-
             </div>
 
             {/* Right Column: Consultation Form (lg:col-span-6) */}
-            <div className="lg:col-span-6">
-              <div className="bg-[#071914] border border-white/15 rounded-2xl p-6 sm:p-8 shadow-xl space-y-5">
+            <div className="lg:col-span-6 flex flex-col h-full">
+              <div className="bg-[#071914] border border-white/15 rounded-2xl p-6 sm:p-8 shadow-xl flex flex-col justify-between h-full space-y-5">
 
                 <div className="space-y-1">
                   <h3
@@ -177,99 +169,102 @@ export const LeadCalculatorBanner: React.FC<LeadCalculatorBannerProps> = ({
                   </p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  {/* Row 1: Nama Lengkap & Nomor WhatsApp */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <form onSubmit={handleSubmit} className="flex-1 flex flex-col justify-between space-y-4">
+                  <div className="space-y-3.5">
+                    {/* Row 1: Nama Lengkap & Nomor WhatsApp */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                      <div>
+                        <label className="block text-xs font-semibold text-neutral-300 mb-1.5">
+                          Nama Lengkap *
+                        </label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
+                            <User className="w-4 h-4" />
+                          </div>
+                          <input
+                            type="text"
+                            required
+                            placeholder="Nama Anda"
+                            value={formData.fullName}
+                            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                            className="w-full pl-10 pr-3.5 py-3 text-sm bg-[#0a221b] border border-white/20 rounded-xl text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-[#d5a864] focus:border-[#d5a864] transition-all"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-neutral-300 mb-1.5">
+                          Nomor WhatsApp *
+                        </label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
+                            <Phone className="w-4 h-4" />
+                          </div>
+                          <input
+                            type="tel"
+                            required
+                            placeholder="0812xxxxxxx"
+                            value={formData.whatsappNumber}
+                            onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
+                            className="w-full pl-10 pr-3.5 py-3 text-sm bg-[#0a221b] border border-white/20 rounded-xl text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-[#d5a864] focus:border-[#d5a864] transition-all"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Row 2: Jenis Properti */}
                     <div>
                       <label className="block text-xs font-semibold text-neutral-300 mb-1.5">
-                        Nama Lengkap *
+                        Jenis Properti *
                       </label>
                       <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
-                          <User className="w-4 h-4" />
+                          <Home className="w-4 h-4" />
                         </div>
-                        <input
-                          type="text"
-                          required
-                          placeholder="Nama Anda"
-                          value={formData.fullName}
-                          onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                          className="w-full pl-10 pr-3.5 py-3 text-sm bg-[#0a221b] border border-white/20 rounded-xl text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-[#d5a864] focus:border-[#d5a864] transition-all"
-                        />
+                        <select
+                          value={formData.propertyType}
+                          onChange={(e) => setFormData({ ...formData, propertyType: e.target.value as PropertyType })}
+                          className="w-full pl-10 pr-10 py-3 text-sm bg-[#0a221b] border border-white/20 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-[#d5a864] focus:border-[#d5a864] appearance-none cursor-pointer transition-all"
+                        >
+                          <option value="rumah" className="bg-[#071914] text-white">Rumah Tinggal / Hunian Keluarga</option>
+                          <option value="villa" className="bg-[#071914] text-white">Villa Mewah / Staycation Pariwisata</option>
+                          <option value="kos" className="bg-[#071914] text-white">Homestay &amp; Kos Eksklusif</option>
+                        </select>
+                        <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-neutral-400">
+                          <ChevronDown className="w-4 h-4" />
+                        </div>
                       </div>
                     </div>
 
+                    {/* Row 3: Keterangan (Opsional) */}
                     <div>
                       <label className="block text-xs font-semibold text-neutral-300 mb-1.5">
-                        Nomor WhatsApp *
+                        Keterangan (opsional)
                       </label>
-                      <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
-                          <Phone className="w-4 h-4" />
-                        </div>
-                        <input
-                          type="tel"
-                          required
-                          placeholder="0812xxxxxxx"
-                          value={formData.whatsappNumber}
-                          onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
-                          className="w-full pl-10 pr-3.5 py-3 text-sm bg-[#0a221b] border border-white/20 rounded-xl text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-[#d5a864] focus:border-[#d5a864] transition-all"
-                        />
-                      </div>
+                      <textarea
+                        rows={2}
+                        placeholder="Ceritakan lokasi dan kebutuhan Anda..."
+                        value={notes}
+                        onChange={(e) => setNotes(e.target.value)}
+                        className="w-full px-4 py-2.5 text-sm bg-[#0a221b] border border-white/20 rounded-xl text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-[#d5a864] focus:border-[#d5a864] resize-none transition-all"
+                      />
                     </div>
                   </div>
 
-                  {/* Row 2: Jenis Properti */}
-                  <div>
-                    <label className="block text-xs font-semibold text-neutral-300 mb-1.5">
-                      Jenis Properti *
-                    </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
-                        <Home className="w-4 h-4" />
-                      </div>
-                      <select
-                        value={formData.propertyType}
-                        onChange={(e) => setFormData({ ...formData, propertyType: e.target.value as PropertyType })}
-                        className="w-full pl-10 pr-10 py-3 text-sm bg-[#0a221b] border border-white/20 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-[#d5a864] focus:border-[#d5a864] appearance-none cursor-pointer transition-all"
-                      >
-                        <option value="rumah" className="bg-[#071914] text-white">Rumah Tinggal / Hunian Keluarga</option>
-                        <option value="villa" className="bg-[#071914] text-white">Villa Mewah / Staycation Pariwisata</option>
-                        <option value="kos" className="bg-[#071914] text-white">Homestay &amp; Kos Eksklusif</option>
-                      </select>
-                      <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-neutral-400">
-                        <ChevronDown className="w-4 h-4" />
-                      </div>
+                  {/* Submit Button & Privacy */}
+                  <div className="space-y-2 pt-1">
+                    <button
+                      type="submit"
+                      className="w-full py-4 px-6 bg-[#d5a864] hover:bg-[#e2b772] active:bg-[#c49855] text-[#071914] font-extrabold text-sm rounded-xl transition-all shadow-[0_4px_20px_rgba(213,168,100,0.3)] flex items-center justify-center gap-2 cursor-pointer hover:-translate-y-0.5"
+                    >
+                      <span>Kirim &amp; Konsultasi Gratis</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+
+                    <div className="flex items-center justify-center gap-2 text-[11px] text-neutral-400 pt-1">
+                      <Shield className="w-3.5 h-3.5 text-[#d5a864]" />
+                      <span>Data Anda aman dan tidak akan dibagikan ke pihak lain.</span>
                     </div>
-                  </div>
-
-                  {/* Row 3: Keterangan (Opsional) */}
-                  <div>
-                    <label className="block text-xs font-semibold text-neutral-300 mb-1.5">
-                      Keterangan (opsional)
-                    </label>
-                    <textarea
-                      rows={2}
-                      placeholder="Ceritakan lokasi dan kebutuhan Anda..."
-                      value={notes}
-                      onChange={(e) => setNotes(e.target.value)}
-                      className="w-full px-4 py-2.5 text-sm bg-[#0a221b] border border-white/20 rounded-xl text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-[#d5a864] focus:border-[#d5a864] resize-none transition-all"
-                    />
-                  </div>
-
-                  {/* Submit Button */}
-                  <button
-                    type="submit"
-                    className="w-full py-4 px-6 bg-[#d5a864] hover:bg-[#e2b772] active:bg-[#c49855] text-[#071914] font-extrabold text-sm rounded-xl transition-all shadow-[0_4px_20px_rgba(213,168,100,0.3)] flex items-center justify-center gap-2 cursor-pointer hover:-translate-y-0.5"
-                  >
-                    <span>Kirim &amp; Konsultasi Gratis</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-
-                  {/* Privacy Assurance */}
-                  <div className="flex items-center justify-center gap-2 text-[11px] text-neutral-400 pt-1">
-                    <Shield className="w-3.5 h-3.5 text-[#d5a864]" />
-                    <span>Data Anda aman dan tidak akan dibagikan ke pihak lain.</span>
                   </div>
                 </form>
 

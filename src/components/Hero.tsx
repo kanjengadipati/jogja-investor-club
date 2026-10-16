@@ -3,19 +3,35 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowRight, MapPin, BarChart3, Users, ShieldCheck } from 'lucide-react';
 import { JOGJA_IMAGES } from '../data/jogjaData';
+import type { HeroData } from './PageClient';
 
 interface HeroProps {
   onStartCalculator: () => void;
   onOpenConsultation: () => void;
+  heroData?: HeroData | null;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onStartCalculator, onOpenConsultation }) => {
+export const Hero: React.FC<HeroProps> = ({ onStartCalculator, onOpenConsultation, heroData }) => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => setLoaded(true), 80);
     return () => clearTimeout(t);
   }, []);
+
+  // Resolve values — Sanity data takes priority, fallback to hardcoded defaults
+  const kicker = heroData?.kicker ?? 'Jogja Investor Club · Private Network';
+  const headline = heroData?.headline ?? 'Investasi Properti';
+  const headlineAccent = heroData?.headlineAccent ?? 'di Jogja.';
+  const headlineSuffix = ' Lebih Cerdas.';
+  const subheadline =
+    heroData?.subheadline ??
+    'Bergabunglah bersama jaringan investor properti eksklusif di Yogyakarta. Akses deal terkurasi, analisis GIS presisi, dan pendampingan penuh — dari lahan hingga passive income.';
+  const ctaPrimaryText = heroData?.ctaPrimaryText ?? 'Daftar Konsultasi Gratis';
+  const ctaSecondaryText = heroData?.ctaSecondaryText ?? 'Analisis Peluang Lahan';
+  const quoteText =
+    heroData?.quoteText ?? 'Akses eksklusif ke peluang\nproperti terbaik di Jogja';
+  const backgroundImage = heroData?.backgroundImage ?? JOGJA_IMAGES.villa;
 
   return (
     <section className="relative bg-[#071914] text-white overflow-hidden flex flex-col justify-between lg:h-[calc(100dvh-5rem)] min-h-[calc(100dvh-5rem)]">
@@ -25,7 +41,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartCalculator, onOpenConsultatio
         {/* Background Photo */}
         <div className="absolute inset-0 z-0">
           <img
-            src={JOGJA_IMAGES.villa}
+            src={backgroundImage}
             alt="Villa Mewah Yogyakarta dengan Kolam Renang Privat"
             className="w-full h-full object-cover object-center"
             referrerPolicy="no-referrer"
@@ -38,35 +54,40 @@ export const Hero: React.FC<HeroProps> = ({ onStartCalculator, onOpenConsultatio
         </div>
 
         {/* Content */}
-        <div className={`relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-4 w-full transition-all duration-700 ${loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <div
+          className={`relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-4 w-full transition-all duration-700 ${
+            loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`}
+        >
           <div className="max-w-2xl space-y-4 sm:space-y-5 lg:space-y-4 xl:space-y-5">
 
             {/* Kicker badge */}
             <div className="inline-flex items-center gap-2 bg-[#d5a864]/15 border border-[#d5a864]/40 rounded-full px-3.5 py-1 backdrop-blur-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-[#d5a864] animate-pulse" />
               <span className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-[#d5a864]">
-                Jogja Investor Club · Private Network
+                {kicker}
               </span>
             </div>
 
             {/* Headline */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.75rem] font-extrabold tracking-tight text-white leading-[1.1]"
-                style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}>
-              Investasi Properti{' '}
+            <h1
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.75rem] font-extrabold tracking-tight text-white leading-[1.1]"
+              style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
+            >
+              {headline}{' '}
               <br />
               <span
                 className="italic font-semibold text-[#d5a864]"
                 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
               >
-                di Jogja.
+                {headlineAccent}
               </span>
-              {' '}Lebih Cerdas.
+              {headlineSuffix}
             </h1>
 
             {/* Subheading */}
             <p className="text-sm sm:text-base lg:text-base xl:text-lg text-neutral-200 font-normal max-w-xl leading-relaxed">
-              Bergabunglah bersama <strong className="text-white font-semibold">jaringan investor properti eksklusif</strong> di Yogyakarta.
-              Akses deal terkurasi, analisis GIS presisi, dan pendampingan penuh — dari lahan hingga passive income.
+              {subheadline}
             </p>
 
             {/* CTA row */}
@@ -76,7 +97,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartCalculator, onOpenConsultatio
                 onClick={onOpenConsultation}
                 className="group px-6 py-3.5 text-sm font-bold text-[#071914] bg-[#d5a864] hover:bg-[#e2b772] active:bg-[#c49855] rounded-xl transition-all shadow-[0_8px_32px_rgba(213,168,100,0.35)] flex items-center gap-2.5 cursor-pointer hover:-translate-y-0.5"
               >
-                <span>Daftar Konsultasi Gratis</span>
+                <span>{ctaPrimaryText}</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </button>
 
@@ -87,7 +108,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartCalculator, onOpenConsultatio
                 className="group px-6 py-3.5 text-sm font-semibold text-white/90 hover:text-white border border-white/25 hover:border-white/50 rounded-xl transition-all backdrop-blur-sm flex items-center gap-2.5 cursor-pointer hover:-translate-y-0.5"
               >
                 <MapPin className="w-4 h-4 text-[#d5a864] group-hover:scale-110 transition-transform" />
-                <span>Analisis Peluang Lahan</span>
+                <span>{ctaSecondaryText}</span>
               </button>
             </div>
 
@@ -114,8 +135,12 @@ export const Hero: React.FC<HeroProps> = ({ onStartCalculator, onOpenConsultatio
         {/* Floating elegant serif quote — right side desktop */}
         <div className="hidden lg:flex absolute bottom-6 right-8 xl:right-12 z-10 flex-col items-end gap-1 pointer-events-none">
           <p className="font-['Playfair_Display'] italic text-neutral-300/80 text-base xl:text-lg tracking-wide drop-shadow-md text-right leading-snug">
-            "Akses eksklusif ke peluang <br />
-            properti terbaik di Jogja"
+            {quoteText.split('\n').map((line, i, arr) => (
+              <React.Fragment key={i}>
+                {i === 0 ? `"${line}` : line}
+                {i < arr.length - 1 ? <br /> : '"'}
+              </React.Fragment>
+            ))}
           </p>
           <span className="w-16 h-[1px] bg-[#d5a864]/50" />
         </div>

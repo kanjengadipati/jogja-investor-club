@@ -1,22 +1,30 @@
 'use client';
 
 import React from 'react';
-import { ArrowUp, Phone, MapPin, Mail, ShieldCheck } from 'lucide-react';
+import { ArrowUp, Phone, ShieldCheck } from 'lucide-react';
+import type { SiteSettingsData } from './PageClient';
 
 interface FooterProps {
   onOpenWhatsApp?: () => void;
+  siteSettings?: SiteSettingsData | null;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenWhatsApp }) => {
+export const Footer: React.FC<FooterProps> = ({ onOpenWhatsApp, siteSettings }) => {
+  const brandName      = siteSettings?.brandName      ?? 'Jogja Investor';
+  const brandSuffix    = siteSettings?.brandSuffix    ?? 'Club';
+  const whatsappNumber = siteSettings?.whatsappNumber ?? '6282137000888';
+  const address        = siteSettings?.address        ?? 'Yogyakarta, D.I. Yogyakarta';
+  const tagline        = siteSettings?.tagline        ?? 'Konsultan Finansial & Kontraktor Properti';
+
   const handleWhatsApp = () => {
     if (onOpenWhatsApp) {
       onOpenWhatsApp();
     } else {
-      window.open(
-        'https://wa.me/6282137000888?text=Halo%20Jogja%20Investor%20Club%2C%20saya%20ingin%20konsultasi%20awal%20gratis.',
-        '_blank',
-        'noopener,noreferrer'
+      const msg = encodeURIComponent(
+        siteSettings?.defaultWhatsAppMessage ??
+          'Halo Jogja Investor Club, saya ingin konsultasi awal gratis.'
       );
+      window.open(`https://wa.me/${whatsappNumber}?text=${msg}`, '_blank', 'noopener,noreferrer');
     }
   };
 
@@ -34,7 +42,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenWhatsApp }) => {
             <div className="h-10 flex items-center justify-center group-hover:scale-105 transition-transform">
               <img
                 src="/images/logo-jic-dark-navbar.png"
-                alt="Jogja Investor Club (JIC)"
+                alt={`${brandName} ${brandSuffix}`}
                 className="h-9 w-auto object-contain"
               />
             </div>
@@ -43,37 +51,25 @@ export const Footer: React.FC<FooterProps> = ({ onOpenWhatsApp }) => {
                 className="text-sm sm:text-base font-extrabold tracking-tight text-white leading-tight"
                 style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
               >
-                Jogja Investor
+                {brandName}
               </span>
               <span className="text-[10px] font-mono tracking-widest text-[#d5a864] uppercase leading-tight font-bold">
-                Club
+                {brandSuffix}
               </span>
             </div>
           </a>
 
           {/* Center: Nav links */}
           <nav className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 text-xs sm:text-sm text-neutral-300">
-            <a href="#" className="hover:text-white transition-colors">
-              Beranda
-            </a>
-            <a href="#solusi-properti" className="hover:text-white transition-colors">
-              Solusi Properti
-            </a>
-            <a href="#studi-kasus-kedokteran" className="hover:text-[#d5a864] transition-colors">
-              Studi Kasus Kedokteran
-            </a>
-            <a href="#area-potensial" className="hover:text-white transition-colors">
-              Area Potensial
-            </a>
-            <a href="#proses-layanan" className="hover:text-white transition-colors">
-              Proses &amp; Layanan
-            </a>
-            <a href="#hitung-potensi" className="hover:text-white transition-colors">
-              Hitung Potensi
-            </a>
+            <a href="#" className="hover:text-white transition-colors">Beranda</a>
+            <a href="#solusi-properti" className="hover:text-white transition-colors">Solusi Properti</a>
+            <a href="#studi-kasus-kedokteran" className="hover:text-[#d5a864] transition-colors">Studi Kasus Kedokteran</a>
+            <a href="#area-potensial" className="hover:text-white transition-colors">Area Potensial</a>
+            <a href="#proses-layanan" className="hover:text-white transition-colors">Proses &amp; Layanan</a>
+            <a href="#hitung-potensi" className="hover:text-white transition-colors">Hitung Potensi</a>
           </nav>
 
-          {/* Right: Direct WA trigger */}
+          {/* Right: CTA + Back to top */}
           <div className="flex items-center gap-3">
             <button
               onClick={handleWhatsApp}
@@ -96,12 +92,15 @@ export const Footer: React.FC<FooterProps> = ({ onOpenWhatsApp }) => {
         <div className="pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-400">
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-[#d5a864]" />
-            <span>&copy; {new Date().getFullYear()} Jogja Investor Club (JIC). Seluruh Hak Cipta Dilindungi.</span>
+            <span>
+              &copy; {new Date().getFullYear()} {brandName} {brandSuffix} (JIC). Seluruh Hak Cipta
+              Dilindungi.
+            </span>
           </div>
           <div className="flex items-center gap-4 text-[11px]">
-            <span>Yogyakarta, D.I. Yogyakarta</span>
+            <span>{address}</span>
             <span>·</span>
-            <span>Konsultan Finansial &amp; Kontraktor Properti</span>
+            <span>{tagline}</span>
           </div>
         </div>
       </div>

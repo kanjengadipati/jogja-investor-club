@@ -90,18 +90,18 @@ export const INVESTMENT_CLUSTERS: InvestmentCluster[] = [
   },
 
   // 1. KAWASAN KAMPUS
-  // Hotspot: Depok & Ngaglik (UGM/UNY/UPN area), Gondokusuman (UA/UAJY)
+  // Hotspot: Depok & Ngaglik (UGM/UNY/UPN/UII), Gondokusuman & Umbulharjo (UAJY, UAD), Kasihan (UMY)
   {
     id: 'kampus',
     title: 'Kawasan Kampus',
-    subtitle: 'UGM, UNY, Seturan, UPN, UII',
+    subtitle: 'UGM, UNY, Seturan, UPN, UII, UMY',
     badge: '🔥 Hot Demand',
     bestFor: 'Kost Eksklusif & Co-Living',
     priceBadge: 'Pasar Rp 5,5 - 16 jt/m²',
-    targetRegions: ['sleman', 'kota'],
-    hotspotKecamatanSlugs: ['depok', 'ngaglik', 'mlati', 'ngemplak', 'gondokusuman', 'tegalrejo'],
-    fullName: 'Kawasan Kampus & Pelajar (Sleman & Kota Jogja)',
-    description: 'Didukung 300.000+ mahasiswa aktif di UGM, UNY, UPN, UII, Atma Jaya. Kec. Depok (Caturtunggal, Seturan, Condongcatur) dan Ngaglik (Babarsari, Jalan Kaliurang) sebagai zona tertinggi. Plus Gondokusuman (Kota) untuk kampus UA & UAJY.',
+    targetRegions: ['sleman', 'kota', 'bantul'],
+    hotspotKecamatanSlugs: ['depok', 'ngaglik', 'mlati', 'ngemplak', 'gondokusuman', 'umbulharjo', 'tegalrejo', 'kasihan'],
+    fullName: 'Kawasan Kampus & Pelajar (Sleman, Kota Jogja & Bantul Utara)',
+    description: 'Didukung 300.000+ mahasiswa aktif. Sleman: Depok (Seturan, Caturtunggal, Babarsari), Ngaglik (Jakal, UII), Mlati (UTY). Kota: Gondokusuman (UKDW, UAJY), Umbulharjo (UAD). Bantul: Kasihan (UMY, Alma Ata, ISI). Kawasan dengan occupancy kos 95%+ sepanjang tahun.',
     priceRange: 'Rp 5,5 - 16 jt/m²',
     njopPrice: 'Rp 3,5 - 14 jt/m²',
     growthRate: '+11% - 16%',
@@ -109,22 +109,23 @@ export const INVESTMENT_CLUSTERS: InvestmentCluster[] = [
   },
 
   // 2. KAWASAN WISATA & STAYCATION
-  // Hotspot: Kraton/Gondokusuman (Malioboro), Bantul pesisir, Pakem/Turi (Kaliurang)
+  // Hotspot: Kraton/Gedongtengen (Malioboro), Bantul pesisir, Pakem/Turi (Kaliurang), Dlingo & Patuk
   {
     id: 'wisata',
     title: 'Kawasan Wisata & Staycation',
-    subtitle: 'Malioboro, Parangtritis, Kaliurang',
+    subtitle: 'Malioboro, Parangtritis, Kaliurang, Mangunan',
     badge: '🏖️ High Yield',
     bestFor: 'Villa & Boutique Homestay',
     priceBadge: 'Pasar Rp 4,0 - 16 jt/m²',
-    targetRegions: ['bantul', 'kota', 'sleman'],
+    targetRegions: ['bantul', 'kota', 'sleman', 'gunungkidul'],
     hotspotKecamatanSlugs: [
-      'kraton', 'gondomanan', 'mergangsan', 'mantrijeron', // Malioboro-Prawirotaman
-      'pakem', 'turi', 'cangkringan',                      // Kaliurang-Merapi
-      'kretek', 'sanden', 'bambanglipuro',                  // Parangtritis & Pantai Bantul
+      'kraton', 'gedongtengen', 'gondomanan', 'mergangsan', 'mantrijeron', // Malioboro, Prawirotaman, Tugu
+      'pakem', 'turi', 'cangkringan', 'prambanan',                         // Kaliurang, Merapi, Candi Prambanan
+      'kretek', 'sanden', 'bambanglipuro', 'dlingo',                       // Parangtritis, Samas, Hutan Pinus Mangunan
+      'patuk',                                                              // HeHa Sky View & Bukit Bintang
     ],
-    fullName: 'Kawasan Wisata & Budaya (Bantul, Kota Jogja, Sleman Utara)',
-    description: 'Koridor 7.2+ juta wisatawan/tahun. Malioboro (Kraton, Gondomanan), Prawirotaman (Mergangsan, Mantrijeron), Kaliurang (Pakem, Turi), Parangtritis & pantai (Kretek, Sanden). Potensial villa sewa harian dan homestay estetik.',
+    fullName: 'Kawasan Wisata & Staycation (Bantul, Kota Jogja, Sleman & Gunungkidul)',
+    description: 'Koridor 7.2+ juta wisatawan/tahun. Malioboro (Kraton, Gedongtengen, Gondomanan), Prawirotaman (Mergangsan, Mantrijeron), Kaliurang (Pakem, Turi), Dlingo (Mangunan glamping), Patuk (HeHa Sky View), dan Parangtritis (Kretek). Potensial villa sewa harian dan homestay estetik.',
     priceRange: 'Rp 4,0 - 16 jt/m²',
     njopPrice: 'Rp 1,5 - 7,5 jt/m²',
     growthRate: '+10% - 14%',
@@ -154,21 +155,25 @@ export const INVESTMENT_CLUSTERS: InvestmentCluster[] = [
   },
 
   // 4. KORIDOR PERTUMBUHAN & TOL
-  // Hotspot: Temon (YIA), Sentolo, Gamping (exit tol Trihanggo)
+  // Hotspot: Seluruh koridor trase tol Solo-Jogja-YIA & Tol Bawen + Aerotropolis YIA
   {
     id: 'pertumbuhan',
     title: 'Kawasan Pertumbuhan & Tol',
-    subtitle: 'Kulon Progo YIA, Sleman Barat',
+    subtitle: 'Kulon Progo YIA, Sleman & Koridor Tol',
     badge: '🚀 High Growth',
     bestFor: 'Land Banking & Ruko Transit',
     priceBadge: 'Pasar Rp 1,8 - 6,5 jt/m²',
-    targetRegions: ['kulonprogo', 'sleman'],
+    targetRegions: ['kulonprogo', 'sleman', 'bantul'],
     hotspotKecamatanSlugs: [
-      'temon', 'wates', 'sentolo', 'panjatan',  // Kulon Progo: YIA & koridor tol
-      'gamping', 'mlati', 'seyegan', 'moyudan', // Sleman Barat: exit tol Trihanggo
+      // Kulon Progo: Bandara YIA & Koridor Trase Tol YIA
+      'temon', 'wates', 'pengasih', 'sentolo', 'nanggulan', 'panjatan', 'kokap', 'lendah',
+      // Bantul: Seksi 3 Trase Tol & Arteri YIA
+      'sedayu',
+      // Sleman: Trase Tol Solo-Jogja & Tol Bawen + Exit Tol Utama
+      'gamping', 'mlati', 'seyegan', 'tempel', 'kalasan', 'depok', 'ngemplak', 'godean', 'moyudan', 'minggir',
     ],
-    fullName: 'Koridor Tol YIA (Kulon Progo & Sleman Barat)',
-    description: 'Pertumbuhan pesat terdorong Bandara YIA dan trase tol Solo-Jogja-YIA. Temon & Wates (aerotropolis YIA), Sentolo (exit interchange), Gamping & Mlati (exit Trihanggo-Sleman). Momentum land banking terbaik saat ini.',
+    fullName: 'Koridor Tol Solo-Jogja-YIA & Aerotropolis Bandara (Kulon Progo, Sleman, Bantul)',
+    description: 'Pertumbuhan pesat terdorong Bandara Internasional YIA dan mega-proyek Tol Solo-Jogja-YIA & Tol Bawen. Mencakup seluruh koridor exit tol & simpul pertumbuhan: Temon, Wates, Pengasih, Sentolo, Sedayu, Gamping, Mlati, Seyegan, Tempel, Kalasan, hingga Depok.',
     priceRange: 'Rp 1,8 - 6,5 jt/m²',
     njopPrice: 'Rp 850 Rb - 4,5 jt/m²',
     growthRate: '+14% - 20%',
@@ -203,8 +208,8 @@ export const INVESTMENT_CLUSTERS: InvestmentCluster[] = [
     priceBadge: 'Pasar Rp 3,5 - 9,5 jt/m²',
     targetRegions: ['kota', 'bantul'],
     hotspotKecamatanSlugs: [
-      'kotagede', 'umbulharjo', 'mergangsan',  // Kota: Kotagede perak, Prawirotaman
-      'kasihan', 'sewon', 'banguntapan',       // Bantul Utara: ISI Jogja, Kasongan
+      'kotagede', 'umbulharjo', 'mergangsan', 'kraton', 'ngampilan', // Kota: Kotagede perak, Prawirotaman, sentra batik
+      'kasihan', 'sewon', 'banguntapan', 'imogiri',                  // Bantul: ISI Jogja, Kasongan, batik Imogiri
     ],
     fullName: 'Kota Jogja Selatan & Bantul Utara (Heritage & Seni)',
     description: 'Pusat komunitas ekspatriat, desainer, dan seniman internasional. Kotagede (kerajinan perak), Prawirotaman (galeri & guest house), Kasihan & Sewon (kampus ISI, kriya), Banguntapan (perumahan premium selatan). Sangat diminati turis mancanegara.',
@@ -224,11 +229,13 @@ export const INVESTMENT_CLUSTERS: InvestmentCluster[] = [
     priceBadge: 'Pasar Rp 900 Rb - 4,5 jt/m²',
     targetRegions: ['gunungkidul', 'bantul'],
     hotspotKecamatanSlugs: [
-      'tepus', 'tanjungsari', 'saptosari', 'girisubo', 'purwosari', // Gunungkidul pantai
-      'kretek', 'sanden', 'bambanglipuro',                            // Bantul pesisir JJLS
+      // Pesisir Gunungkidul: Jalur Pantai & JJLS Lengkap (tanpa terputus)
+      'purwosari', 'panggang', 'saptosari', 'tanjungsari', 'tepus', 'girisubo', 'rongkop',
+      // Pesisir Bantul: Parangtritis hingga Jembatan Pandansimo JJLS
+      'kretek', 'sanden', 'srandakan', 'bambanglipuro',
     ],
     fullName: 'Pesisir DIY Selatan (Gunungkidul & Bantul Pantai)',
-    description: 'Kawasan pesisir eksotis tumbuh tercepat di DIY. Tepus (Indrayanti, Greweng), Tanjungsari (Baron, Kukup), Saptosari (Ngrenehan, Gesing), Girisubo (Sadeng, Wediombo) + Parangtritis & Samas (Bantul). Capital gain agresif via JJLS.',
+    description: 'Kawasan pesisir eksotis tumbuh tercepat di DIY. Purwosari (Parangendog), Panggang (HeHa Ocean View, Pantai Gesing), Saptosari (Ngrenehan, Ngobaran), Tanjungsari (Baron, Kukup), Tepus (Indrayanti, Timang), Girisubo (Sadeng, Wediombo) + Parangtritis & Samas (Bantul). Capital gain agresif via JJLS.',
     priceRange: 'Rp 900 Rb - 4,5 jt/m²',
     njopPrice: 'Rp 450 Rb - 3 jt/m²',
     growthRate: '+12% - 18%',
