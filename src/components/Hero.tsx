@@ -34,7 +34,7 @@ export const Hero: React.FC<HeroProps> = ({ onStartCalculator, onOpenConsultatio
   const backgroundImage = heroData?.backgroundImage ?? JOGJA_IMAGES.villa;
 
   return (
-    <section className="relative bg-[#071914] text-white overflow-hidden flex flex-col justify-between lg:h-[calc(100dvh-5rem)] min-h-[calc(100dvh-5rem)]">
+    <section id="beranda" className="relative bg-[#071914] text-white overflow-hidden flex flex-col justify-between lg:h-[calc(100dvh-5rem)] min-h-[calc(100dvh-5rem)]">
       {/* Hero Visual — full-bleed cinematic */}
       <div className="relative flex-1 flex items-center min-h-0">
 

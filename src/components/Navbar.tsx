@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight, Menu, X } from 'lucide-react';
 import type { SiteSettingsData } from './PageClient';
 
@@ -10,22 +10,156 @@ interface NavbarProps {
   siteSettings?: SiteSettingsData | null;
 }
 
+interface NavItem {
+  id: string;
+  label: string;
+  href: string;
+  isSpecial?: boolean;
+}
+
+const NAV_ITEMS: NavItem[] = [
+  { id: 'beranda', label: 'Beranda', href: '#beranda' },
+  { id: 'solusi-properti', label: 'Solusi Properti', href: '#solusi-properti' },
+  { id: 'area-potensial', label: 'Area Potensial', href: '#area-potensial' },
+  { id: 'proses-layanan', label: 'Proses & Layanan', href: '#proses-layanan' },
+  {
+    id: 'studi-kasus-kedokteran',
+    label: 'Studi Kasus Kos',
+    href: '#studi-kasus-kedokteran',
+    isSpecial: true,
+  },
+];
+
 export const Navbar: React.FC<NavbarProps> = ({
   onOpenConsultation,
-  activeSection = 'beranda',
+  activeSection: propActiveSection,
   siteSettings,
 }) => {
+  const [activeSection, setActiveSection] = useState<string>(propActiveSection || 'beranda');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const isClickScrollingRef = useRef(false);
+  const clickTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const brandName   = siteSettings?.brandName   ?? 'Jogja Investor';
+  const brandName = siteSettings?.brandName ?? 'Jogja Investor';
   const brandSuffix = siteSettings?.brandSuffix ?? 'Club';
+
+  // Sync if propActiveSection changes externally
+  useEffect(() => {
+    if (propActiveSection) {
+      setActiveSection(propActiveSection);
+    }
+  }, [propActiveSection]);
+
+  // Scroll spy & URL hash detection
+  useEffect(() => {
+    const sectionIds = NAV_ITEMS.map((item) => item.id);
+
+    const determineActiveSection = () => {
+      if (isClickScrollingRef.current) return;
+
+      // When near the top, beranda is always active
+      if (window.scrollY < 120) {
+        setActiveSection('beranda');
+        return;
+      }
+
+      const navOffset = 110; // navbar height (80px) + safety buffer
+
+      let matchedSection = '';
+      for (const item of NAV_ITEMS) {
+        const el = document.getElementById(item.id);
+        if (!el) continue;
+
+        const rect = el.getBoundingClientRect();
+        // If section has reached navbar and bottom is still below navbar
+        if (rect.top <= navOffset && rect.bottom > navOffset) {
+          matchedSection = item.id;
+          break;
+        }
+      }
+
+      if (matchedSection) {
+        setActiveSection(matchedSection);
+      }
+    };
+
+    const onScroll = () => {
+      determineActiveSection();
+    };
+
+    const onHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (sectionIds.includes(hash)) {
+        setActiveSection(hash);
+      } else if (!hash) {
+        setActiveSection('beranda');
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('hashchange', onHashChange);
+
+    // Initial sync
+    if (window.location.hash) {
+      onHashChange();
+    } else {
+      determineActiveSection();
+    }
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('hashchange', onHashChange);
+      if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
+    };
+  }, []);
+
+  const handleNavClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    item: NavItem
+  ) => {
+    e.preventDefault();
+    setActiveSection(item.id);
+    setMobileMenuOpen(false);
+
+    // Prevent scroll spy from instantly reverting during smooth scrolling
+    isClickScrollingRef.current = true;
+    if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
+    clickTimerRef.current = setTimeout(() => {
+      isClickScrollingRef.current = false;
+    }, 900);
+
+    if (item.id === 'beranda') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (window.location.hash) {
+        window.history.pushState(null, '', window.location.pathname);
+      }
+      return;
+    }
+
+    const targetEl = document.getElementById(item.id);
+    if (targetEl) {
+      const navOffset = 76; // header height is h-20 (80px)
+      const elementPosition = targetEl.getBoundingClientRect().top + window.scrollY;
+      const offsetPosition = Math.max(0, elementPosition - navOffset);
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
+      window.history.pushState(null, '', `#${item.id}`);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-[#071914]/95 backdrop-blur-md border-b border-[#c5a25d]/20 text-white transition-all">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-6 px-4 sm:px-6 lg:px-8 h-20">
 
         {/* Zone 1: Logo & Brand */}
-        <a href="#" className="flex items-center gap-3.5 shrink-0 group">
+        <a
+          href="#beranda"
+          onClick={(e) => handleNavClick(e, NAV_ITEMS[0])}
+          className="flex items-center gap-3.5 shrink-0 group cursor-pointer"
+        >
           <div className="h-11 flex items-center justify-center group-hover:scale-105 transition-transform">
             <img
               src="/images/logo-jic-dark-navbar.png"
@@ -47,29 +181,43 @@ export const Navbar: React.FC<NavbarProps> = ({
         </a>
 
         {/* Zone 2: Navigation Links */}
-        <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium text-neutral-300">
-          <a
-            href="#"
-            className="text-white relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-[#c5a25d]"
-          >
-            Beranda
-          </a>
-          <a href="#solusi-properti" className="hover:text-white transition-colors py-1">
-            Solusi Properti
-          </a>
-          <a href="#area-potensial" className="hover:text-white transition-colors py-1">
-            Area Potensial
-          </a>
-          <a href="#proses-layanan" className="hover:text-white transition-colors py-1">
-            Proses &amp; Layanan
-          </a>
-          <a
-            href="#studi-kasus-kedokteran"
-            className="hover:text-white transition-colors py-1 flex items-center gap-1.5 text-[#d5a864]"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Studi Kasus Kos</span>
-          </a>
+        <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium">
+          {NAV_ITEMS.map((item) => {
+            const isActive = activeSection === item.id;
+
+            if (item.isSpecial) {
+              return (
+                <a
+                  key={item.id}
+                  href={item.href}
+                  onClick={(e) => handleNavClick(e, item)}
+                  className={`transition-colors py-1 flex items-center gap-1.5 relative cursor-pointer ${
+                    isActive
+                      ? "text-[#d5a864] font-semibold after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-[#c5a25d]"
+                      : 'text-[#d5a864]/90 hover:text-[#e2b772]'
+                  }`}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>{item.label}</span>
+                </a>
+              );
+            }
+
+            return (
+              <a
+                key={item.id}
+                href={item.href}
+                onClick={(e) => handleNavClick(e, item)}
+                className={`transition-colors py-1 relative cursor-pointer ${
+                  isActive
+                    ? "text-white font-medium after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-[#c5a25d]"
+                    : 'text-neutral-300 hover:text-white'
+                }`}
+              >
+                {item.label}
+              </a>
+            );
+          })}
         </nav>
 
         {/* Zone 3: CTA Button */}
@@ -98,44 +246,37 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-[#071914] border-b border-[#c5a25d]/20 px-6 py-4 space-y-3 text-sm">
-          <a
-            href="#"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-[#c5a25d] font-bold py-1"
-          >
-            Beranda
-          </a>
-          <a
-            href="#solusi-properti"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-neutral-300 hover:text-white py-1"
-          >
-            Solusi Properti
-          </a>
-          <a
-            href="#area-potensial"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-neutral-300 hover:text-white py-1"
-          >
-            Area Potensial
-          </a>
-          <a
-            href="#proses-layanan"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-neutral-300 hover:text-white py-1"
-          >
-            Proses &amp; Layanan
-          </a>
-          <a
-            href="#studi-kasus-kedokteran"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-emerald-400 font-semibold hover:text-white py-1"
-          >
-            Studi Kasus: Kos Kedokteran
-          </a>
+          {NAV_ITEMS.map((item) => {
+            const isActive = activeSection === item.id;
+            return (
+              <a
+                key={item.id}
+                href={item.href}
+                onClick={(e) => handleNavClick(e, item)}
+                className={`block py-1 transition-colors ${
+                  isActive
+                    ? 'text-[#c5a25d] font-bold border-l-2 border-[#c5a25d] pl-2'
+                    : item.isSpecial
+                    ? 'text-emerald-400 font-semibold hover:text-white'
+                    : 'text-neutral-300 hover:text-white'
+                }`}
+              >
+                {item.isSpecial ? `Studi Kasus: ${item.label}` : item.label}
+              </a>
+            );
+          })}
           <a
             href="#hitung-potensi"
-            onClick={() => setMobileMenuOpen(false)}
+            onClick={(e) => {
+              e.preventDefault();
+              setMobileMenuOpen(false);
+              const el = document.getElementById('hitung-potensi');
+              if (el) {
+                const navOffset = 76;
+                const pos = el.getBoundingClientRect().top + window.scrollY - navOffset;
+                window.scrollTo({ top: pos, behavior: 'smooth' });
+              }
+            }}
             className="block text-neutral-300 hover:text-white py-1"
           >
             Hitung Potensi Tanah
@@ -154,3 +295,4 @@ export const Navbar: React.FC<NavbarProps> = ({
     </header>
   );
 };
+
