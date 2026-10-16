@@ -291,12 +291,12 @@ export const JogjaOsmMap: React.FC<JogjaOsmMapProps> = ({
       );
 
       poly.bindPopup(`
-        <div style="font-family: system-ui, -apple-system, sans-serif; color: #fff; background: #071914; padding: 11px 13px; border-radius: 12px; border: 1px solid #d5a864; min-width: 210px; box-shadow: 0 10px 25px rgba(0,0,0,0.8);">
-          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+        <div style="font-family: system-ui, -apple-system, sans-serif; color: #fff; padding: 12px 28px 12px 14px; min-width: 215px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px;">
             <span style="font-size: 9px; font-weight: 800; color: #d5a864; letter-spacing: 0.8px; text-transform: uppercase;">ZONA MIKRO INVESTASI</span>
-            <span style="font-size: 9px; background: rgba(213,168,100,0.2); color: #f59e0b; padding: 2px 6px; border-radius: 999px; font-weight: 700;">Kecamatan</span>
+            <span style="font-size: 9px; background: rgba(213,168,100,0.25); color: #f59e0b; padding: 2px 7px; border-radius: 999px; font-weight: 700;">Kecamatan</span>
           </div>
-          <div style="font-size: 15px; font-weight: 800; color: #ffffff; margin: 4px 0 2px 0;">Kec. ${kec.name}</div>
+          <div style="font-size: 15px; font-weight: 800; color: #ffffff; margin: 2px 0 2px 0;">Kec. ${kec.name}</div>
           <div style="font-size: 11px; color: #94a3b8; text-transform: capitalize;">Kabupaten: <strong style="color: #e2e8f0;">${kec.kabupaten}</strong></div>
           <div style="margin-top: 8px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; gap: 6px; font-size: 10px; color: #34d399; font-weight: 600;">
             <span>🔍 Zoom In Aktif</span> · <span>Tingkat Kecamatan</span>

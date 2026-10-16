@@ -39,3 +39,68 @@
     transform: scale(1);
   }
 }
+
+/* Luminous thin boundary for kab/kota */
+path.kab-poly {
+  filter: drop-shadow(0 0 2.5px rgba(255, 255, 255, 0.4));
+  transition: stroke 0.25s ease, stroke-opacity 0.25s ease, stroke-width 0.25s ease;
+}
+
+/* Kecamatan interactive polygon styling */
+path.kec-poly {
+  cursor: pointer;
+  transition: fill-opacity 0.25s ease, stroke-width 0.25s ease, stroke 0.25s ease;
+}
+
+/* Custom Leaflet Dark HUD Popup - Single unified card */
+.leaflet-popup-content-wrapper,
+.leaflet-popup.custom-leaflet-popup .leaflet-popup-content-wrapper {
+  background: #071914 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(213, 168, 100, 0.45) !important;
+  border-radius: 14px !important;
+  padding: 0 !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75), 0 0 20px rgba(213, 168, 100, 0.2) !important;
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+}
+
+.leaflet-popup-content,
+.leaflet-popup.custom-leaflet-popup .leaflet-popup-content {
+  margin: 0 !important;
+  line-height: 1.4 !important;
+}
+
+.leaflet-popup-tip-container {
+  overflow: visible !important;
+}
+
+.leaflet-popup-tip,
+.leaflet-popup.custom-leaflet-popup .leaflet-popup-tip {
+  background: #071914 !important;
+  border: 1px solid rgba(213, 168, 100, 0.45) !important;
+  box-shadow: none !important;
+}
+
+.leaflet-popup-close-button,
+.leaflet-popup.custom-leaflet-popup .leaflet-popup-close-button {
+  color: #d5a864 !important;
+  top: 8px !important;
+  right: 10px !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  width: 22px !important;
+  height: 22px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: color 0.15s ease, transform 0.15s ease;
+  z-index: 20;
+}
+
+.leaflet-popup-close-button:hover,
+.leaflet-popup.custom-leaflet-popup .leaflet-popup-close-button:hover {
+  color: #ffffff !important;
+  transform: scale(1.15);
+}
+

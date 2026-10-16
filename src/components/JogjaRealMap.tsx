@@ -624,13 +624,16 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
       );
 
       exitMarker.bindPopup(`
-        <div style="font-family: sans-serif; color: #fff; background: #071914; padding: 10px; border-radius: 10px; border: 1px solid #eab308; min-width: 200px;">
-          <div style="font-size: 10px; color: #eab308; font-weight: bold; text-transform: uppercase;">Exit Gerbang Tol Strategis</div>
-          <div style="font-size: 13px; font-weight: bold; margin: 2px 0 4px 0;">${exit.name}</div>
-          <div style="font-size: 11px; color: #cbd5e1; line-height: 1.4;">${exit.impactZone}</div>
-          <div style="margin-top: 6px; font-size: 10px; font-family: monospace; color: #10b981;">Target Siap: ${exit.completion}</div>
+        <div style="font-family: system-ui, -apple-system, sans-serif; color: #fff; padding: 12px 28px 12px 14px; min-width: 210px;">
+          <div style="font-size: 10px; color: #eab308; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Exit Gerbang Tol Strategis</div>
+          <div style="font-size: 14px; font-weight: 800; margin: 3px 0 3px 0; color: #ffffff;">${exit.name}</div>
+          <div style="font-size: 11px; color: #94a3b8; line-height: 1.4;">${exit.impactZone}</div>
+          <div style="margin-top: 8px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.12); font-size: 10px; font-family: monospace; color: #10b981; font-weight: 600;">Target Siap: ${exit.completion}</div>
         </div>
-      `);
+      `, {
+        className: 'custom-leaflet-popup',
+        offset: [0, -6],
+      });
     });
     tollLayerGroupRef.current = tollGroup;
     if (showTollLayer || filterMode === 'akses') {
@@ -664,13 +667,16 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
       );
 
       poiMarker.bindPopup(`
-        <div style="font-family: sans-serif; color: #fff; background: #071914; padding: 10px; border-radius: 10px; border: 1px solid #d5a864; min-width: 210px;">
-          <div style="font-size: 10px; color: #d5a864; font-weight: bold;">MAGNET INVESTASI · RADIUS TANGKAPAN</div>
-          <div style="font-size: 13px; font-weight: bold; margin: 3px 0 4px 0;">${categoryEmoji} ${poi.name}</div>
-          <div style="font-size: 11px; color: #cbd5e1; line-height: 1.4;">${poi.detail}</div>
-          <div style="margin-top: 6px; font-size: 10px; color: #10b981; font-weight: bold;">Captive Market: ${poi.badge}</div>
+        <div style="font-family: system-ui, -apple-system, sans-serif; color: #fff; padding: 12px 28px 12px 14px; min-width: 215px;">
+          <div style="font-size: 9px; color: #d5a864; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase;">MAGNET INVESTASI · RADIUS TANGKAPAN</div>
+          <div style="font-size: 14px; font-weight: 800; margin: 3px 0 3px 0; color: #ffffff;">${categoryEmoji} ${poi.name}</div>
+          <div style="font-size: 11px; color: #94a3b8; line-height: 1.4;">${poi.detail}</div>
+          <div style="margin-top: 8px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.12); font-size: 10px; color: #10b981; font-weight: 700;">Captive Market: ${poi.badge}</div>
         </div>
-      `);
+      `, {
+        className: 'custom-leaflet-popup',
+        offset: [0, -6],
+      });
     });
     poiLayerGroupRef.current = poiGroup;
     if (showPoiLayer && filterMode !== 'akses') {
@@ -699,12 +705,12 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
       );
 
       poly.bindPopup(`
-        <div style="font-family: system-ui, -apple-system, sans-serif; color: #fff; background: #071914; padding: 11px 13px; border-radius: 12px; border: 1px solid #d5a864; min-width: 210px; box-shadow: 0 10px 25px rgba(0,0,0,0.8);">
-          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+        <div style="font-family: system-ui, -apple-system, sans-serif; color: #fff; padding: 12px 28px 12px 14px; min-width: 215px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px;">
             <span style="font-size: 9px; font-weight: 800; color: #d5a864; letter-spacing: 0.8px; text-transform: uppercase;">ZONA MIKRO INVESTASI</span>
-            <span style="font-size: 9px; background: rgba(213,168,100,0.2); color: #f59e0b; padding: 2px 6px; border-radius: 999px; font-weight: 700;">Hotspot</span>
+            <span style="font-size: 9px; background: rgba(213,168,100,0.25); color: #f59e0b; padding: 2px 7px; border-radius: 999px; font-weight: 700;">Hotspot</span>
           </div>
-          <div style="font-size: 15px; font-weight: 800; color: #ffffff; margin: 4px 0 2px 0;">Kec. ${kec.name}</div>
+          <div style="font-size: 15px; font-weight: 800; color: #ffffff; margin: 2px 0 2px 0;">Kec. ${kec.name}</div>
           <div style="font-size: 11px; color: #94a3b8; text-transform: capitalize;">Kabupaten: <strong style="color: #e2e8f0;">${kec.kabupaten}</strong></div>
           <div style="margin-top: 8px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; gap: 6px; font-size: 10px; color: #34d399; font-weight: 600;">
             <span>🔍 Zoom In Aktif</span> · <span>Tingkat Kecamatan</span>
