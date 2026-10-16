@@ -5,6 +5,15 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { PropertyType } from '../types/property';
 import { MapPin, Crosshair, ArrowRight, Layers, Target, Compass } from 'lucide-react';
+import jogjaKecamatanDataRaw from '../data/jogjaKecamatanGeoData.json';
+
+interface KecamatanEntry {
+  name: string;
+  kabupaten: string;
+  polygon: [number, number][];
+}
+
+const jogjaKecamatanData = (jogjaKecamatanDataRaw as unknown as { kecamatan: Record<string, KecamatanEntry> }).kecamatan;
 
 export interface InvestmentBlock {
   id: string;
@@ -182,7 +191,7 @@ export const JogjaOsmMap: React.FC<JogjaOsmMapProps> = ({
   const customMarkerRef = useRef<L.Marker | null>(null);
 
   const [activeBlockId, setActiveBlockId] = useState<string>(selectedLocationId);
-  const [mapTheme, setMapTheme] = useState<'dark-hud' | 'light' | 'street'>('dark-hud');
+  const [mapTheme, setMapTheme] = useState<'dark-hud' | 'light' | 'street' | 'satellite'>('dark-hud');
   const [customPinInfo, setCustomPinInfo] = useState<{
     lat: number;
     lng: number;
@@ -221,17 +230,29 @@ export const JogjaOsmMap: React.FC<JogjaOsmMapProps> = ({
       zoomSnap: 0.1,
       zoomDelta: 0.5,
       zoom: 11,
+      minZoom: 8.5,
+      maxZoom: 19,
       zoomControl: false,
-      scrollWheelZoom: false,
+      scrollWheelZoom: true,
+      doubleClickZoom: true,
     });
 
     L.control.zoom({ position: 'bottomleft' }).addTo(map);
     mapInstanceRef.current = map;
 
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
+    const tileUrl =
+      mapTheme === 'satellite'
+        ? 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'
+        : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+    const tileAttribution =
+      mapTheme === 'satellite'
+        ? '&copy; Google Satellite Imagery'
+        : '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>';
+
+    L.tileLayer(tileUrl, {
+      maxZoom: mapTheme === 'satellite' ? 20 : 18,
+      attribution: tileAttribution,
     }).addTo(map);
 
     const tilePane = map.getPane('tilePane');
@@ -241,10 +262,82 @@ export const JogjaOsmMap: React.FC<JogjaOsmMapProps> = ({
           'invert(100%) hue-rotate(180deg) brightness(88%) contrast(110%) saturate(60%)';
       } else if (mapTheme === 'light') {
         tilePane.style.filter = 'saturate(0.55) brightness(1.03) contrast(0.96)';
+      } else if (mapTheme === 'satellite') {
+        tilePane.style.filter = 'brightness(0.92) contrast(1.08)';
       } else {
         tilePane.style.filter = 'none';
       }
     }
+
+    // Kecamatan Micro Layer for deep zoom on click
+    const kecamatanGroup = L.layerGroup();
+    Object.entries(jogjaKecamatanData).forEach(([slug, kec]) => {
+      const poly = L.polygon(kec.polygon as [number, number][], {
+        color: '#d5a864',
+        fillColor: '#d5a864',
+        fillOpacity: 0.08,
+        weight: 1.0,
+        opacity: 0.45,
+        className: `kec-poly kec-${slug}`,
+      }).addTo(kecamatanGroup);
+
+      poly.bindTooltip(
+        `<div style="font-family: sans-serif; font-size: 11px; font-weight: bold;
+          color: #fff; background: #071914cc; padding: 3px 8px; border-radius: 6px;
+          border: 1px solid #d5a864;">
+          📍 Kec. ${kec.name} (${kec.kabupaten})
+        </div>`,
+        { sticky: true, opacity: 0.95 }
+      );
+
+      poly.bindPopup(`
+        <div style="font-family: system-ui, -apple-system, sans-serif; color: #fff; background: #071914; padding: 11px 13px; border-radius: 12px; border: 1px solid #d5a864; min-width: 210px; box-shadow: 0 10px 25px rgba(0,0,0,0.8);">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+            <span style="font-size: 9px; font-weight: 800; color: #d5a864; letter-spacing: 0.8px; text-transform: uppercase;">ZONA MIKRO INVESTASI</span>
+            <span style="font-size: 9px; background: rgba(213,168,100,0.2); color: #f59e0b; padding: 2px 6px; border-radius: 999px; font-weight: 700;">Kecamatan</span>
+          </div>
+          <div style="font-size: 15px; font-weight: 800; color: #ffffff; margin: 4px 0 2px 0;">Kec. ${kec.name}</div>
+          <div style="font-size: 11px; color: #94a3b8; text-transform: capitalize;">Kabupaten: <strong style="color: #e2e8f0;">${kec.kabupaten}</strong></div>
+          <div style="margin-top: 8px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; gap: 6px; font-size: 10px; color: #34d399; font-weight: 600;">
+            <span>🔍 Zoom In Aktif</span> · <span>Tingkat Kecamatan</span>
+          </div>
+        </div>
+      `, {
+        className: 'custom-leaflet-popup',
+        offset: [0, -6],
+      });
+
+      // Zoom in to kecamatan on click
+      poly.on('click', (e) => {
+        L.DomEvent.stopPropagation(e);
+        map.flyToBounds(poly.getBounds(), {
+          padding: [30, 30],
+          maxZoom: 16,
+          duration: 0.8,
+        });
+        poly.openPopup(e.latlng);
+      });
+
+      poly.on('mouseover', () => {
+        poly.setStyle({
+          weight: 3.0,
+          fillOpacity: 0.35,
+          opacity: 1,
+          color: '#f59e0b',
+        });
+      });
+
+      poly.on('mouseout', () => {
+        poly.setStyle({
+          color: '#d5a864',
+          fillColor: '#d5a864',
+          fillOpacity: 0.08,
+          weight: 1.0,
+          opacity: 0.45,
+        });
+      });
+    });
+    kecamatanGroup.addTo(map);
 
     INVESTMENT_BLOCKS.forEach((block) => {
       const isSelected = block.id === activeBlockId;
@@ -403,6 +496,17 @@ export const JogjaOsmMap: React.FC<JogjaOsmMapProps> = ({
               }`}
             >
               GIS Dark
+            </button>
+            <button
+              type="button"
+              onClick={() => setMapTheme('satellite')}
+              className={`px-2.5 py-1 rounded-lg font-bold cursor-pointer transition-colors ${
+                mapTheme === 'satellite'
+                  ? 'bg-[#d5a864] text-[#071914] shadow-xs'
+                  : 'text-neutral-300 hover:text-white'
+              }`}
+            >
+              Satelit
             </button>
             <button
               type="button"

@@ -289,6 +289,9 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
     return new Set(highlightKecamatanSlugs);
   }, [highlightKecamatanSlugs]);
 
+  const kecamatanHighlightSetRef = useRef(kecamatanHighlightSet);
+  kecamatanHighlightSetRef.current = kecamatanHighlightSet;
+
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const polygonsRef = useRef<{ [key: string]: L.Polygon }>({});
@@ -299,7 +302,7 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
   const poiLayerGroupRef = useRef<L.LayerGroup | null>(null);
   const inspectMarkerRef = useRef<L.Marker | null>(null);
 
-  const [mapTheme, setMapTheme] = useState<'dark-hud' | 'light' | 'street'>('dark-hud');
+  const [mapTheme, setMapTheme] = useState<'dark-hud' | 'light' | 'street' | 'satellite'>('dark-hud');
   const [activeRegionId, setActiveRegionId] = useState(selectedRegionId);
 
   // Layer Toggles
@@ -453,9 +456,9 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
     // Default: Zonasi RTRW
     return `
       <div style="display: flex; align-items: center; gap: 5px; cursor: pointer; transform: translate(-8px, -8px);">
-        <div style="width: 12px; height: 12px; border-radius: 9999px; background-color: #071914; border: 2.5px solid ${reg.color}; box-shadow: 0 0 10px ${reg.color}; flex-shrink: 0;"></div>
-        <div style="font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 800; color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.9); background: rgba(7,25,20,0.92); padding: 2.5px 7px; border-radius: 6px; border: 1px solid ${reg.color}60; white-space: nowrap;">
-          ${reg.name} · ${reg.id === 'sleman' ? 'Zonasi Kampus' : reg.id === 'kota' ? 'Zonasi Urban' : reg.id === 'bantul' ? 'Zonasi Seni' : reg.id === 'gunungkidul' ? 'Zonasi Geopark' : 'Zonasi Aerotropolis'}
+        <div style="width: 10px; height: 10px; border-radius: 9999px; background-color: #071914; border: 2px solid ${reg.color}; box-shadow: 0 0 8px ${reg.color}; flex-shrink: 0;"></div>
+        <div style="font-family: system-ui, -apple-system, sans-serif; font-size: 11px; font-weight: 700; color: #f1f5f9; background: rgba(7,25,20,0.88); padding: 2px 7px; border-radius: 6px; border: 1px solid ${reg.color}60; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.6);">
+          ${reg.name}
         </div>
       </div>
     `;
@@ -477,18 +480,28 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
       zoomSnap: 0.1,
       zoomDelta: 0.5,
       minZoom: 8.5,
-      maxZoom: 16,
+      maxZoom: 19,
       zoomControl: false,
-      scrollWheelZoom: false,
+      scrollWheelZoom: true,
+      doubleClickZoom: true,
     });
 
     L.control.zoom({ position: 'bottomleft' }).addTo(map);
     mapInstanceRef.current = map;
 
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
+    const tileUrl =
+      mapTheme === 'satellite'
+        ? 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'
+        : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+    const tileAttribution =
+      mapTheme === 'satellite'
+        ? '&copy; Google Satellite Imagery'
+        : '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>';
+
+    L.tileLayer(tileUrl, {
+      maxZoom: mapTheme === 'satellite' ? 20 : 18,
+      attribution: tileAttribution,
     }).addTo(map);
 
     const tilePane = map.getPane('tilePane');
@@ -498,6 +511,8 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
           'invert(100%) hue-rotate(180deg) brightness(88%) contrast(110%) saturate(60%)';
       } else if (mapTheme === 'light') {
         tilePane.style.filter = 'saturate(0.55) brightness(1.03) contrast(0.96)';
+      } else if (mapTheme === 'satellite') {
+        tilePane.style.filter = 'brightness(0.92) contrast(1.08)';
       } else {
         tilePane.style.filter = 'none';
       }
@@ -511,11 +526,12 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
       const polygon = L.polygon(reg.polygon, {
         color: fillColor,
         fillColor: fillColor,
-        fillOpacity: filterMode === 'akses' ? 0.08 : isAll ? 0.25 : isSelected ? 0.45 : 0.12,
-        weight: filterMode === 'akses' ? 1.0 : isAll ? 1.5 : isSelected ? 3 : 1.2,
-        opacity: isAll ? 0.85 : isSelected ? 1 : 0.65,
+        fillOpacity: filterMode === 'akses' ? 0.08 : isAll ? 0.22 : isSelected ? 0.35 : 0.08,
+        weight: isSelected ? 1.6 : 1.2,
+        opacity: isSelected ? 1.0 : 0.75,
         lineCap: 'round',
         lineJoin: 'round',
+        className: 'kab-poly',
       }).addTo(map);
 
       polygon.on('click', () => {
@@ -585,21 +601,28 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
       );
     });
 
-    // Toll Exit Markers
+    // Toll Exit Markers (Compact pin, hover for tooltip, click for full popup)
     TOLL_EXITS.forEach((exit) => {
       const exitIcon = L.divIcon({
         className: 'toll-exit-pin',
         html: `
-          <div style="background: #071914; border: 2px solid #eab308; color: #eab308; border-radius: 8px; padding: 2px 6px; font-size: 10px; font-weight: 800; font-family: monospace; display: flex; align-items: center; gap: 4px; box-shadow: 0 0 12px rgba(234,179,8,0.7); cursor: pointer; white-space: nowrap;">
-            <span>🚧</span>
-            <span>${exit.name.replace('Exit Tol ', '')}</span>
+          <div style="width: 26px; height: 26px; border-radius: 8px; background: rgba(7,25,20,0.95); border: 2px solid #eab308; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(234,179,8,0.7); cursor: pointer;">
+            <span style="font-size: 13px; line-height: 1;">🚧</span>
           </div>
         `,
-        iconSize: [120, 22],
-        iconAnchor: [60, 11],
+        iconSize: [26, 26],
+        iconAnchor: [13, 13],
       });
 
       const exitMarker = L.marker([exit.lat, exit.lng], { icon: exitIcon }).addTo(tollGroup);
+
+      exitMarker.bindTooltip(
+        `<div style="font-family: sans-serif; font-size: 11px; font-weight: bold; color: #eab308; background: #071914ee; padding: 4px 8px; border-radius: 6px; border: 1px solid #eab308; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.6);">
+          🚧 ${exit.name}
+        </div>`,
+        { direction: 'top', offset: [0, -14], opacity: 0.98 }
+      );
+
       exitMarker.bindPopup(`
         <div style="font-family: sans-serif; color: #fff; background: #071914; padding: 10px; border-radius: 10px; border: 1px solid #eab308; min-width: 200px;">
           <div style="font-size: 10px; color: #eab308; font-weight: bold; text-transform: uppercase;">Exit Gerbang Tol Strategis</div>
@@ -614,7 +637,7 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
       tollGroup.addTo(map);
     }
 
-    // 4. Strategic Investment POI Layer (Kampus & RS)
+    // 4. Strategic Investment POI Layer (Compact pin, hover for tooltip, click for full popup)
     const poiGroup = L.layerGroup();
     INVESTMENT_POIS.forEach((poi) => {
       const categoryColor = poi.category === 'kampus' ? '#10b981' : poi.category === 'kesehatan' ? '#ef4444' : '#06b6d4';
@@ -623,16 +646,23 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
       const poiIcon = L.divIcon({
         className: 'poi-pin',
         html: `
-          <div style="background: rgba(7,25,20,0.92); border: 1.5px solid ${categoryColor}; border-radius: 9999px; padding: 3px 6px; display: flex; align-items: center; gap: 3px; box-shadow: 0 0 6px ${categoryColor}80; cursor: pointer; white-space: nowrap;">
-            <span style="font-size: 10px;">${categoryEmoji}</span>
-            <span style="font-size: 9px; font-weight: bold; color: #fff; font-family: system-ui;">${poi.name}</span>
+          <div style="width: 26px; height: 26px; border-radius: 9999px; background: rgba(7,25,20,0.95); border: 2px solid ${categoryColor}; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px ${categoryColor}80; cursor: pointer;">
+            <span style="font-size: 13px; line-height: 1;">${categoryEmoji}</span>
           </div>
         `,
-        iconSize: [120, 20],
-        iconAnchor: [60, 10],
+        iconSize: [26, 26],
+        iconAnchor: [13, 13],
       });
 
       const poiMarker = L.marker([poi.lat, poi.lng], { icon: poiIcon }).addTo(poiGroup);
+
+      poiMarker.bindTooltip(
+        `<div style="font-family: sans-serif; font-size: 11px; font-weight: bold; color: #fff; background: #071914ee; padding: 4px 8px; border-radius: 6px; border: 1px solid ${categoryColor}; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.6);">
+          ${categoryEmoji} ${poi.name}
+        </div>`,
+        { direction: 'top', offset: [0, -14], opacity: 0.98 }
+      );
+
       poiMarker.bindPopup(`
         <div style="font-family: sans-serif; color: #fff; background: #071914; padding: 10px; border-radius: 10px; border: 1px solid #d5a864; min-width: 210px;">
           <div style="font-size: 10px; color: #d5a864; font-weight: bold;">MAGNET INVESTASI · RADIUS TANGKAPAN</div>
@@ -667,6 +697,87 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
         </div>`,
         { sticky: true, opacity: 0.95 }
       );
+
+      poly.bindPopup(`
+        <div style="font-family: system-ui, -apple-system, sans-serif; color: #fff; background: #071914; padding: 11px 13px; border-radius: 12px; border: 1px solid #d5a864; min-width: 210px; box-shadow: 0 10px 25px rgba(0,0,0,0.8);">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+            <span style="font-size: 9px; font-weight: 800; color: #d5a864; letter-spacing: 0.8px; text-transform: uppercase;">ZONA MIKRO INVESTASI</span>
+            <span style="font-size: 9px; background: rgba(213,168,100,0.2); color: #f59e0b; padding: 2px 6px; border-radius: 999px; font-weight: 700;">Hotspot</span>
+          </div>
+          <div style="font-size: 15px; font-weight: 800; color: #ffffff; margin: 4px 0 2px 0;">Kec. ${kec.name}</div>
+          <div style="font-size: 11px; color: #94a3b8; text-transform: capitalize;">Kabupaten: <strong style="color: #e2e8f0;">${kec.kabupaten}</strong></div>
+          <div style="margin-top: 8px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; gap: 6px; font-size: 10px; color: #34d399; font-weight: 600;">
+            <span>🔍 Zoom In Aktif</span> · <span>Tingkat Kecamatan</span>
+          </div>
+        </div>
+      `, {
+        className: 'custom-leaflet-popup',
+        offset: [0, -6],
+      });
+
+      // Click to Zoom In on Kecamatan!
+      poly.on('click', (e) => {
+        L.DomEvent.stopPropagation(e);
+
+        // Sync parent kabupaten if matched
+        const matchedRegion = YOGYAKARTA_REGIONS.find((r) => r.id === kec.kabupaten);
+        if (matchedRegion) {
+          setActiveRegionId(matchedRegion.id);
+          onSelectRegion(matchedRegion);
+        }
+
+        // Smooth zoom in deeper to the clicked kecamatan with compact padding
+        map.flyToBounds(poly.getBounds(), {
+          padding: [30, 30],
+          maxZoom: 16,
+          duration: 0.8,
+        });
+
+        poly.openPopup(e.latlng);
+      });
+
+      // Hover glow enhancement
+      poly.on('mouseover', () => {
+        poly.setStyle({
+          weight: 3.2,
+          fillOpacity: 0.5,
+          opacity: 1,
+          color: '#f59e0b',
+        });
+      });
+
+      poly.on('mouseout', () => {
+        const hasHighlight = kecamatanHighlightSetRef.current.size > 0;
+        const isHot = hasHighlight && kecamatanHighlightSetRef.current.has(slug);
+        const parentReg = YOGYAKARTA_REGIONS.find((r) => r.id === kec.kabupaten);
+        const baseColor = parentReg?.color ?? '#d5a864';
+
+        if (!hasHighlight) {
+          poly.setStyle({
+            color: '#d5a864',
+            fillColor: baseColor,
+            fillOpacity: 0.1,
+            weight: 0.9,
+            opacity: 0.45,
+          });
+        } else if (isHot) {
+          poly.setStyle({
+            color: '#d5a864',
+            fillColor: baseColor,
+            fillOpacity: 0.55,
+            weight: 2.4,
+            opacity: 1,
+          });
+        } else {
+          poly.setStyle({
+            color: '#64748b',
+            fillColor: '#334155',
+            fillOpacity: 0.04,
+            weight: 0.7,
+            opacity: 0.3,
+          });
+        }
+      });
 
       // Store with compound key
       polygonsRef.current[`kec:${slug}`] = poly;
@@ -705,30 +816,47 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
   useEffect(() => {
     if (!mapInstanceRef.current) return;
 
-    // 1. Update Polygons Style
     // Multi-region highlight: jika highlightSet tidak kosong, polygon yang masuk set = aktif
+    const hasKecamatanHighlight = kecamatanHighlightSet.size > 0;
     const hasMultiHighlight = highlightSet.size > 0;
+
     Object.keys(polygonsRef.current).forEach((regId) => {
+      // Skip kecamatan polygons which are styled in their dedicated effect
+      if (regId.startsWith('kec:')) return;
+
       const poly = polygonsRef.current[regId];
       const isSelected = regId === activeRegionId;
       const isHighlighted = hasMultiHighlight ? highlightSet.has(regId) : isSelected;
       const reg = YOGYAKARTA_REGIONS.find((r) => r.id === regId);
       if (poly && reg) {
         const fillColor = filterMode === 'harga' ? reg.njopColor : reg.color;
+
+        // Batas Kab/Kota: dibuat menyala tipis (luminous thin boundary)
+        if (hasKecamatanHighlight) {
+          poly.setStyle({
+            fillColor: fillColor,
+            color: fillColor,
+            fillOpacity: isHighlighted ? 0.03 : 0.01,
+            weight: isHighlighted ? 1.5 : 1.0,
+            opacity: isHighlighted ? 0.95 : 0.6,
+          });
+          return;
+        }
+
         poly.setStyle({
           fillColor: fillColor,
           color: fillColor,
           fillOpacity:
             filterMode === 'akses' ? 0.08
-            : isAll ? 0.25
-            : isHighlighted ? 0.45
+            : isAll ? 0.22
+            : isHighlighted ? 0.35
             : 0.08,
           weight:
             filterMode === 'akses' ? 1.0
-            : isAll ? 1.5
-            : isHighlighted ? 3
-            : 0.8,
-          opacity: isAll ? 0.85 : isHighlighted ? 1 : 0.45,
+            : isAll ? 1.4
+            : isHighlighted ? 1.6
+            : 1.1,
+          opacity: isAll ? 0.85 : isHighlighted ? 1.0 : 0.75,
         });
       }
     });
@@ -772,7 +900,7 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
         }
       }
     }
-  }, [filterMode, activeRegionId, isAll, showTollLayer, showPoiLayer]);
+  }, [filterMode, activeRegionId, isAll, showTollLayer, showPoiLayer, highlightSet, kecamatanHighlightSet]);
 
   // -------------------------------------------------------------
   // KECAMATAN LAYER: update styles when highlight set changes
@@ -792,26 +920,32 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
       const baseColor = parentReg?.color ?? '#d5a864';
 
       if (!hasHighlight) {
-        // No cluster selected — hide all kecamatan
-        poly.setStyle({ fillOpacity: 0, weight: 0, opacity: 0 });
+        // Semua Kawasan DIY: tampilkan batas halus semua kecamatan agar terlihat dan bisa di-zoom
+        poly.setStyle({
+          color: '#d5a864',
+          fillColor: baseColor,
+          fillOpacity: 0.1,
+          weight: 0.9,
+          opacity: 0.5,
+        });
       } else if (isHot) {
-        // Highlighted kecamatan: vibrant glow
+        // Highlighted kecamatan klaster aktif: vibrant glow emas/aksen zona
         poly.setStyle({
           color: '#d5a864',
           fillColor: baseColor,
           fillOpacity: 0.55,
-          weight: 2.5,
+          weight: 2.4,
           opacity: 1,
         });
         poly.bringToFront();
       } else {
-        // Other kecamatan in same area: very dim
+        // Bukan hotspot klaster aktif: batas halus namun tetap interaktif dan bisa di-zoom
         poly.setStyle({
-          color: baseColor,
-          fillColor: baseColor,
-          fillOpacity: 0.06,
-          weight: 0.5,
-          opacity: 0.3,
+          color: '#64748b',
+          fillColor: '#334155',
+          fillOpacity: 0.04,
+          weight: 0.7,
+          opacity: 0.35,
         });
       }
     });
@@ -914,6 +1048,17 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
             </button>
             <button
               type="button"
+              onClick={() => setMapTheme('satellite')}
+              className={`px-2 py-1 rounded-lg font-bold cursor-pointer transition-colors ${
+                mapTheme === 'satellite'
+                  ? 'bg-[#d5a864] text-[#071914]'
+                  : 'text-neutral-300 hover:text-white'
+              }`}
+            >
+              Satelit
+            </button>
+            <button
+              type="button"
               onClick={() => setMapTheme('street')}
               className={`px-2 py-1 rounded-lg font-bold cursor-pointer transition-colors ${
                 mapTheme === 'street'
@@ -922,6 +1067,22 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
               }`}
             >
               Jalan
+            </button>
+
+            {/* Reset Zoom Button */}
+            <div className="h-3.5 w-px bg-white/20 mx-0.5" />
+            <button
+              type="button"
+              onClick={() => {
+                if (mapInstanceRef.current) {
+                  mapInstanceRef.current.fitBounds(diyBounds, { padding: [16, 16], duration: 0.8 });
+                }
+              }}
+              className="px-2 py-1 rounded-lg font-semibold cursor-pointer transition-colors text-neutral-300 hover:text-white hover:bg-white/10 flex items-center gap-1"
+              title="Reset Tampilan ke Seluruh DIY"
+            >
+              <Compass className="w-3 h-3 text-[#d5a864]" />
+              <span>Fit DIY</span>
             </button>
           </div>
         </div>

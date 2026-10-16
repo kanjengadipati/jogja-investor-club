@@ -103,10 +103,10 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
       <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[#d5a864]/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-[#1a4a39]/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="relative max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 space-y-4 lg:space-y-5">
+      <div className="relative max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
 
-        {/* Top Header Row — High density & streamlined to save vertical space */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-3.5 border-b border-white/10">
+        {/* Top Header Row — High density & streamlined to eliminate gap */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3">
           <div className="space-y-1 flex-1">
             <div className="inline-flex items-center gap-2 text-[11px] font-mono font-bold uppercase tracking-widest text-[#d5a864]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#d5a864] animate-pulse" />
@@ -133,65 +133,54 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
           </div>
 
           {/* Filter Pills (Zonasi RTRW, Harga Lahan / NJOP, Aksesibilitas & Tol) */}
-          <div className="flex flex-col sm:items-end gap-1 shrink-0">
-            <div className="flex items-center gap-1.5 bg-[#0a231c] p-1 rounded-full border border-white/10">
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveMapTab('zonasi');
-                  setActiveFilterTab('zonasi');
-                }}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                  activeFilterTab === 'zonasi' && activeMapTab === 'zonasi'
-                    ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
-                    : 'text-neutral-300 hover:text-white'
-                }`}
-              >
-                <Layers className="w-3.5 h-3.5" />
-                <span>Zonasi RTRW</span>
-              </button>
+          <div className="flex items-center gap-1.5 bg-[#0a231c] p-1 rounded-full border border-white/10 shrink-0">
+            <button
+              type="button"
+              onClick={() => {
+                setActiveMapTab('zonasi');
+                setActiveFilterTab('zonasi');
+              }}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeFilterTab === 'zonasi' && activeMapTab === 'zonasi'
+                  ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
+                  : 'text-neutral-300 hover:text-white'
+              }`}
+            >
+              <Layers className="w-3.5 h-3.5" />
+              <span>Zonasi RTRW</span>
+            </button>
 
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveMapTab('zonasi');
-                  setActiveFilterTab('harga');
-                }}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                  activeFilterTab === 'harga' && activeMapTab === 'zonasi'
-                    ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
-                    : 'text-neutral-300 hover:text-white'
-                }`}
-              >
-                <DollarSign className="w-3.5 h-3.5" />
-                <span>Harga Lahan (NJOP)</span>
-              </button>
+            <button
+              type="button"
+              onClick={() => {
+                setActiveMapTab('zonasi');
+                setActiveFilterTab('harga');
+              }}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeFilterTab === 'harga' && activeMapTab === 'zonasi'
+                  ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
+                  : 'text-neutral-300 hover:text-white'
+              }`}
+            >
+              <DollarSign className="w-3.5 h-3.5" />
+              <span>Harga Lahan (NJOP)</span>
+            </button>
 
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveMapTab('zonasi');
-                  setActiveFilterTab('akses');
-                }}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                  activeFilterTab === 'akses' && activeMapTab === 'zonasi'
-                    ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
-                    : 'text-neutral-300 hover:text-white'
-                }`}
-              >
-                <Navigation className="w-3.5 h-3.5" />
-                <span>Akses &amp; Jalur Tol</span>
-              </button>
-            </div>
-
-            {/* Active Mode Sub-Notice */}
-            <span className="text-[10px] sm:text-[11px] font-mono text-[#d5a864]/90">
-              {activeFilterTab === 'harga'
-                ? '📊 Heatmap NJOP Resmi PBB-P2 vs Nilai Transaksi Pasar'
-                : activeFilterTab === 'akses'
-                ? '🛣️ Trase Tol Solo-Jogja-YIA & Tol Bawen + 5 Exit Gate'
-                : '🗺️ Batas Administratif 5 Kab/Kota & Peruntukan Zonasi RTRW'}
-            </span>
+            <button
+              type="button"
+              onClick={() => {
+                setActiveMapTab('zonasi');
+                setActiveFilterTab('akses');
+              }}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeFilterTab === 'akses' && activeMapTab === 'zonasi'
+                  ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
+                  : 'text-neutral-300 hover:text-white'
+              }`}
+            >
+              <Navigation className="w-3.5 h-3.5" />
+              <span>Akses &amp; Jalur Tol</span>
+            </button>
           </div>
         </div>
 
