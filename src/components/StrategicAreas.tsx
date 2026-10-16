@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import {
   MapPin, Layers, DollarSign, Navigation, ArrowRight,
   TrendingUp, BarChart2, ShieldCheck, Check, Sparkles, Building, Globe,
-  Maximize2, Minimize2, X as XIcon
+  Maximize2, Minimize2, X as XIcon, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import type { YogyakartaRegion } from './JogjaRealMap';
 import type { InvestmentBlock } from './JogjaOsmMap';
@@ -51,6 +51,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
   const [selectedCluster, setSelectedCluster] = useState<string>('kampus');
   const [selectedBlockId, setSelectedBlockId] = useState<string>('block-kampus');
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isClusterPanelOpen, setIsClusterPanelOpen] = useState(true);
 
   // ESC key to close fullscreen
   const handleCloseFullscreen = useCallback(() => setIsFullscreen(false), []);
@@ -304,150 +305,195 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
           </div>
         </div>
 
-        {/* Main Interactive Map & Selection Area */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-
-          {/* Left Column: Pilih Kawasan List (Enhanced UI with Badges & Best-fit Archetypes) */}
-          <div className="lg:col-span-4 space-y-2.5">
-            <div className="flex items-center justify-between px-1 pb-0.5">
-              <span className="text-xs font-bold uppercase tracking-wider text-neutral-400">
-                Pilih Klaster Kawasan
-              </span>
-              <span className="text-[10px] text-[#d5a864] font-mono bg-[#0a231c] px-2 py-0.5 rounded-full border border-white/10">
-                {clusters.length} KLASTER STRATEGIS
-              </span>
+        {/* Main Unified Interactive GIS Terminal Frame */}
+        <div className="rounded-3xl bg-[#0a231c]/90 border border-white/15 shadow-2xl backdrop-blur-md overflow-hidden">
+          
+          {/* Top Unified Header: Terminal Peta GIS Yogyakarta & Controls */}
+          <div className="p-3.5 sm:p-4 bg-[#071914] border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#d5a864] animate-ping shrink-0" />
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs sm:text-sm font-extrabold text-white tracking-tight">
+                    Terminal Peta GIS Yogyakarta
+                  </span>
+                  <span className="text-[10px] text-[#d5a864] font-mono font-bold bg-[#d5a864]/10 px-2 py-0.5 rounded-full border border-[#d5a864]/30 hidden md:inline">
+                    DUAL-LAYER RADAR
+                  </span>
+                </div>
+                <span className="text-[10px] text-neutral-400 font-mono hidden sm:inline">
+                  {activeMapTab === 'zonasi'
+                    ? 'Layer Makro: 5 Batas Administratif DIY, Heatmap NJOP Resmi & Jalur Tol'
+                    : 'Layer Mikro: Koridor Potensial BLK-01 s/d BLK-05 OpenStreetMap'}
+                </span>
+              </div>
             </div>
 
-            <div className="space-y-2 max-h-[500px] lg:max-h-[540px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-white/10">
-              {clusters.map((c) => {
-                const isActive = selectedCluster === c.id;
-                return (
-                  <button
-                    type="button"
-                    key={c.id}
-                    onClick={() => handleSelectCluster(c.id)}
-                    className={`w-full text-left p-3 rounded-xl border transition-all duration-200 flex flex-col gap-1.5 group cursor-pointer ${
-                      isActive
-                        ? 'bg-[#0f2e25] border-[#d5a864] ring-1 ring-[#d5a864] shadow-[0_4px_16px_rgba(213,168,100,0.18)]'
-                        : 'bg-[#0a231c]/70 border-white/10 hover:border-white/20 hover:bg-[#0c2a22]'
-                    }`}
-                  >
-                    {/* Top Row: Title, Radio Check, and Status Badge */}
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-start gap-2">
-                        <div
-                          className={`w-4.5 h-4.5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-                            isActive ? 'bg-[#d5a864] text-[#071914]' : 'bg-white/10 text-neutral-400'
-                          }`}
-                        >
-                          {isActive ? (
-                            <Check className="w-2.5 h-2.5 stroke-[3]" />
-                          ) : (
-                            <span className="w-1.5 h-1.5 rounded-full bg-neutral-400" />
-                          )}
-                        </div>
-                        <div>
-                          <h4 className="text-xs sm:text-sm font-bold text-white group-hover:text-[#d5a864] transition-colors leading-tight">
-                            {c.title}
-                          </h4>
-                          <p className="text-[10px] sm:text-[11px] text-neutral-400 mt-0.5 line-clamp-1">{c.subtitle}</p>
-                        </div>
-                      </div>
+            <div className="flex items-center gap-2 shrink-0 flex-wrap">
+              {/* Segmented Tab Buttons: Zonasi (Makro) | Blok (Mikro) */}
+              <div className="flex items-center gap-1 bg-[#0a231c] p-1 rounded-lg border border-white/15">
+                <button
+                  type="button"
+                  onClick={() => setActiveMapTab('zonasi')}
+                  className={`px-3 py-1 rounded-md text-xs font-bold cursor-pointer transition-all flex items-center gap-1.5 ${
+                    activeMapTab === 'zonasi'
+                      ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
+                      : 'text-neutral-300 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  <Layers className="w-3 h-3" />
+                  <span>Zonasi &amp; NJOP</span>
+                </button>
 
-                      <span className="text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-[#071914] border border-white/15 text-[#d5a864] whitespace-nowrap shrink-0">
-                        {c.badge}
-                      </span>
-                    </div>
+                <button
+                  type="button"
+                  onClick={() => setActiveMapTab('blok')}
+                  className={`px-3 py-1 rounded-md text-xs font-bold cursor-pointer transition-all flex items-center gap-1.5 ${
+                    activeMapTab === 'blok'
+                      ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
+                      : 'text-neutral-300 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  <Globe className="w-3 h-3" />
+                  <span>Blok Mikro</span>
+                </button>
+              </div>
 
-                    {/* Bottom Row: Best For Archetype Tag & Price Range */}
-                    <div className="flex items-center justify-between text-[10px] pt-1 border-t border-white/10 pl-6.5">
-                      <span className="text-neutral-300 truncate">
-                        <span className="text-neutral-500">Cocok: </span>
-                        <strong className="text-emerald-300 font-semibold">{c.bestFor}</strong>
-                      </span>
-                      <div className="text-right shrink-0 ml-2">
-                        <span className="font-mono text-amber-300 font-semibold block text-[10px]">
-                          NJOP: {c.njopPrice}
-                        </span>
-                      </div>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Micro Hint for Dual Layer Radar */}
-            <div className="text-[11px] text-neutral-300 bg-[#0a231c]/80 py-2 px-3 rounded-xl border border-white/10 flex items-center gap-2">
-              <Sparkles className="w-3.5 h-3.5 text-[#d5a864] shrink-0" />
-              <p className="font-light leading-tight">
-                Tab <strong className="text-white">Zonasi</strong>: 5 Kab/Kota &amp; NJOP · Tab <strong className="text-white">Blok</strong>: Koridor mikro BLK-01 s/d BLK-05
-              </p>
+              {/* Fullscreen Button */}
+              <button
+                type="button"
+                onClick={() => setIsFullscreen(true)}
+                title="Buka peta layar penuh (Full Screen)"
+                className="px-2.5 py-1 rounded-lg bg-[#d5a864]/15 hover:bg-[#d5a864]/30 border border-[#d5a864]/40 text-[#d5a864] transition-all cursor-pointer flex items-center gap-1.5 text-xs font-bold"
+              >
+                <Maximize2 className="w-3 h-3" />
+                <span className="hidden sm:inline">Full Map</span>
+              </button>
             </div>
           </div>
 
-          {/* Right Column: GIS Interactive Map with Dual-Layer Radar Toolbar */}
-          <div className="lg:col-span-8 space-y-2.5">
+          {/* Body: Map Canvas (Full-Width) with Floating Cluster Panel on the Left */}
+          <div className="relative w-full bg-[#051410] min-h-[560px] lg:min-h-[620px]">
             
-            {/* Terminal Peta GIS Yogyakarta Header & Tab Switcher (Zonasi vs Blok) */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 bg-[#0a231c]/90 p-2 rounded-xl border border-white/15 shadow-xl backdrop-blur-md">
-              <div className="flex items-center gap-2 px-2">
-                <span className="w-2 h-2 rounded-full bg-[#d5a864] animate-ping" />
-                <span className="text-xs sm:text-sm font-extrabold text-white tracking-tight">
-                  Terminal Peta GIS Yogyakarta
-                </span>
-                <span className="text-[10px] text-neutral-400 font-mono hidden md:inline">
-                  · DUAL-LAYER RADAR
-                </span>
-              </div>
+            {/* FLOATING CLUSTER PANEL — Melayang di Atas Peta Sisi Kiri */}
+            <div
+              className={`absolute top-3.5 left-3.5 sm:top-4 sm:left-4 z-[400] transition-all duration-300 pointer-events-auto ${
+                isClusterPanelOpen
+                  ? 'w-[295px] sm:w-[335px] max-h-[calc(100%-2rem)]'
+                  : 'w-auto'
+              }`}
+            >
+              {isClusterPanelOpen ? (
+                <div className="flex flex-col bg-[#071914]/94 backdrop-blur-xl rounded-2xl border border-white/20 shadow-[0_16px_40px_rgba(0,0,0,0.65)] overflow-hidden">
+                  
+                  {/* Header Panel Melayang */}
+                  <div className="p-3 bg-[#081e18]/95 border-b border-white/10 flex items-center justify-between shrink-0">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-[#d5a864] animate-pulse" />
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-200 font-mono">
+                        Klaster Kawasan
+                      </span>
+                      <span className="text-[9.5px] text-[#d5a864] font-mono bg-[#071914] px-1.5 py-0.5 rounded border border-white/10">
+                        {clusters.length}
+                      </span>
+                    </div>
 
-              <div className="flex items-center gap-2">
-                {/* Segmented Tab Buttons: Zonasi (Kiri) | Blok (Kanan) */}
-                <div className="flex items-center gap-1 bg-[#071914] p-1 rounded-lg border border-white/15">
-                  {/* Tab Kiri: Zonasi */}
-                  <button
-                    type="button"
-                    onClick={() => setActiveMapTab('zonasi')}
-                    className={`px-3 py-1 rounded-md text-xs font-bold cursor-pointer transition-all flex items-center gap-1.5 ${
-                      activeMapTab === 'zonasi'
-                        ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
-                        : 'text-neutral-300 hover:text-white hover:bg-white/5'
-                    }`}
-                  >
-                    <Layers className="w-3 h-3" />
-                    <span>Zonasi &amp; NJOP</span>
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => setIsClusterPanelOpen(false)}
+                      title="Sembunyikan panel klaster (lihat peta penuh)"
+                      className="p-1 rounded-lg text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer flex items-center gap-1 text-[10px]"
+                    >
+                      <span className="text-[10px] hidden sm:inline">Tutup</span>
+                      <ChevronLeft className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
 
-                  {/* Tab Kanan: Blok */}
-                  <button
-                    type="button"
-                    onClick={() => setActiveMapTab('blok')}
-                    className={`px-3 py-1 rounded-md text-xs font-bold cursor-pointer transition-all flex items-center gap-1.5 ${
-                      activeMapTab === 'blok'
-                        ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
-                        : 'text-neutral-300 hover:text-white hover:bg-white/5'
-                    }`}
-                  >
-                    <Globe className="w-3 h-3" />
-                    <span>Blok</span>
-                  </button>
+                  {/* Scrollable Cluster List */}
+                  <div className="p-2 space-y-1.5 overflow-y-auto max-h-[460px] sm:max-h-[480px] scrollbar-thin scrollbar-thumb-white/10">
+                    {clusters.map((c) => {
+                      const isActive = selectedCluster === c.id;
+                      return (
+                        <button
+                          type="button"
+                          key={c.id}
+                          onClick={() => handleSelectCluster(c.id)}
+                          className={`w-full text-left p-2 rounded-xl border transition-all duration-200 flex flex-col gap-1 cursor-pointer relative group ${
+                            isActive
+                              ? 'bg-[#0f2e25] border-[#d5a864] ring-1.5 ring-[#d5a864] shadow-[0_4px_16px_rgba(213,168,100,0.25)]'
+                              : 'bg-[#0a231c]/65 border-white/10 hover:border-[#d5a864]/40 hover:bg-[#0c2a22]'
+                          }`}
+                        >
+                          {/* Row 1: Title, Icon & Badge */}
+                          <div className="flex items-start justify-between gap-1.5">
+                            <div className="flex items-start gap-1.5 min-w-0">
+                              <div
+                                className={`w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
+                                  isActive ? 'bg-[#d5a864] text-[#071914]' : 'bg-white/10 text-neutral-500'
+                                }`}
+                              >
+                                {isActive ? (
+                                  <Check className="w-2 h-2 stroke-[3]" />
+                                ) : (
+                                  <span className="w-1 h-1 rounded-full bg-neutral-500" />
+                                )}
+                              </div>
+                              <div className="min-w-0">
+                                <h4 className="text-xs font-bold text-white group-hover:text-[#d5a864] transition-colors leading-tight truncate">
+                                  {c.title}
+                                </h4>
+                                <p className="text-[10px] text-neutral-400 mt-0.5 line-clamp-1 leading-tight">
+                                  {c.subtitle}
+                                </p>
+                              </div>
+                            </div>
+
+                            <span className="text-[8.5px] font-bold px-1.5 py-0.5 rounded bg-[#071914] border border-white/15 text-[#d5a864] shrink-0 whitespace-nowrap">
+                              {c.badge}
+                            </span>
+                          </div>
+
+                          {/* Row 2: Cocok & NJOP */}
+                          <div className="flex items-center justify-between text-[9px] sm:text-[9.5px] pt-1 border-t border-white/10 pl-5">
+                            <span className="text-neutral-300 truncate">
+                              <span className="text-neutral-500">Cocok: </span>
+                              <strong className="text-emerald-300 font-semibold">{c.bestFor}</strong>
+                            </span>
+                            <span className="font-mono text-amber-300 font-semibold shrink-0 ml-1">
+                              {c.njopPrice.split('-')[0].trim()}..
+                            </span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Micro Footer info */}
+                  <div className="p-2 bg-[#081e18]/90 border-t border-white/10 flex items-center gap-1.5 text-[9.5px] text-neutral-400 shrink-0">
+                    <Sparkles className="w-3 h-3 text-[#d5a864] shrink-0" />
+                    <span className="truncate">Klik klaster untuk menyorot polygon peta</span>
+                  </div>
+
                 </div>
-
-                {/* Fullscreen Button */}
+              ) : (
+                /* Floating Minimized Trigger Pill */
                 <button
                   type="button"
-                  onClick={() => setIsFullscreen(true)}
-                  title="Buka peta layar penuh (Full Screen)"
-                  className="px-2.5 py-1 rounded-lg bg-[#d5a864]/15 hover:bg-[#d5a864]/30 border border-[#d5a864]/40 text-[#d5a864] transition-all cursor-pointer flex items-center gap-1.5 text-xs font-bold"
+                  onClick={() => setIsClusterPanelOpen(true)}
+                  className="flex items-center gap-2 bg-[#071914]/94 backdrop-blur-md px-3 py-2 rounded-xl border border-[#d5a864]/40 shadow-2xl text-white hover:bg-[#0f2e25] transition-all cursor-pointer group"
                 >
-                  <Maximize2 className="w-3 h-3" />
-                  <span className="hidden sm:inline">Full Map</span>
+                  <span className="w-2 h-2 rounded-full bg-[#d5a864] animate-pulse" />
+                  <span className="text-xs font-bold group-hover:text-[#d5a864] transition-colors font-mono">
+                    Pilih Klaster ({clusters.length})
+                  </span>
+                  <ChevronRight className="w-3.5 h-3.5 text-[#d5a864]" />
                 </button>
-              </div>
+              )}
             </div>
 
             {/* TAB 1: Peta Zonasi Administratif DIY, NJOP & Infrastruktur Tol */}
             {activeMapTab === 'zonasi' && (
-              <div className="transition-opacity duration-300">
+              <div className="transition-opacity duration-300 h-full w-full">
                 <JogjaRealMap
                   selectedRegionId={currentData.region}
                   filterMode={activeFilterTab}
@@ -456,22 +502,50 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                     if (match) setSelectedCluster(match.id);
                   }}
                   onApplyZoneToCalculator={(zoneName) => onSelectZone(zoneName, true)}
-                  height="500px"
+                  height="600px"
                 />
               </div>
             )}
 
             {/* TAB 2: Peta Blok Koridor OpenStreetMap (BLK-01 s/d BLK-05) */}
             {activeMapTab === 'blok' && (
-              <div className="transition-opacity duration-300">
+              <div className="transition-opacity duration-300 h-full w-full">
                 <JogjaOsmMap
                   selectedLocationId={selectedBlockId}
                   onSelectBlock={handleBlockSelect}
                   onApplyZoneToCalculator={(zoneName) => onSelectZone(zoneName, true)}
-                  height="500px"
+                  height="600px"
                 />
               </div>
             )}
+
+            {/* Floating Mini HUD Card on Bottom Right of Map */}
+            <div className="absolute bottom-4 right-4 z-[400] max-w-xs sm:max-w-sm bg-[#071914]/92 backdrop-blur-md p-3 rounded-2xl border border-[#d5a864]/30 shadow-2xl space-y-1.5 hidden sm:block pointer-events-auto">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-[10px] font-mono text-[#d5a864] font-bold uppercase tracking-wider flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Kawasan Terpilih:
+                </span>
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#0a231c] text-[#d5a864] border border-[#d5a864]/20">
+                  {currentData.badge}
+                </span>
+              </div>
+              <h4 className="text-xs sm:text-sm font-bold text-white tracking-tight leading-snug line-clamp-1">
+                {currentData.fullName}
+              </h4>
+              <div className="flex items-center gap-3 text-[10px] font-mono pt-1 border-t border-white/10">
+                <div>
+                  <span className="text-neutral-400 block text-[8.5px]">NJOP RESMI</span>
+                  <span className="text-amber-300 font-bold text-[10px]">{currentData.njopPrice}</span>
+                </div>
+                <div className="h-5 w-px bg-white/10" />
+                <div>
+                  <span className="text-neutral-400 block text-[8.5px]">ESTIMASI ROI</span>
+                  <span className="text-emerald-300 font-bold text-[10px]">{currentData.roi}</span>
+                </div>
+              </div>
+            </div>
+
           </div>
 
         </div>
@@ -553,9 +627,126 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
               </div>
             </div>
 
-            {/* Fullscreen Map Body — stretches remaining viewport height */}
-            {/* Top bar ~48px + bottom bar ~40px = ~88px total chrome */}
-            <div className="flex-1 overflow-auto bg-[#051410]">
+            {/* Fullscreen Map Body — stretches remaining viewport height with Floating Cluster Panel & HUD */}
+            <div className="relative flex-1 overflow-hidden bg-[#051410]">
+              
+              {/* FLOATING CLUSTER PANEL DI FULLSCREEN MAP — Melayang di Atas Peta Sisi Kiri */}
+              <div
+                className={`absolute top-4 left-4 z-[500] transition-all duration-300 pointer-events-auto ${
+                  isClusterPanelOpen
+                    ? 'w-[300px] sm:w-[340px] max-h-[calc(100vh-140px)]'
+                    : 'w-auto'
+                }`}
+              >
+                {isClusterPanelOpen ? (
+                  <div className="flex flex-col bg-[#071914]/94 backdrop-blur-xl rounded-2xl border border-white/20 shadow-[0_16px_40px_rgba(0,0,0,0.7)] overflow-hidden">
+                    
+                    {/* Header Panel Melayang */}
+                    <div className="p-3 bg-[#081e18]/95 border-b border-white/10 flex items-center justify-between shrink-0">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-[#d5a864] animate-pulse" />
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-200 font-mono">
+                          Klaster Kawasan
+                        </span>
+                        <span className="text-[9.5px] text-[#d5a864] font-mono bg-[#071914] px-1.5 py-0.5 rounded border border-white/10">
+                          {clusters.length}
+                        </span>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => setIsClusterPanelOpen(false)}
+                        title="Sembunyikan panel klaster (lihat peta penuh)"
+                        className="p-1 rounded-lg text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer flex items-center gap-1 text-[10px]"
+                      >
+                        <span className="text-[10px] hidden sm:inline">Tutup</span>
+                        <ChevronLeft className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+
+                    {/* Scrollable Cluster List */}
+                    <div className="p-2 space-y-1.5 overflow-y-auto max-h-[calc(100vh-220px)] scrollbar-thin scrollbar-thumb-white/10">
+                      {clusters.map((c) => {
+                        const isActive = selectedCluster === c.id;
+                        return (
+                          <button
+                            type="button"
+                            key={c.id}
+                            onClick={() => handleSelectCluster(c.id)}
+                            className={`w-full text-left p-2 rounded-xl border transition-all duration-200 flex flex-col gap-1 cursor-pointer relative group ${
+                              isActive
+                                ? 'bg-[#0f2e25] border-[#d5a864] ring-1.5 ring-[#d5a864] shadow-[0_4px_16px_rgba(213,168,100,0.25)]'
+                                : 'bg-[#0a231c]/65 border-white/10 hover:border-[#d5a864]/40 hover:bg-[#0c2a22]'
+                            }`}
+                          >
+                            {/* Row 1: Title, Icon & Badge */}
+                            <div className="flex items-start justify-between gap-1.5">
+                              <div className="flex items-start gap-1.5 min-w-0">
+                                <div
+                                  className={`w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
+                                    isActive ? 'bg-[#d5a864] text-[#071914]' : 'bg-white/10 text-neutral-500'
+                                  }`}
+                                >
+                                  {isActive ? (
+                                    <Check className="w-2 h-2 stroke-[3]" />
+                                  ) : (
+                                    <span className="w-1 h-1 rounded-full bg-neutral-500" />
+                                  )}
+                                </div>
+                                <div className="min-w-0">
+                                  <h4 className="text-xs font-bold text-white group-hover:text-[#d5a864] transition-colors leading-tight truncate">
+                                    {c.title}
+                                  </h4>
+                                  <p className="text-[10px] text-neutral-400 mt-0.5 line-clamp-1 leading-tight">
+                                    {c.subtitle}
+                                  </p>
+                                </div>
+                              </div>
+
+                              <span className="text-[8.5px] font-bold px-1.5 py-0.5 rounded bg-[#071914] border border-white/15 text-[#d5a864] shrink-0 whitespace-nowrap">
+                                {c.badge}
+                              </span>
+                            </div>
+
+                            {/* Row 2: Cocok & NJOP */}
+                            <div className="flex items-center justify-between text-[9px] sm:text-[9.5px] pt-1 border-t border-white/10 pl-5">
+                              <span className="text-neutral-300 truncate">
+                                <span className="text-neutral-500">Cocok: </span>
+                                <strong className="text-emerald-300 font-semibold">{c.bestFor}</strong>
+                              </span>
+                              <span className="font-mono text-amber-300 font-semibold shrink-0 ml-1">
+                                {c.njopPrice.split('-')[0].trim()}..
+                              </span>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Micro Footer */}
+                    <div className="p-2 bg-[#081e18]/90 border-t border-white/10 flex items-center gap-1.5 text-[9.5px] text-neutral-400 shrink-0">
+                      <Sparkles className="w-3 h-3 text-[#d5a864] shrink-0" />
+                      <span className="truncate">Sinkron otomatis dengan peta GIS DIY</span>
+                    </div>
+
+                  </div>
+                ) : (
+                  /* Floating Minimized Trigger Pill */
+                  <button
+                    type="button"
+                    onClick={() => setIsClusterPanelOpen(true)}
+                    className="flex items-center gap-2 bg-[#071914]/94 backdrop-blur-md px-3 py-2 rounded-xl border border-[#d5a864]/40 shadow-2xl text-white hover:bg-[#0f2e25] transition-all cursor-pointer group"
+                  >
+                    <span className="w-2 h-2 rounded-full bg-[#d5a864] animate-pulse" />
+                    <span className="text-xs font-bold group-hover:text-[#d5a864] transition-colors font-mono">
+                      Pilih Klaster ({clusters.length})
+                    </span>
+                    <ChevronRight className="w-3.5 h-3.5 text-[#d5a864]" />
+                  </button>
+                )}
+              </div>
+
+              {/* MAP KANVAS FULLSCREEN */}
               {activeMapTab === 'zonasi' ? (
                 <JogjaRealMap
                   selectedRegionId={currentData.region}
@@ -568,7 +759,7 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                     onSelectZone(zoneName, true);
                     handleCloseFullscreen();
                   }}
-                  height="calc(100vh - 130px)"
+                  height="calc(100vh - 88px)"
                 />
               ) : (
                 <JogjaOsmMap
@@ -580,9 +771,37 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                     onSelectZone(zoneName, true);
                     handleCloseFullscreen();
                   }}
-                  height="calc(100vh - 130px)"
+                  height="calc(100vh - 88px)"
                 />
               )}
+
+              {/* Floating Mini HUD Card on Bottom Right of Fullscreen Map */}
+              <div className="absolute bottom-4 right-4 z-[500] max-w-xs sm:max-w-sm bg-[#071914]/92 backdrop-blur-md p-3 rounded-2xl border border-[#d5a864]/30 shadow-2xl space-y-1.5 hidden sm:block pointer-events-auto">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-[10px] font-mono text-[#d5a864] font-bold uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    Kawasan Terpilih:
+                  </span>
+                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#0a231c] text-[#d5a864] border border-[#d5a864]/20">
+                    {currentData.badge}
+                  </span>
+                </div>
+                <h4 className="text-xs sm:text-sm font-bold text-white tracking-tight leading-snug line-clamp-1">
+                  {currentData.fullName}
+                </h4>
+                <div className="flex items-center gap-3 text-[10px] font-mono pt-1 border-t border-white/10">
+                  <div>
+                    <span className="text-neutral-400 block text-[8.5px]">NJOP RESMI</span>
+                    <span className="text-amber-300 font-bold text-[10px]">{currentData.njopPrice}</span>
+                  </div>
+                  <div className="h-5 w-px bg-white/10" />
+                  <div>
+                    <span className="text-neutral-400 block text-[8.5px]">ESTIMASI ROI</span>
+                    <span className="text-emerald-300 font-bold text-[10px]">{currentData.roi}</span>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
             {/* Bottom hint bar */}
