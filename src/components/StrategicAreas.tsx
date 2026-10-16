@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import {
   MapPin, Layers, DollarSign, Navigation, ArrowRight,
-  TrendingUp, BarChart2, ShieldCheck, Check, Sparkles, Building, Globe
+  TrendingUp, BarChart2, ShieldCheck, Check, Sparkles, Building, Globe,
+  Maximize2, Minimize2, X as XIcon
 } from 'lucide-react';
 import type { YogyakartaRegion } from './JogjaRealMap';
 import type { InvestmentBlock } from './JogjaOsmMap';
@@ -49,6 +50,21 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
   const [activeFilterTab, setActiveFilterTab] = useState<'zonasi' | 'harga' | 'akses'>('zonasi');
   const [selectedCluster, setSelectedCluster] = useState<string>('kampus');
   const [selectedBlockId, setSelectedBlockId] = useState<string>('block-kampus');
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // ESC key to close fullscreen
+  const handleCloseFullscreen = useCallback(() => setIsFullscreen(false), []);
+  useEffect(() => {
+    if (!isFullscreen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') handleCloseFullscreen(); };
+    document.addEventListener('keydown', onKey);
+    // Prevent body scroll while fullscreen is open
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [isFullscreen, handleCloseFullscreen]);
 
   const clusters = [
     {
@@ -386,34 +402,47 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
                 </span>
               </div>
 
-              {/* Segmented Tab Buttons: Zonasi (Kiri) | Blok (Kanan) */}
-              <div className="flex items-center gap-1.5 bg-[#071914] p-1 rounded-xl border border-white/15">
-                {/* Tab Kiri: Zonasi */}
-                <button
-                  type="button"
-                  onClick={() => setActiveMapTab('zonasi')}
-                  className={`px-4 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all flex items-center gap-2 ${
-                    activeMapTab === 'zonasi'
-                      ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
-                      : 'text-neutral-300 hover:text-white hover:bg-white/5'
-                  }`}
-                >
-                  <Layers className="w-3.5 h-3.5" />
-                  <span>Zonasi &amp; NJOP</span>
-                </button>
+              <div className="flex items-center gap-2">
+                {/* Segmented Tab Buttons: Zonasi (Kiri) | Blok (Kanan) */}
+                <div className="flex items-center gap-1.5 bg-[#071914] p-1 rounded-xl border border-white/15">
+                  {/* Tab Kiri: Zonasi */}
+                  <button
+                    type="button"
+                    onClick={() => setActiveMapTab('zonasi')}
+                    className={`px-4 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all flex items-center gap-2 ${
+                      activeMapTab === 'zonasi'
+                        ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
+                        : 'text-neutral-300 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    <Layers className="w-3.5 h-3.5" />
+                    <span>Zonasi &amp; NJOP</span>
+                  </button>
 
-                {/* Tab Kanan: Blok */}
+                  {/* Tab Kanan: Blok */}
+                  <button
+                    type="button"
+                    onClick={() => setActiveMapTab('blok')}
+                    className={`px-4 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all flex items-center gap-2 ${
+                      activeMapTab === 'blok'
+                        ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
+                        : 'text-neutral-300 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    <Globe className="w-3.5 h-3.5" />
+                    <span>Blok</span>
+                  </button>
+                </div>
+
+                {/* Fullscreen Button */}
                 <button
                   type="button"
-                  onClick={() => setActiveMapTab('blok')}
-                  className={`px-4 py-1.5 rounded-lg text-xs font-bold cursor-pointer transition-all flex items-center gap-2 ${
-                    activeMapTab === 'blok'
-                      ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
-                      : 'text-neutral-300 hover:text-white hover:bg-white/5'
-                  }`}
+                  onClick={() => setIsFullscreen(true)}
+                  title="Buka peta layar penuh (Full Screen)"
+                  className="p-2 rounded-xl bg-[#d5a864]/15 hover:bg-[#d5a864]/30 border border-[#d5a864]/40 text-[#d5a864] transition-all cursor-pointer flex items-center gap-1.5 text-xs font-bold"
                 >
-                  <Globe className="w-3.5 h-3.5" />
-                  <span>Blok</span>
+                  <Maximize2 className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Full Map</span>
                 </button>
               </div>
             </div>
@@ -448,6 +477,123 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
           </div>
 
         </div>
+
+        {/* ============================================================ */}
+        {/* FULLSCREEN MAP OVERLAY MODAL                                  */}
+        {/* ============================================================ */}
+        {isFullscreen && (
+          <div
+            className="fixed inset-0 z-[9999] bg-[#051410]/95 backdrop-blur-sm flex flex-col"
+            style={{ animation: 'fadeInScale 0.2s ease-out' }}
+          >
+            {/* Fullscreen Top Bar */}
+            <div className="flex items-center justify-between px-4 py-2.5 bg-[#071914] border-b border-[#d5a864]/30 shrink-0">
+              <div className="flex items-center gap-3">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#d5a864] animate-ping" />
+                <span className="text-sm font-extrabold text-white tracking-tight">
+                  GIS Spatial Intelligence — DIY Full Map View
+                </span>
+                <span className="text-[10px] font-mono text-neutral-400 hidden sm:inline">
+                  · {activeFilterTab === 'harga' ? 'MODE: NJOP PBB-P2 HEATMAP' : activeFilterTab === 'akses' ? 'MODE: TRASE & EXIT TOL' : 'MODE: ZONASI RTRW'}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {/* Filter Pills (compact, inside fullscreen) */}
+                <div className="hidden sm:flex items-center gap-1 bg-[#0a231c] p-1 rounded-full border border-white/10 text-[11px]">
+                  {(['zonasi', 'harga', 'akses'] as const).map((tab) => (
+                    <button
+                      key={tab}
+                      type="button"
+                      onClick={() => { setActiveMapTab('zonasi'); setActiveFilterTab(tab); }}
+                      className={`px-3 py-1 rounded-full font-bold transition-all cursor-pointer ${
+                        activeFilterTab === tab && activeMapTab === 'zonasi'
+                          ? 'bg-[#d5a864] text-[#071914]'
+                          : 'text-neutral-300 hover:text-white'
+                      }`}
+                    >
+                      {tab === 'zonasi' ? '🗺️ Zonasi' : tab === 'harga' ? '💰 NJOP' : '🛣️ Tol'}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Tab Blok / Zonasi switcher */}
+                <div className="flex items-center gap-1 bg-[#0a231c] p-1 rounded-xl border border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => setActiveMapTab('zonasi')}
+                    className={`px-3 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition-all flex items-center gap-1 ${
+                      activeMapTab === 'zonasi' ? 'bg-[#d5a864] text-[#071914]' : 'text-neutral-300 hover:text-white'
+                    }`}
+                  >
+                    <Layers className="w-3 h-3" />
+                    Zonasi
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveMapTab('blok')}
+                    className={`px-3 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition-all flex items-center gap-1 ${
+                      activeMapTab === 'blok' ? 'bg-[#d5a864] text-[#071914]' : 'text-neutral-300 hover:text-white'
+                    }`}
+                  >
+                    <Globe className="w-3 h-3" />
+                    Blok
+                  </button>
+                </div>
+
+                {/* Close Fullscreen Button */}
+                <button
+                  type="button"
+                  onClick={handleCloseFullscreen}
+                  title="Tutup layar penuh (ESC)"
+                  className="p-2 rounded-xl bg-white/10 hover:bg-red-500/20 border border-white/15 hover:border-red-500/50 text-neutral-300 hover:text-red-400 transition-all cursor-pointer flex items-center gap-1.5 text-xs font-bold"
+                >
+                  <Minimize2 className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Tutup</span>
+                  <span className="hidden sm:inline text-[10px] text-neutral-500">(ESC)</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Fullscreen Map Body — stretches remaining viewport height */}
+            {/* Top bar ~48px + bottom bar ~40px = ~88px total chrome */}
+            <div className="flex-1 overflow-auto bg-[#051410]">
+              {activeMapTab === 'zonasi' ? (
+                <JogjaRealMap
+                  selectedRegionId={currentData.region}
+                  filterMode={activeFilterTab}
+                  onSelectRegion={(reg) => {
+                    const match = clusters.find((c) => c.region === reg.id);
+                    if (match) setSelectedCluster(match.id);
+                  }}
+                  onApplyZoneToCalculator={(zoneName) => {
+                    onSelectZone(zoneName, true);
+                    handleCloseFullscreen();
+                  }}
+                  height="calc(100vh - 130px)"
+                />
+              ) : (
+                <JogjaOsmMap
+                  selectedLocationId={selectedBlockId}
+                  onSelectBlock={(block) => {
+                    handleBlockSelect(block);
+                  }}
+                  onApplyZoneToCalculator={(zoneName) => {
+                    onSelectZone(zoneName, true);
+                    handleCloseFullscreen();
+                  }}
+                  height="calc(100vh - 130px)"
+                />
+              )}
+            </div>
+
+            {/* Bottom hint bar */}
+            <div className="shrink-0 px-4 py-2 bg-[#071914] border-t border-white/10 flex items-center justify-between text-[11px] text-neutral-400">
+              <span>💡 Klik sembarang titik di peta untuk analisis kelayakan lahan instan</span>
+              <span className="font-mono">Tekan <kbd className="px-1.5 py-0.5 bg-white/10 rounded text-white text-[10px] border border-white/20">ESC</kbd> untuk keluar dari mode layar penuh</span>
+            </div>
+          </div>
+        )}
 
         {/* Bottom Box: Analisis Kawasan Terpilih & Metrik Dinamis */}
         <div id="analisis-kawasan-detail" className="bg-[#0a231c]/90 rounded-3xl p-6 sm:p-8 border border-white/15 space-y-6 backdrop-blur-md scroll-mt-24">
