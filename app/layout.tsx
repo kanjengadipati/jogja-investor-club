@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Playfair_Display, Plus_Jakarta_Sans, DM_Sans } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 
 const playfairDisplay = Playfair_Display({
@@ -60,7 +61,11 @@ export default function RootLayout({
       lang="id"
       className={`scroll-smooth ${playfairDisplay.variable} ${plusJakartaSans.variable} ${dmSans.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
+
