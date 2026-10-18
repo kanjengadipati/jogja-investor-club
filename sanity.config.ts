@@ -6,8 +6,6 @@ import { schemaTypes } from './sanity/schemas';
 import type { StructureBuilder } from 'sanity/structure';
 import StudioWelcome from './sanity/components/StudioWelcome';
 
-import StudioNavbar from './sanity/components/StudioNavbar';
-
 // ─── Custom structure with welcome dashboard ──────────────────────────────────
 const structure = (S: StructureBuilder) =>
   S.list()
@@ -107,11 +105,6 @@ export default defineConfig({
   title: 'Jogja Investor Club',
   projectId: 'fxrpr0tm',
   dataset: 'production',
-  studio: {
-    components: {
-      navbar: StudioNavbar,
-    },
-  },
   plugins: [
     structureTool({
       structure,
