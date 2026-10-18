@@ -12,10 +12,9 @@ export default async function StudioPage({
   const resolvedParams = await params;
   const tool = resolvedParams?.tool;
 
-  // Always redirect root /studio and /studio/structure to /studio/structure/welcome
-  // so the sidebar menu is ALWAYS visible alongside the dashboard
-  if (!tool || tool.length === 0 || (tool.length === 1 && tool[0] === 'structure')) {
-    redirect('/studio/structure/welcome');
+  // Redirect root /studio → /studio/structure so sidebar is always visible
+  if (!tool || tool.length === 0) {
+    redirect('/studio/structure');
   }
 
   return <NextStudio config={config} />;
