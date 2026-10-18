@@ -239,7 +239,11 @@ async function seed() {
       order: 1,
       ...(imgVilla ? { coverImage: imgVilla } : {}),
       ...(imgVilla && imgRumah && imgKos
-        ? { gallery: [imgVilla, imgRumah, imgKos] }
+        ? { gallery: [
+            { ...imgVilla, _key: 'gallery-villa-1' },
+            { ...imgRumah, _key: 'gallery-villa-2' },
+            { ...imgKos,   _key: 'gallery-villa-3' },
+          ] }
         : {}),
     },
     {
@@ -261,7 +265,10 @@ async function seed() {
       order: 2,
       ...(imgKos ? { coverImage: imgKos } : {}),
       ...(imgKos && imgRumah
-        ? { gallery: [imgKos, imgRumah] }
+        ? { gallery: [
+            { ...imgKos,   _key: 'gallery-kos-1' },
+            { ...imgRumah, _key: 'gallery-kos-2' },
+          ] }
         : {}),
     },
     {
@@ -283,7 +290,10 @@ async function seed() {
       order: 3,
       ...(imgRumah ? { coverImage: imgRumah } : {}),
       ...(imgRumah && imgVilla
-        ? { gallery: [imgRumah, imgVilla] }
+        ? { gallery: [
+            { ...imgRumah, _key: 'gallery-rumah-1' },
+            { ...imgVilla, _key: 'gallery-rumah-2' },
+          ] }
         : {}),
     },
   ];
