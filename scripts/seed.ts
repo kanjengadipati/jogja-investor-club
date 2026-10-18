@@ -13,7 +13,6 @@ import * as dotenv from 'dotenv';
 import * as path from 'path';
 import * as fs from 'fs';
 
-// Load .env.local
 dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? 'fxrpr0tm';
@@ -21,280 +20,428 @@ const dataset   = process.env.NEXT_PUBLIC_SANITY_DATASET ?? 'production';
 const token     = process.env.SANITY_API_TOKEN;
 
 if (!token || token === 'PASTE_YOUR_NEW_TOKEN_HERE' || token === 'your_sanity_api_token_here') {
-  console.error('\n❌  SANITY_API_TOKEN belum diset di .env.local');
-  console.error('   Buka https://sanity.io/manage → project fxrpr0tm → API → Tokens');
-  console.error('   Buat token baru dengan role "Editor", lalu paste ke .env.local\n');
+  console.error('\n❌  SANITY_API_TOKEN belum diset di .env.local\n');
   process.exit(1);
 }
 
-const client = createClient({
-  projectId,
-  dataset,
-  apiVersion: '2024-01-01',
-  useCdn: false,
-  token,
-});
+const client = createClient({ projectId, dataset, apiVersion: '2024-01-01', useCdn: false, token });
 
-// ─── Helper: check if doc already exists ────────────────────────────────────
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 async function exists(id: string): Promise<boolean> {
-  const doc = await client.getDocument(id);
-  return !!doc;
+  return !!(await client.getDocument(id));
 }
 
-// ─── Helper: upload image from local file, returns Sanity image reference ───
-interface SanityImageRef {
-  _type: 'image';
-  asset: { _type: 'reference'; _ref: string };
-}
+interface ImgRef { _type: 'image'; asset: { _type: 'reference'; _ref: string } }
 
-async function uploadImage(filePath: string, label: string): Promise<SanityImageRef | null> {
-  if (!fs.existsSync(filePath)) {
-    console.log(`  ⚠️  Gambar tidak ditemukan: ${filePath}`);
-    return null;
-  }
-
-  const fileStream = fs.createReadStream(filePath);
-  const filename   = path.basename(filePath);
-  const ext        = path.extname(filename).replace('.', '') as 'jpg' | 'png' | 'webp';
-
+async function uploadImage(filePath: string, label: string): Promise<ImgRef | null> {
+  if (!fs.existsSync(filePath)) { console.log(`  ⚠️  Tidak ditemukan: ${filePath}`); return null; }
+  const ext = path.extname(filePath).replace('.', '') as 'jpg' | 'png';
   try {
-    const asset = await client.assets.upload('image', fileStream, {
-      filename,
+    const asset = await client.assets.upload('image', fs.createReadStream(filePath), {
+      filename: path.basename(filePath),
       contentType: ext === 'png' ? 'image/png' : 'image/jpeg',
     });
     console.log(`  📸  Uploaded — ${label}`);
-    return {
-      _type: 'image',
-      asset: { _type: 'reference', _ref: asset._id },
-    };
-  } catch (err: any) {
-    console.log(`  ⚠️  Gagal upload ${label}: ${err.message}`);
-    return null;
-  }
+    return { _type: 'image', asset: { _type: 'reference', _ref: asset._id } };
+  } catch (e: any) { console.log(`  ⚠️  Gagal upload ${label}: ${e.message}`); return null; }
+}
+
+function block(key: string, text: string) {
+  return { _key: key, _type: 'block', style: 'normal', markDefs: [],
+    children: [{ _key: `${key}-s`, _type: 'span', marks: [], text }] };
 }
 
 // ─── Image paths ─────────────────────────────────────────────────────────────
 const IMG = {
-  villa:   path.resolve('public/images/arch_jogja_villa_1792108231919.jpg'),
-  rumah:   path.resolve('public/images/arch_jogja_rumah_1792108230130.jpg'),
-  kos:     path.resolve('public/images/arch_jogja_kos_1792108231318.jpg'),
-  hero:    path.resolve('public/images/hero_jogja_landscape_1792108229283.jpg'),
+  villa:     path.resolve('public/images/arch_jogja_villa_1792108231919.jpg'),
+  rumah:     path.resolve('public/images/arch_jogja_rumah_1792108230130.jpg'),
+  kos:       path.resolve('public/images/arch_jogja_kos_1792108231318.jpg'),
+  hero:      path.resolve('public/images/hero_jogja_landscape_1792108229283.jpg'),
   prambanan: path.resolve('public/images/jogja_heritage_tugu_prambanan_1792109052483.jpg'),
-  logo:    path.resolve('public/images/logo-jic-original.png'),
+  logo:      path.resolve('public/images/logo-jic-original.png'),
 };
 
 // ─── MAIN ────────────────────────────────────────────────────────────────────
 async function seed() {
-  console.log(`\n🌱  Seeding Sanity dataset "${dataset}" (project: ${projectId})\n`);
-
-  // ── Upload all images first ──────────────────────────────────────────────
+  console.log(`\n🌱  Seeding "${dataset}" (project: ${projectId})\n`);
   console.log('📦  Uploading images...\n');
-  const [
-    imgVilla,
-    imgRumah,
-    imgKos,
-    imgHero,
-    imgPrambanan,
-    imgLogo,
-  ] = await Promise.all([
-    uploadImage(IMG.villa,     'Villa'),
-    uploadImage(IMG.rumah,     'Rumah'),
-    uploadImage(IMG.kos,       'Kos'),
-    uploadImage(IMG.hero,      'Hero background'),
-    uploadImage(IMG.prambanan, 'Prambanan heritage'),
-    uploadImage(IMG.logo,      'Logo JIC'),
+
+  const [imgVilla, imgRumah, imgKos, imgHero, , imgLogo] = await Promise.all([
+    uploadImage(IMG.villa, 'Villa'),
+    uploadImage(IMG.rumah, 'Rumah'),
+    uploadImage(IMG.kos, 'Kos'),
+    uploadImage(IMG.hero, 'Hero background'),
+    uploadImage(IMG.prambanan, 'Prambanan'),
+    uploadImage(IMG.logo, 'Logo JIC'),
   ]);
 
-  // ── Build documents ──────────────────────────────────────────────────────
+  // ── 1. Site Settings ────────────────────────────────────────────────────
   const siteSettings = {
-    _id: 'siteSettings-singleton',
-    _type: 'siteSettings',
-    brandName: 'Jogja Investor',
-    brandSuffix: 'Club',
+    _id: 'siteSettings-singleton', _type: 'siteSettings',
+    brandName: 'Jogja Investor', brandSuffix: 'Club',
     whatsappNumber: '6282137000888',
     address: 'Yogyakarta, D.I. Yogyakarta',
     tagline: 'Konsultan Finansial & Kontraktor Properti',
-    defaultWhatsAppMessage:
-      'Halo Tim Jogja Investor Club, saya memiliki tanah di Yogyakarta dan ingin berkonsultasi mengenai potensi pengembangan menjadi Rumah / Villa / Homestay & Kos Eksklusif. Mohon info jadwal konsultasi awal gratis. Terima kasih!',
+    defaultWhatsAppMessage: 'Halo Tim Jogja Investor Club, saya memiliki tanah di Yogyakarta dan ingin berkonsultasi mengenai potensi pengembangan menjadi Rumah / Villa / Homestay & Kos Eksklusif. Mohon info jadwal konsultasi awal gratis. Terima kasih!',
     ...(imgLogo ? { logo: imgLogo } : {}),
   };
 
+  // ── 2. Hero ──────────────────────────────────────────────────────────────
   const hero = {
-    _id: 'hero-singleton',
-    _type: 'hero',
+    _id: 'hero-singleton', _type: 'hero',
     kicker: 'Jogja Investor Club · Private Network',
     headline: 'Investasi Properti',
     headlineAccent: 'di Jogja.',
-    subheadline:
-      'Bergabunglah bersama jaringan investor properti eksklusif di Yogyakarta. Akses deal terkurasi, analisis GIS presisi, dan pendampingan penuh — dari lahan hingga passive income.',
+    subheadline: 'Bergabunglah bersama jaringan investor properti eksklusif di Yogyakarta. Akses deal terkurasi, analisis GIS presisi, dan pendampingan penuh — dari lahan hingga passive income.',
     ctaPrimaryText: 'Daftar Konsultasi Gratis',
     ctaSecondaryText: 'Analisis Peluang Lahan',
     quoteText: 'Akses eksklusif ke peluang\nproperti terbaik di Jogja',
     ...(imgHero ? { backgroundImage: imgHero } : {}),
   };
 
+  // ── 3. Property Archetypes ───────────────────────────────────────────────
   const propertyArchetypes = [
     {
-      _id: 'archetype-rumah',
-      _type: 'propertyArchetype',
-      id: 'rumah',
-      title: 'Rumah',
-      subtitle: 'Hunian syariah untuk keluarga',
+      _id: 'archetype-rumah', _type: 'propertyArchetype',
+      id: 'rumah', title: 'Rumah', subtitle: 'Hunian syariah untuk keluarga',
       tagline: 'Aset apresiasi jangka panjang',
-      description:
-        'Hunian keluarga bernuansa islami dengan desain modern minimalis. Cocok untuk investor yang ingin portofolio properti residensial dengan nilai apresiasi stabil.',
-      yieldInfo: 'Apresiasi 10–15% / thn',
-      buildCost: 'Rp 4.5 Jt / m²',
-      minArea: '120 m²',
+      description: 'Hunian keluarga bernuansa islami dengan desain modern minimalis. Cocok untuk investor yang ingin portofolio properti residensial dengan nilai apresiasi stabil.',
+      yieldInfo: 'Apresiasi 10–15% / thn', buildCost: 'Rp 4.5 Jt / m²', minArea: '120 m²',
       features: ['Desain modern minimalis', 'KPR syariah tersedia', 'Sertifikat SHM', 'Area strategis dekat fasilitas publik'],
-      order: 1,
-      ...(imgRumah ? { image: imgRumah } : {}),
+      order: 1, ...(imgRumah ? { image: imgRumah } : {}),
     },
     {
-      _id: 'archetype-villa',
-      _type: 'propertyArchetype',
-      id: 'villa',
-      title: 'Villa',
-      subtitle: 'Investasi properti bernilai tinggi',
+      _id: 'archetype-villa', _type: 'propertyArchetype',
+      id: 'villa', title: 'Villa', subtitle: 'Investasi properti bernilai tinggi',
       tagline: 'ROI premium dari sewa harian',
-      description:
-        'Villa mewah dengan kolam renang privat dan interior premium. Ideal untuk investor yang ingin ROI tinggi dari pasar sewa harian wisatawan Jogja.',
-      yieldInfo: 'ROI 15–22% / thn',
-      buildCost: 'Rp 6.2 Jt / m²',
-      minArea: '180 m²',
+      description: 'Villa mewah dengan kolam renang privat dan interior premium. Ideal untuk investor yang ingin ROI tinggi dari pasar sewa harian wisatawan Jogja.',
+      yieldInfo: 'ROI 15–22% / thn', buildCost: 'Rp 6.2 Jt / m²', minArea: '180 m²',
       features: ['Kolam renang privat', 'Interior premium', 'Manajemen sewa terkelola', 'Dekat destinasi wisata utama'],
-      order: 2,
-      ...(imgVilla ? { image: imgVilla } : {}),
+      order: 2, ...(imgVilla ? { image: imgVilla } : {}),
     },
     {
-      _id: 'archetype-kos',
-      _type: 'propertyArchetype',
-      id: 'kos',
-      title: 'Homestay & Kos',
-      subtitle: 'Penghasilan stabil jangka panjang',
+      _id: 'archetype-kos', _type: 'propertyArchetype',
+      id: 'kos', title: 'Homestay & Kos', subtitle: 'Penghasilan stabil jangka panjang',
       tagline: 'Occupancy rate 90%+ sepanjang tahun',
-      description:
-        'Kos eksekutif dan homestay dekat kawasan kampus atau pusat kota. Demand tinggi dari mahasiswa dan profesional muda dengan occupancy rate konsisten.',
-      yieldInfo: 'ROI 14–18% / thn',
-      buildCost: 'Rp 3.8 Jt / m²',
-      minArea: '200 m²',
+      description: 'Kos eksekutif dan homestay dekat kawasan kampus atau pusat kota. Demand tinggi dari mahasiswa dan profesional muda dengan occupancy rate konsisten.',
+      yieldInfo: 'ROI 14–18% / thn', buildCost: 'Rp 3.8 Jt / m²', minArea: '200 m²',
       features: ['AC & WiFi tiap kamar', 'Kamar mandi dalam', 'Dapur bersama', 'Parkir luas'],
-      order: 3,
-      ...(imgKos ? { image: imgKos } : {}),
+      order: 3, ...(imgKos ? { image: imgKos } : {}),
     },
   ];
 
+  // ── 4. Process Steps (Proses Kerja Kami) ─────────────────────────────────
   const processSteps = [
     {
-      _id: 'step-1',
-      _type: 'processStep',
-      number: 1,
+      _id: 'step-1', _type: 'processStep', number: 1,
       title: 'Konsultasi Awal',
-      description: 'Diskusikan kebutuhan dan rencana investasi Anda bersama konsultan kami secara gratis.',
+      description: 'Diskusikan kebutuhan dan rencana investasi Anda bersama konsultan kami secara gratis. Kami bantu identifikasi potensi lahan dan pilihan properti terbaik sesuai lokasi.',
       icon: 'MessageSquare',
     },
     {
-      _id: 'step-2',
-      _type: 'processStep',
-      number: 2,
+      _id: 'step-2', _type: 'processStep', number: 2,
       title: 'Analisis Potensi',
-      description: 'Pelajari nilai dan potensi lahan berdasarkan data kawasan, infrastruktur, dan regulasi setempat.',
+      description: 'Pelajari nilai dan potensi lahan berdasarkan data kawasan, infrastruktur, regulasi tata ruang (RTRW), dan analisis GIS presisi dari tim kami.',
       icon: 'Search',
     },
     {
-      _id: 'step-3',
-      _type: 'processStep',
-      number: 3,
+      _id: 'step-3', _type: 'processStep', number: 3,
       title: 'Desain & Estimasi',
-      description: 'Dapatkan desain konsep dan estimasi biaya yang transparan sesuai anggaran dan target ROI Anda.',
+      description: 'Dapatkan desain konsep 3D dan estimasi biaya (RAB) yang transparan sesuai anggaran dan target ROI Anda. Tidak ada biaya tersembunyi.',
       icon: 'PenTool',
     },
     {
-      _id: 'step-4',
-      _type: 'processStep',
-      number: 4,
+      _id: 'step-4', _type: 'processStep', number: 4,
       title: 'Bangun & Serah Terima',
-      description: 'Proses pembangunan terpantau penuh hingga properti siap ditempati atau langsung disewakan.',
+      description: 'Proses pembangunan terpantau penuh dengan laporan progres mingguan, hingga properti siap ditempati atau langsung disewakan dan menghasilkan passive income.',
       icon: 'Check',
     },
   ];
 
+  // ── 5. Projects ──────────────────────────────────────────────────────────
   const projects = [
     {
-      _id: 'project-villa-seturan',
-      _type: 'project',
-      title: 'Villa Eksklusif Seturan',
-      location: 'Sleman, Yogyakarta',
-      propertyType: 'Villa',
-      year: 2024,
-      summary:
-        'Villa mewah 2 lantai dengan kolam renang privat, dirancang untuk investor yang mencari ROI tinggi dari sewa harian wisatawan.',
-      specs: [
-        { _key: 'spec-1', label: 'Luas Tanah',       value: '300 m²'      },
-        { _key: 'spec-2', label: 'Luas Bangunan',     value: '220 m²'      },
-        { _key: 'spec-3', label: 'Nilai Investasi',   value: 'Rp 2.5 M'    },
-        { _key: 'spec-4', label: 'ROI',               value: '18% / tahun' },
+      _id: 'project-villa-seturan', _type: 'project',
+      title: 'Villa Eksklusif Seturan', location: 'Sleman, Yogyakarta',
+      propertyType: 'Villa', year: 2024,
+      summary: 'Villa mewah 2 lantai dengan kolam renang privat, dirancang untuk investor yang mencari ROI tinggi dari sewa harian wisatawan.',
+      description: [
+        block('dv1', 'Villa Eksklusif Seturan adalah proyek unggulan Jogja Investor Club yang berlokasi di kawasan premium Sleman, Yogyakarta. Dibangun di atas lahan 300 m² dengan total luas bangunan 220 m², villa ini dirancang untuk memaksimalkan potensi sewa harian dari pasar wisatawan domestik dan mancanegara.'),
+        block('dv2', 'Fasilitas utama meliputi kolam renang privat berukuran 8×4 m, ruang tamu bergaya resort, dapur fully-equipped, dan 3 kamar tidur en-suite. Properti ini telah beroperasi sejak Q1 2024 dengan tingkat hunian rata-rata 78% dan ROI aktual 18% per tahun.'),
+        block('dv3', 'Manajemen properti dikelola penuh oleh tim JIC termasuk listing di platform Airbnb, Traveloka Stays, dan Booking.com, sehingga investor tidak perlu terlibat langsung dalam operasional harian.'),
       ],
-      featured: true,
-      order: 1,
+      specs: [
+        { _key: 'sv1', label: 'Luas Tanah', value: '300 m²' },
+        { _key: 'sv2', label: 'Luas Bangunan', value: '220 m²' },
+        { _key: 'sv3', label: 'Nilai Investasi', value: 'Rp 2.5 M' },
+        { _key: 'sv4', label: 'ROI', value: '18% / tahun' },
+      ],
+      featured: true, order: 1,
       ...(imgVilla ? { coverImage: imgVilla } : {}),
-      ...(imgVilla && imgRumah && imgKos
-        ? { gallery: [
-            { ...imgVilla, _key: 'gallery-villa-1' },
-            { ...imgRumah, _key: 'gallery-villa-2' },
-            { ...imgKos,   _key: 'gallery-villa-3' },
-          ] }
-        : {}),
+      ...(imgVilla && imgRumah && imgKos ? { gallery: [
+        { ...imgVilla, _key: 'gv1' }, { ...imgRumah, _key: 'gv2' }, { ...imgKos, _key: 'gv3' },
+      ] } : {}),
     },
     {
-      _id: 'project-kos-kampus',
-      _type: 'project',
-      title: 'Kos Eksekutif Kawasan Kampus',
-      location: 'Depok, Sleman',
-      propertyType: 'Homestay & Kos',
-      year: 2024,
-      summary:
-        'Kos eksekutif 20 kamar dekat kampus UGM, dengan occupancy rate 95% sejak bulan pertama operasi.',
-      specs: [
-        { _key: 'spec-1', label: 'Luas Tanah',      value: '500 m²'      },
-        { _key: 'spec-2', label: 'Jumlah Kamar',    value: '20 kamar'    },
-        { _key: 'spec-3', label: 'Nilai Investasi', value: 'Rp 1.8 M'    },
-        { _key: 'spec-4', label: 'ROI',             value: '15% / tahun' },
+      _id: 'project-kos-kampus', _type: 'project',
+      title: 'Kos Eksekutif Kawasan Kampus', location: 'Depok, Sleman',
+      propertyType: 'Homestay & Kos', year: 2024,
+      summary: 'Kos eksekutif 20 kamar dekat kampus UGM, dengan occupancy rate 95% sejak bulan pertama operasi.',
+      description: [
+        block('dk1', 'Proyek kos eksekutif ini hadir di jantung kawasan kampus Depok, Sleman — hanya 800 meter dari gerbang utama UGM. Dibangun di atas tanah 500 m² dengan 20 kamar berukuran 18 m² masing-masing dilengkapi AC, kamar mandi dalam, dan akses WiFi fiber optik.'),
+        block('dk2', 'Sejak beroperasi pada Agustus 2024, hunian ini langsung mencapai occupancy rate 95% berkat sistem pra-booking yang sudah dibuka 3 bulan sebelum serah terima. Tarif sewa berkisar Rp 1.8–2.2 juta per kamar per bulan.'),
+        block('dk3', 'ROI aktual mencapai 15% per tahun dengan proyeksi BEP (Break-Even Point) dalam 5.8 tahun. Pengelolaan operasional harian ditangani oleh manajemen properti mitra JIC.'),
       ],
-      featured: false,
-      order: 2,
+      specs: [
+        { _key: 'sk1', label: 'Luas Tanah', value: '500 m²' },
+        { _key: 'sk2', label: 'Jumlah Kamar', value: '20 kamar' },
+        { _key: 'sk3', label: 'Nilai Investasi', value: 'Rp 1.8 M' },
+        { _key: 'sk4', label: 'ROI', value: '15% / tahun' },
+      ],
+      featured: false, order: 2,
       ...(imgKos ? { coverImage: imgKos } : {}),
-      ...(imgKos && imgRumah
-        ? { gallery: [
-            { ...imgKos,   _key: 'gallery-kos-1' },
-            { ...imgRumah, _key: 'gallery-kos-2' },
-          ] }
-        : {}),
+      ...(imgKos && imgRumah ? { gallery: [
+        { ...imgKos, _key: 'gk1' }, { ...imgRumah, _key: 'gk2' },
+      ] } : {}),
     },
     {
-      _id: 'project-rumah-bantul',
-      _type: 'project',
-      title: 'Rumah Modern Minimalis Bantul',
-      location: 'Bantul, Yogyakarta',
-      propertyType: 'Rumah',
-      year: 2023,
-      summary:
-        'Rumah hunian keluarga dengan konsep islami, 3 kamar tidur dan taman tropis di halaman belakang. Apresiasi nilai 12% dalam satu tahun pertama.',
-      specs: [
-        { _key: 'spec-1', label: 'Luas Tanah',     value: '150 m²'      },
-        { _key: 'spec-2', label: 'Luas Bangunan',  value: '120 m²'      },
-        { _key: 'spec-3', label: 'Nilai Investasi', value: 'Rp 900 Jt'  },
-        { _key: 'spec-4', label: 'Apresiasi',       value: '12% / tahun' },
+      _id: 'project-rumah-bantul', _type: 'project',
+      title: 'Rumah Modern Minimalis Bantul', location: 'Bantul, Yogyakarta',
+      propertyType: 'Rumah', year: 2023,
+      summary: 'Rumah hunian keluarga dengan konsep islami, 3 kamar tidur dan taman tropis di halaman belakang. Apresiasi nilai 12% dalam satu tahun pertama.',
+      description: [
+        block('dr1', 'Rumah Modern Minimalis Bantul adalah proyek hunian keluarga yang mengedepankan konsep islami modern dengan desain tropis kontemporer. Berlokasi di kawasan strategis Bantul, 15 menit dari pusat Kota Yogyakarta.'),
+        block('dr2', 'Bangunan 2 lantai ini memiliki 3 kamar tidur, 2 kamar mandi, ruang keluarga yang luas, dan dapur semi-terbuka menghadap taman tropis di halaman belakang. Material utama menggunakan batu bata ekspos, kayu sengon, dan kaca double-pane untuk efisiensi energi.'),
+        block('dr3', 'Setelah serah terima pada Desember 2023, nilai properti mengalami apresiasi 12% berdasarkan appraisal bank pada pertengahan 2024 — melampaui proyeksi awal sebesar 8–10% per tahun.'),
       ],
-      featured: false,
-      order: 3,
+      specs: [
+        { _key: 'sr1', label: 'Luas Tanah', value: '150 m²' },
+        { _key: 'sr2', label: 'Luas Bangunan', value: '120 m²' },
+        { _key: 'sr3', label: 'Nilai Investasi', value: 'Rp 900 Jt' },
+        { _key: 'sr4', label: 'Apresiasi', value: '12% / tahun' },
+      ],
+      featured: false, order: 3,
       ...(imgRumah ? { coverImage: imgRumah } : {}),
-      ...(imgRumah && imgVilla
-        ? { gallery: [
-            { ...imgRumah, _key: 'gallery-rumah-1' },
-            { ...imgVilla, _key: 'gallery-rumah-2' },
-          ] }
-        : {}),
+      ...(imgRumah && imgVilla ? { gallery: [
+        { ...imgRumah, _key: 'gr1' }, { ...imgVilla, _key: 'gr2' },
+      ] } : {}),
+    },
+  ];
+
+  // ── 6. Investment Clusters (GIS Panel) ───────────────────────────────────
+  const investmentClusters = [
+    {
+      _id: 'cluster-semua', _type: 'investmentCluster',
+      clusterId: 'semua', order: 0,
+      title: 'Semua Kawasan DIY',
+      subtitle: 'Lihat seluruh 5 kabupaten/kota',
+      badge: '🗺️ Comprehensive',
+      bestFor: 'Portfolio Diversifikasi',
+      priceBadge: 'Pasar Rp 1,5 - 25 jt/m²',
+      fullName: 'Daerah Istimewa Yogyakarta (Seluruh Kawasan)',
+      description: 'Mencakup 5 kabupaten/kota dengan beragam karakteristik investasi dari perkotaan, koridor universitas, hingga kawasan pariwisata heritage dan bahari.',
+      priceRange: 'Rp 2,5 - 18 jt/m²', njopPrice: 'Rp 450 Rb - 22 Jt/m²',
+      growthRate: '+8% - 15%', roi: '8% - 14% / tahun',
+      targetRegions: ['semua'], hotspotKecamatanSlugs: [],
+    },
+    {
+      _id: 'cluster-kampus', _type: 'investmentCluster',
+      clusterId: 'kampus', order: 1,
+      title: 'Kawasan Kampus',
+      subtitle: 'UGM, UNY, Seturan, UPN, UII, UMY',
+      badge: '🔥 Hot Demand',
+      bestFor: 'Kost Eksklusif & Co-Living',
+      priceBadge: 'Pasar Rp 5,5 - 16 jt/m²',
+      fullName: 'Kawasan Kampus & Pelajar (Sleman, Kota Jogja & Bantul Utara)',
+      description: 'Didukung 300.000+ mahasiswa aktif. Sleman: Depok (Seturan, Caturtunggal, Babarsari), Ngaglik (Jakal, UII), Mlati (UTY). Kota: Gondokusuman (UKDW, UAJY), Umbulharjo (UAD). Bantul: Kasihan (UMY, Alma Ata, ISI). Kawasan dengan occupancy kos 95%+ sepanjang tahun.',
+      priceRange: 'Rp 5,5 - 16 jt/m²', njopPrice: 'Rp 3,5 - 14 jt/m²',
+      growthRate: '+11% - 16%', roi: '12% - 18% / tahun',
+      targetRegions: ['sleman', 'kota', 'bantul'],
+      hotspotKecamatanSlugs: ['depok', 'ngaglik', 'mlati', 'ngemplak', 'gondokusuman', 'umbulharjo', 'tegalrejo', 'kasihan'],
+    },
+    {
+      _id: 'cluster-wisata', _type: 'investmentCluster',
+      clusterId: 'wisata', order: 2,
+      title: 'Kawasan Wisata & Staycation',
+      subtitle: 'Malioboro, Parangtritis, Kaliurang, Mangunan',
+      badge: '🏖️ High Yield',
+      bestFor: 'Villa & Boutique Homestay',
+      priceBadge: 'Pasar Rp 4,0 - 16 jt/m²',
+      fullName: 'Kawasan Wisata & Staycation (Bantul, Kota Jogja, Sleman & Gunungkidul)',
+      description: 'Koridor 7.2+ juta wisatawan/tahun. Malioboro (Kraton, Gedongtengen, Gondomanan), Prawirotaman (Mergangsan, Mantrijeron), Kaliurang (Pakem, Turi), Dlingo (Mangunan glamping), Patuk (HeHa Sky View), dan Parangtritis (Kretek). Potensial villa sewa harian dan homestay estetik.',
+      priceRange: 'Rp 4,0 - 16 jt/m²', njopPrice: 'Rp 1,5 - 7,5 jt/m²',
+      growthRate: '+10% - 14%', roi: '14% - 22% / tahun',
+      targetRegions: ['bantul', 'kota', 'sleman', 'gunungkidul'],
+      hotspotKecamatanSlugs: ['kraton', 'gedongtengen', 'gondomanan', 'mergangsan', 'mantrijeron', 'pakem', 'turi', 'cangkringan', 'prambanan', 'kretek', 'sanden', 'bambanglipuro', 'dlingo', 'patuk'],
+    },
+    {
+      _id: 'cluster-premium', _type: 'investmentCluster',
+      clusterId: 'premium', order: 3,
+      title: 'Kawasan Premium Kota',
+      subtitle: 'Kotabaru, Ring Road Utara, Elit Pusat',
+      badge: '💎 Prime Capital',
+      bestFor: 'Luxury Townhouse & Komersial',
+      priceBadge: 'Pasar Rp 9,0 - 25 jt/m²',
+      fullName: 'Kota Yogyakarta & Sleman Tengah (Kawasan Premium)',
+      description: 'Aksesibilitas terbaik dan fasilitas terlengkap. Gondokusuman (Kotabaru heritage), Umbulharjo (bisnis modern), Pakualaman (elite heritage), Mlati & Gamping (Ring Road Utara hunian premium). Likuiditas aset tertinggi.',
+      priceRange: 'Rp 9,0 - 25 jt/m²', njopPrice: 'Rp 6,0 - 22 jt/m²',
+      growthRate: '+12% - 18%', roi: '9% - 13% / tahun',
+      targetRegions: ['kota', 'sleman'],
+      hotspotKecamatanSlugs: ['gondokusuman', 'umbulharjo', 'pakualaman', 'mlati', 'gamping', 'godean'],
+    },
+    {
+      _id: 'cluster-pertumbuhan', _type: 'investmentCluster',
+      clusterId: 'pertumbuhan', order: 4,
+      title: 'Kawasan Pertumbuhan & Tol',
+      subtitle: 'Kulon Progo YIA, Sleman & Koridor Tol',
+      badge: '🚀 High Growth',
+      bestFor: 'Land Banking & Ruko Transit',
+      priceBadge: 'Pasar Rp 1,8 - 6,5 jt/m²',
+      fullName: 'Koridor Tol Solo-Jogja-YIA & Aerotropolis Bandara (Kulon Progo, Sleman, Bantul)',
+      description: 'Pertumbuhan pesat terdorong Bandara Internasional YIA dan mega-proyek Tol Solo-Jogja-YIA & Tol Bawen. Mencakup seluruh koridor exit tol & simpul pertumbuhan: Temon, Wates, Pengasih, Sentolo, Sedayu, Gamping, Mlati, Seyegan, Tempel, Kalasan, hingga Depok.',
+      priceRange: 'Rp 1,8 - 6,5 jt/m²', njopPrice: 'Rp 850 Rb - 4,5 jt/m²',
+      growthRate: '+14% - 20%', roi: '9% - 15% / tahun',
+      targetRegions: ['kulonprogo', 'sleman', 'bantul'],
+      hotspotKecamatanSlugs: ['temon', 'wates', 'pengasih', 'sentolo', 'nanggulan', 'panjatan', 'kokap', 'lendah', 'sedayu', 'gamping', 'mlati', 'seyegan', 'tempel', 'kalasan', 'depok', 'ngemplak', 'godean', 'moyudan', 'minggir'],
+    },
+    {
+      _id: 'cluster-eco-wellness', _type: 'investmentCluster',
+      clusterId: 'eco-wellness', order: 5,
+      title: 'Kawasan Eco & Wellness',
+      subtitle: 'Pakem, Cangkringan, Lereng Merapi',
+      badge: '🌿 Eco Living',
+      bestFor: 'Resort Villa & Glamping Cafe',
+      priceBadge: 'Pasar Rp 2,0 - 6,0 jt/m²',
+      fullName: 'Sleman Utara (Kawasan Wisata Alam & Wellness Retreat)',
+      description: 'Udara sejuk lereng Merapi, view alam terbuka, air melimpah. Pakem (Kaliurang, Bumi Perkemahan), Cangkringan (Kaliadem, lava tour), Turi (agrowisata salak), Ngemplak (Besi, resort eco). Primadona: wellness villa, healing resort, glamping café.',
+      priceRange: 'Rp 2,0 - 6,0 jt/m²', njopPrice: 'Rp 1,2 - 4,0 jt/m²',
+      growthRate: '+10% - 15%', roi: '11% - 17% / tahun',
+      targetRegions: ['sleman'],
+      hotspotKecamatanSlugs: ['pakem', 'cangkringan', 'turi', 'ngemplak', 'tempel'],
+    },
+    {
+      _id: 'cluster-heritage-art', _type: 'investmentCluster',
+      clusterId: 'heritage-art', order: 6,
+      title: 'Kawasan Heritage & Seni',
+      subtitle: 'Kotagede, Prawirotaman, Kasihan',
+      badge: '🏛️ Art & Culture',
+      bestFor: 'Boutique Guesthouse & Galeri',
+      priceBadge: 'Pasar Rp 3,5 - 9,5 jt/m²',
+      fullName: 'Kota Jogja Selatan & Bantul Utara (Heritage & Seni)',
+      description: 'Pusat komunitas ekspatriat, desainer, dan seniman internasional. Kotagede (kerajinan perak), Prawirotaman (galeri & guest house), Kasihan & Sewon (kampus ISI, kriya), Banguntapan (perumahan premium selatan). Sangat diminati turis mancanegara.',
+      priceRange: 'Rp 3,5 - 9,5 jt/m²', njopPrice: 'Rp 1,5 - 7,5 jt/m²',
+      growthRate: '+9% - 14%', roi: '12% - 16% / tahun',
+      targetRegions: ['kota', 'bantul'],
+      hotspotKecamatanSlugs: ['kotagede', 'umbulharjo', 'mergangsan', 'kraton', 'ngampilan', 'kasihan', 'sewon', 'banguntapan', 'imogiri'],
+    },
+    {
+      _id: 'cluster-pesisir', _type: 'investmentCluster',
+      clusterId: 'pesisir', order: 7,
+      title: 'Pesisir Selatan & Geopark',
+      subtitle: 'Gunungkidul, Parangtritis, JJLS',
+      badge: '🌊 Ocean View',
+      bestFor: 'Boutique Resort & Glamping',
+      priceBadge: 'Pasar Rp 900 Rb - 4,5 jt/m²',
+      fullName: 'Pesisir DIY Selatan (Gunungkidul & Bantul Pantai)',
+      description: 'Kawasan pesisir eksotis tumbuh tercepat di DIY. Purwosari (Parangendog), Panggang (HeHa Ocean View, Pantai Gesing), Saptosari (Ngrenehan, Ngobaran), Tanjungsari (Baron, Kukup), Tepus (Indrayanti, Timang), Girisubo (Sadeng, Wediombo) + Parangtritis & Samas (Bantul). Capital gain agresif via JJLS.',
+      priceRange: 'Rp 900 Rb - 4,5 jt/m²', njopPrice: 'Rp 450 Rb - 3 jt/m²',
+      growthRate: '+12% - 18%', roi: '13% - 19% / tahun',
+      targetRegions: ['gunungkidul', 'bantul'],
+      hotspotKecamatanSlugs: ['purwosari', 'panggang', 'saptosari', 'tanjungsari', 'tepus', 'girisubo', 'rongkop', 'kretek', 'sanden', 'srandakan', 'bambanglipuro'],
+    },
+  ];
+
+  // ── 7. Yogyakarta Regions (GIS Map Data) ────────────────────────────────
+  const yogyakartaRegions = [
+    {
+      _id: 'region-semua', _type: 'yogyakartaRegion',
+      regionId: 'semua', name: 'Semua Kawasan DIY',
+      fullName: 'Daerah Istimewa Yogyakarta (Seluruh 5 Wilayah Terpadu)',
+      recommended: 'Rumah Mewah, Villa Resort & Kos Eksklusif',
+      landPrice: 'Rp 1,5 Jt - 25 Jt / m²', njopPrice: 'Rp 450 Rb - 22 Jt / m²',
+      njopRangeDetail: 'Rentang NJOP Resmi PBB-P2 Seluruh DIY: Terendah di Lahan Kars GK, Tertinggi di Koridor Malioboro',
+      njopRatio: '~50% - 75% dari harga pasar transaksi',
+      tollAccessDesc: 'Akses 2 Trase Tol Utama: Solo-Yogyakarta-YIA & Yogyakarta-Bawen',
+      rtrwDesc: 'Zonasi Terpadu RTRW DIY: Perkotaan, Kawasan Pendidikan, Aerotropolis, & Cagar Budaya',
+      yieldEst: '12% - 19% / tahun', occupancy: '85% - 98%',
+      kdb: 'KDB 50% - 70% · Bergantung Zonasi RTRW',
+      highlights: ['Sleman (Kampus & Wisata)', 'Kota Jogja (Pusat Heritage)', 'Bantul (Seni & Industri Kreatif)', 'Gunungkidul (Pantai & Geowisata)', 'Kulon Progo (Aerotropolis YIA)'],
+      desc: 'Peluang investasi properti terpadu di seluruh Daerah Istimewa Yogyakarta: kos eksklusif mahasiswa di Sleman, hunian heritage & homestay di Kota Jogja, villa asri di Kaliurang & Bantul, hingga resort pesisir di Gunungkidul.',
+    },
+    {
+      _id: 'region-sleman', _type: 'yogyakartaRegion',
+      regionId: 'sleman', name: 'Sleman',
+      fullName: 'Kabupaten Sleman (Kawasan Kampus & Wisata Kaliurang)',
+      recommended: 'Kos Eksklusif, Co-Living Mahasiswa & Villa Kaliurang',
+      landPrice: 'Rp 5,5 Jt - 16 Jt / m²', njopPrice: 'Rp 3,5 Jt - 14 Jt / m²',
+      njopRangeDetail: 'Depok/Seturan: Rp 8-14 Jt | Jakal/Ngaglik: Rp 5-10 Jt | Sleman Barat: Rp 3,5-7 Jt | Sleman Utara: Rp 1,5-3,5 Jt',
+      njopRatio: '~60% - 75% dari harga pasar',
+      tollAccessDesc: 'Koneksi Langsung 5 Exit Tol (Purwomartani, Maguwo, Monjali, Trihanggo, Gamping)',
+      rtrwDesc: 'Zona Pendidikan Tinggi, Agrowisata Merapi & Hunian Komersial Vertikal',
+      yieldEst: '14% - 19% / tahun', occupancy: '94% - 98%',
+      kdb: 'KDB 60% · Maksimal 3-4 Lantai',
+      highlights: ['Kampus UGM & UNY', 'Kawasan Seturan & Jakal', 'Wisata Kaliurang & Merapi'],
+      desc: 'Sentra pendidikan terbesar di DIY dengan 300.000+ mahasiswa aktif. Permintaan kos eksklusif dan villa staycation tertinggi sepanjang tahun.',
+    },
+    {
+      _id: 'region-kota', _type: 'yogyakartaRegion',
+      regionId: 'kota', name: 'Kota Yogyakarta',
+      fullName: 'Kota Yogyakarta (Pusat Heritage & Komersial)',
+      recommended: 'Boutique Homestay, Hotel Transit & Rumah Heritage Mewah',
+      landPrice: 'Rp 9 Jt - 25 Jt / m²', njopPrice: 'Rp 6 Jt - 22 Jt / m²',
+      njopRangeDetail: 'Malioboro/Sudirman: Rp 18-22 Jt | Kotabaru/Kraton: Rp 9-15 Jt | Umbulharjo: Rp 6-9 Jt',
+      njopRatio: '~65% - 85% dari harga pasar',
+      tollAccessDesc: 'Akses 12-15 menit ke Exit Tol Trihanggo & Maguwo Ring Road',
+      rtrwDesc: 'Zona Perkotaan Padat, Kawasan Cagar Budaya & Sentra Bisnis Komersial',
+      yieldEst: '12% - 15% / tahun', occupancy: '88% - 94%',
+      kdb: 'KDB 70% · Zona Pusat Kota & Bisnis',
+      highlights: ['Kawasan Malioboro', 'Keraton Ngayogyakarta', 'Kotabaru & Tugu Jogja'],
+      desc: 'Jantung denyut budaya dan pariwisata urban DIY. Keterbatasan lahan kosong menjadikan aset properti di sini bernilai likuiditas dan apresiasi kapital tertinggi.',
+    },
+    {
+      _id: 'region-bantul', _type: 'yogyakartaRegion',
+      regionId: 'bantul', name: 'Bantul',
+      fullName: 'Kabupaten Bantul (Kawasan Seni & Budaya Kasihan-Sewon)',
+      recommended: 'Rumah Modern Tropis, Villa Etnik & Guest House Seni',
+      landPrice: 'Rp 3 Jt - 10 Jt / m²', njopPrice: 'Rp 1,5 Jt - 7,5 Jt / m²',
+      njopRangeDetail: 'Banguntapan/Sewon: Rp 4-7,5 Jt | Bantul Kota: Rp 2,5-4,5 Jt | Pajangan/Sedayu: Rp 1,5-3 Jt | Pesisir: Rp 800 Rb-2 Jt',
+      njopRatio: '~50% - 65% dari harga pasar',
+      tollAccessDesc: '15-20 menit via Ring Road Selatan ke Exit Tol Gamping',
+      rtrwDesc: 'Zona Industri Kreatif, Sentra Kriya Seni & Hunian Sub-Urban Hijau',
+      yieldEst: '11% - 16% / tahun', occupancy: '82% - 89%',
+      kdb: 'KDB 60% · Sentra Residensial Nyaman',
+      highlights: ['Sentra Gerabah Kasongan', 'Kampus ISI Yogyakarta', 'Pantai Parangtritis'],
+      desc: 'Lingkungan asri bernuansa seni dan budaya kreatif. Sangat diminati untuk cluster perumahan keluarga modern dan homestay pelancong seni mancanegara.',
+    },
+    {
+      _id: 'region-gunungkidul', _type: 'yogyakartaRegion',
+      regionId: 'gunungkidul', name: 'Gunungkidul',
+      fullName: 'Kabupaten Gunungkidul (Kawasan Wisata Pesisir & Geopark)',
+      recommended: 'Boutique Resort Tebing, Glamping & Villa Wisata Pantai',
+      landPrice: 'Rp 900 Rb - 4,5 Jt / m²', njopPrice: 'Rp 450 Rb - 3 Jt / m²',
+      njopRangeDetail: 'Kawasan Pantai JJLS: Rp 1,5-3 Jt | Wonosari Kota: Rp 1,8-3 Jt | Patuk: Rp 1-2,2 Jt | Lahan Kars: Rp 250-650 Rb',
+      njopRatio: '~40% - 55% dari harga pasar',
+      tollAccessDesc: 'Akses Jalur JJLS (Jalur Jalan Lintas Selatan) & Akses Prambanan-Gayamharjo',
+      rtrwDesc: 'Zona Geopark UNESCO, Pariwisata Pantai Bahari & Kawasan Lindung Ekologis',
+      yieldEst: '13% - 18% / tahun', occupancy: '72% - 85%',
+      kdb: 'KDB 40% - 50% · Kawasan Konservasi & Wisata',
+      highlights: ['Pantai Indrayanti & Baron', 'Goa Pindul', 'Wonosari Sentra Bisnis'],
+      desc: 'Kawasan pesisir eksotis dengan pertumbuhan destinasi pariwisata alam tercepat di DIY. Potensi capital gain tanah jangka panjang yang sangat agresif.',
+    },
+    {
+      _id: 'region-kulonprogo', _type: 'yogyakartaRegion',
+      regionId: 'kulonprogo', name: 'Kulon Progo',
+      fullName: 'Kabupaten Kulon Progo (Kawasan Aerotropolis YIA)',
+      recommended: 'Hotel Transit Bandara, Guest House & Perumahan Baru',
+      landPrice: 'Rp 1,8 Jt - 6,5 Jt / m²', njopPrice: 'Rp 850 Rb - 4,5 Jt / m²',
+      njopRangeDetail: 'Aerotropolis Temon (YIA): Rp 2,5-4,5 Jt | Kota Wates: Rp 1,8-3,5 Jt | Nanggulan: Rp 1-2,5 Jt | Menoreh: Rp 450-900 Rb',
+      njopRatio: '~45% - 60% dari harga pasar',
+      tollAccessDesc: 'Titik Akhir Trase Tol Solo-Jogja-YIA & Jalur Kereta Cepat Bandara',
+      rtrwDesc: 'Zona Aerotropolis Terpadu, Transportasi Intermoda & Pusat Pertumbuhan Baru',
+      yieldEst: '12% - 16% / tahun', occupancy: '78% - 86%',
+      kdb: 'KDB 50% - 60% · Koridor Infrastruktur Baru',
+      highlights: ['Bandara YIA Glagah', 'Kota Wates', 'Perbukitan Menoreh'],
+      desc: 'Pintu gerbang udara internasional DIY. Mengalami akselerasi pembangunan infrastruktur jalan tol bandara dan kawasan logistik aerotropolis.',
     },
   ];
 
@@ -302,34 +449,28 @@ async function seed() {
   console.log('\n📄  Writing documents...\n');
 
   const allDocs = [
-    { doc: siteSettings,         label: 'Site Settings'                          },
-    { doc: hero,                  label: 'Hero Section'                           },
+    { doc: siteSettings, label: 'Site Settings' },
+    { doc: hero, label: 'Hero Section' },
     ...propertyArchetypes.map((d) => ({ doc: d, label: `Property Archetype: ${d.title}` })),
-    ...processSteps.map((d)      => ({ doc: d, label: `Process Step ${d.number}: ${d.title}` })),
-    ...projects.map((d)          => ({ doc: d, label: `Project: ${d.title}`       })),
+    ...processSteps.map((d) => ({ doc: d, label: `Process Step ${d.number}: ${d.title}` })),
+    ...projects.map((d) => ({ doc: d, label: `Project: ${d.title}` })),
+    ...investmentClusters.map((d) => ({ doc: d, label: `Investment Cluster: ${d.title}` })),
+    ...yogyakartaRegions.map((d) => ({ doc: d, label: `Region: ${d.name}` })),
   ];
 
-  let created = 0;
-  let updated = 0;
-
+  let created = 0, updated = 0;
   for (const { doc, label } of allDocs) {
     const alreadyExists = await exists(doc._id);
-    // Always createOrReplace so images get updated on re-run
     await client.createOrReplace(doc as any);
-    if (alreadyExists) {
-      console.log(`  🔄  Updated — ${label}`);
-      updated++;
-    } else {
-      console.log(`  ✅  Created — ${label}`);
-      created++;
-    }
+    if (alreadyExists) { console.log(`  🔄  Updated — ${label}`); updated++; }
+    else { console.log(`  ✅  Created — ${label}`); created++; }
   }
 
-  console.log(`\n✨  Selesai! ${created} dibuat, ${updated} diupdate.\n`);
-  console.log(`📝  Buka Studio untuk review:\n    http://localhost:3002/studio\n`);
+  console.log(`\n✨  Selesai! ${created} dibuat, ${updated} diupdate.`);
+  console.log(`📝  Buka Studio: http://localhost:3002/studio\n`);
 }
 
 seed().catch((err) => {
-  console.error('\n❌  Error saat seeding:', err.message);
+  console.error('\n❌  Error:', err.message);
   process.exit(1);
 });

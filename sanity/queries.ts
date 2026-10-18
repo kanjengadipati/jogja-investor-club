@@ -64,3 +64,43 @@ export const projectsQuery = groq`
     order,
   }
 `;
+
+export const investmentClustersQuery = groq`
+  *[_type == "investmentCluster"] | order(order asc) {
+    clusterId,
+    title,
+    subtitle,
+    badge,
+    bestFor,
+    priceBadge,
+    fullName,
+    description,
+    priceRange,
+    njopPrice,
+    growthRate,
+    roi,
+    targetRegions,
+    hotspotKecamatanSlugs,
+    order,
+  }
+`;
+
+export const yogyakartaRegionsQuery = groq`
+  *[_type == "yogyakartaRegion"] {
+    regionId,
+    name,
+    fullName,
+    recommended,
+    landPrice,
+    njopPrice,
+    njopRangeDetail,
+    njopRatio,
+    tollAccessDesc,
+    rtrwDesc,
+    yieldEst,
+    occupancy,
+    kdb,
+    highlights,
+    desc,
+  }
+`;

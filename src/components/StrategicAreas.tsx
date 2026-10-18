@@ -9,7 +9,8 @@ import {
 } from 'lucide-react';
 import type { YogyakartaRegion } from './JogjaRealMap';
 import type { InvestmentBlock } from './JogjaOsmMap';
-import { INVESTMENT_CLUSTERS, getHighlightRegions, getHighlightKecamatan } from '../data/investmentClusters';
+import { INVESTMENT_CLUSTERS, getHighlightRegions, getHighlightKecamatan, type InvestmentCluster } from '../data/investmentClusters';
+import type { SanityInvestmentCluster, SanityYogyakartaRegion } from './PageClient';
 
 // Dynamically import Leaflet maps
 const JogjaRealMap = dynamic(
@@ -44,9 +45,35 @@ const JogjaOsmMap = dynamic(
 
 interface StrategicAreasProps {
   onSelectZone: (zoneName: string, shouldScroll?: boolean) => void;
+  sanityInvestmentClusters?: SanityInvestmentCluster[];
+  sanityYogyakartaRegions?: SanityYogyakartaRegion[];
 }
 
-export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) => {
+/** Map SanityInvestmentCluster → InvestmentCluster (shape yang dipakai komponen) */
+function mapSanityCluster(s: SanityInvestmentCluster): InvestmentCluster {
+  return {
+    id: s.clusterId,
+    title: s.title,
+    subtitle: s.subtitle ?? '',
+    badge: s.badge ?? '',
+    bestFor: s.bestFor ?? '',
+    priceBadge: s.priceBadge ?? '',
+    targetRegions: (s.targetRegions ?? []) as any,
+    hotspotKecamatanSlugs: s.hotspotKecamatanSlugs ?? [],
+    fullName: s.fullName,
+    description: s.description ?? '',
+    priceRange: s.priceRange ?? '',
+    njopPrice: s.njopPrice ?? '',
+    growthRate: s.growthRate ?? '',
+    roi: s.roi ?? '',
+  };
+}
+
+export const StrategicAreas: React.FC<StrategicAreasProps> = ({
+  onSelectZone,
+  sanityInvestmentClusters,
+  sanityYogyakartaRegions,
+}) => {
   const [activeMapTab, setActiveMapTab] = useState<'zonasi' | 'blok'>('zonasi');
   const [activeFilterTab, setActiveFilterTab] = useState<'zonasi' | 'harga' | 'akses'>('zonasi');
   const [selectedCluster, setSelectedCluster] = useState<string>('kampus');
@@ -69,8 +96,11 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({ onSelectZone }) 
   }, [isFullscreen, handleCloseFullscreen]);
 
 
-  // clusters sekarang dari data file — tidak ada yang perlu diedit di sini
-  const clusters = INVESTMENT_CLUSTERS;
+  // clusters: gunakan data Sanity jika tersedia, fallback ke data statis
+  const clusters: InvestmentCluster[] =
+    sanityInvestmentClusters && sanityInvestmentClusters.length > 0
+      ? sanityInvestmentClusters.map(mapSanityCluster)
+      : INVESTMENT_CLUSTERS;
 
 
   const currentData = clusters.find((c) => c.id === selectedCluster) || clusters[1];

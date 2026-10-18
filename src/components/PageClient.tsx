@@ -12,7 +12,8 @@ import { Footer } from './Footer';
 import { WhatsAppFloatingCTA } from './WhatsAppFloatingCTA';
 import { PropertyType } from '../types/property';
 
-// Types mirroring Sanity data shapes
+// ─── Sanity data types ────────────────────────────────────────────────────────
+
 export interface HeroData {
   kicker?: string;
   headline?: string;
@@ -54,12 +55,54 @@ export interface SiteSettingsData {
   logo?: string;
 }
 
+/** Mirrors investmentCluster Sanity schema */
+export interface SanityInvestmentCluster {
+  clusterId: string;
+  title: string;
+  subtitle?: string;
+  badge?: string;
+  bestFor?: string;
+  priceBadge?: string;
+  fullName: string;
+  description?: string;
+  priceRange?: string;
+  njopPrice?: string;
+  growthRate?: string;
+  roi?: string;
+  targetRegions?: string[];
+  hotspotKecamatanSlugs?: string[];
+  order?: number;
+}
+
+/** Mirrors yogyakartaRegion Sanity schema */
+export interface SanityYogyakartaRegion {
+  regionId: string;
+  name: string;
+  fullName?: string;
+  recommended?: string;
+  landPrice?: string;
+  njopPrice?: string;
+  njopRangeDetail?: string;
+  njopRatio?: string;
+  tollAccessDesc?: string;
+  rtrwDesc?: string;
+  yieldEst?: string;
+  occupancy?: string;
+  kdb?: string;
+  highlights?: string[];
+  desc?: string;
+}
+
+// ─── Props ────────────────────────────────────────────────────────────────────
+
 interface PageClientProps {
   heroData: HeroData | null;
   archetypes: PropertyArchetypeData[];
   processSteps: ProcessStepData[];
   siteSettings: SiteSettingsData | null;
   projects: ProjectData[];
+  investmentClusters: SanityInvestmentCluster[];
+  yogyakartaRegions: SanityYogyakartaRegion[];
 }
 
 export default function PageClient({
@@ -68,6 +111,8 @@ export default function PageClient({
   processSteps,
   siteSettings,
   projects,
+  investmentClusters,
+  yogyakartaRegions,
 }: PageClientProps) {
   const [selectedPropertyType, setSelectedPropertyType] = useState<PropertyType>('kos');
   const [selectedZone, setSelectedZone] = useState<string>(
@@ -109,10 +154,7 @@ export default function PageClient({
   return (
     <div className="min-h-screen flex flex-col bg-[#fbf9f5] text-[#1a221f] selection:bg-[#d5a864] selection:text-[#071914]">
       {/* 1. Navbar */}
-      <Navbar
-        onOpenConsultation={scrollToCalculator}
-        siteSettings={siteSettings}
-      />
+      <Navbar onOpenConsultation={scrollToCalculator} siteSettings={siteSettings} />
 
       <main className="flex-1">
         {/* 2. Hero */}
@@ -123,13 +165,14 @@ export default function PageClient({
         />
 
         {/* 3. Solusi Properti */}
-        <PropertyArchetypes
-          onSelectArchetype={handleSelectArchetype}
-          archetypes={archetypes}
-        />
+        <PropertyArchetypes onSelectArchetype={handleSelectArchetype} archetypes={archetypes} />
 
-        {/* 4. Area Strategis */}
-        <StrategicAreas onSelectZone={handleSelectZone} />
+        {/* 4. Area Strategis GIS */}
+        <StrategicAreas
+          onSelectZone={handleSelectZone}
+          sanityInvestmentClusters={investmentClusters}
+          sanityYogyakartaRegions={yogyakartaRegions}
+        />
 
         {/* 5. Proses Layanan */}
         <ProcessSteps steps={processSteps} />
@@ -145,10 +188,7 @@ export default function PageClient({
       </main>
 
       {/* 8. Footer */}
-      <Footer
-        onOpenWhatsApp={handleOpenWhatsAppDirect}
-        siteSettings={siteSettings}
-      />
+      <Footer onOpenWhatsApp={handleOpenWhatsAppDirect} siteSettings={siteSettings} />
 
       {/* Floating WhatsApp */}
       <WhatsAppFloatingCTA onOpenWhatsApp={handleOpenWhatsAppDirect} />
