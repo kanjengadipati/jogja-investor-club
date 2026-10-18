@@ -12,9 +12,10 @@ export default async function StudioPage({
   const resolvedParams = await params;
   const tool = resolvedParams?.tool;
 
-  // Redirect root /studio → /studio/structure so sidebar is always visible
-  if (!tool || tool.length === 0) {
-    redirect('/studio/structure');
+  // Redirect root /studio or /studio/structure → /studio/structure/welcome
+  // so the Beranda & Panduan dashboard opens immediately instead of an empty pane
+  if (!tool || tool.length === 0 || (tool.length === 1 && tool[0] === 'structure')) {
+    redirect('/studio/structure/welcome');
   }
 
   return <NextStudio config={config} />;
