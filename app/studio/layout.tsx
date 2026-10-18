@@ -65,6 +65,12 @@ export default function StudioLayout({
             .sanity-studio [class*="RootFlex"] {
               background-color: #faf8f4 !important;
             }
+
+            /* Sembunyikan default folder icon di sidebar menu */
+            svg[data-sanity-icon="folder"],
+            [data-sanity-icon="folder"] {
+              display: none !important;
+            }
           `,
         }}
       />

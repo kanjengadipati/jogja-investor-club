@@ -16,6 +16,7 @@ const structure = (S: StructureBuilder) =>
       S.listItem()
         .title('👋  Beranda & Panduan')
         .id('welcome')
+        .icon(false as any)
         .child(
           S.component(StudioWelcome)
             .id('welcome-view')
@@ -28,6 +29,7 @@ const structure = (S: StructureBuilder) =>
       S.listItem()
         .title('⚙️  Pengaturan Situs')
         .id('siteSettings')
+        .icon(false as any)
         .child(
           S.document()
             .schemaType('siteSettings')
@@ -38,6 +40,7 @@ const structure = (S: StructureBuilder) =>
       S.listItem()
         .title('🖼️  Hero Section')
         .id('hero')
+        .icon(false as any)
         .child(
           S.document()
             .schemaType('hero')
@@ -52,18 +55,21 @@ const structure = (S: StructureBuilder) =>
         .title('🏠  Tipe Properti (Rumah / Villa / Kos)')
         .id('tipePropertiRumahVillaKos')
         .schemaType('propertyArchetype')
+        .icon(false as any)
         .child(S.documentTypeList('propertyArchetype').title('Tipe Properti')),
 
       S.listItem()
         .title('👣  Langkah Proses Kerja')
         .id('langkahProsesKerja')
         .schemaType('processStep')
+        .icon(false as any)
         .child(S.documentTypeList('processStep').title('Langkah Proses').defaultOrdering([{ field: 'number', direction: 'asc' }])),
 
       S.listItem()
         .title('🏗️  Proyek Selesai')
         .id('proyekSelesai')
         .schemaType('project')
+        .icon(false as any)
         .child(S.documentTypeList('project').title('Proyek Selesai').defaultOrdering([{ field: 'order', direction: 'asc' }])),
 
       S.divider(),
@@ -72,18 +78,21 @@ const structure = (S: StructureBuilder) =>
         .title('💬  Testimoni')
         .id('testimoni')
         .schemaType('testimonial')
+        .icon(false as any)
         .child(S.documentTypeList('testimonial').title('Testimoni').defaultOrdering([{ field: 'order', direction: 'asc' }])),
 
       S.listItem()
         .title('❓  FAQ (Pertanyaan Umum)')
         .id('faqPertanyaanUmum')
         .schemaType('faq')
+        .icon(false as any)
         .child(S.documentTypeList('faq').title('FAQ').defaultOrdering([{ field: 'order', direction: 'asc' }])),
 
       S.listItem()
         .title('👤  Tim & Konsultan')
         .id('timKonsultan')
         .schemaType('teamMember')
+        .icon(false as any)
         .child(S.documentTypeList('teamMember').title('Tim & Konsultan').defaultOrdering([{ field: 'order', direction: 'asc' }])),
 
       S.divider(),
@@ -92,12 +101,14 @@ const structure = (S: StructureBuilder) =>
         .title('🗺️  Kawasan Investasi (GIS Clusters)')
         .id('kawasanInvestasiGISClusters')
         .schemaType('investmentCluster')
+        .icon(false as any)
         .child(S.documentTypeList('investmentCluster').title('Kawasan Investasi').defaultOrdering([{ field: 'order', direction: 'asc' }])),
 
       S.listItem()
         .title('📍  Kabupaten/Kota Yogyakarta (Data GIS)')
         .id('kabupatenKotaYogyakartaDataGIS')
         .schemaType('yogyakartaRegion')
+        .icon(false as any)
         .child(S.documentTypeList('yogyakartaRegion').title('Kabupaten/Kota')),
     ]);
 
