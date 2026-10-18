@@ -2,10 +2,50 @@ import React from 'react';
 
 export default function StudioNavbar(props: any) {
   return (
-    <div>
-      {/* Global CSS injection for maximum button text contrast & clarity */}
+    <>
       <style>{`
-        /* Sanity Studio Action Bar: Publish Button Ultra-Clear Contrast */
+        /* 1. Turn Sanity's real Navbar into JIC Dark Emerald (#071914) */
+        header[data-ui="Navbar"],
+        [data-ui="Navbar"],
+        [data-testid="studio-navbar"] {
+          background-color: #071914 !important;
+          background: #071914 !important;
+          border-bottom: 1px solid rgba(213, 168, 100, 0.35) !important;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        /* 2. Brand title, search button, and icons in Navbar */
+        [data-ui="Navbar"] button,
+        [data-ui="Navbar"] a,
+        [data-ui="Navbar"] span,
+        [data-ui="Navbar"] p,
+        [data-ui="Navbar"] svg {
+          color: #ffffff !important;
+          fill: currentColor !important;
+        }
+
+        /* 3. Search & Workspace button hover */
+        [data-ui="Navbar"] button:hover {
+          background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* 4. Active Tool Tabs in Navbar (Beranda & Panduan, Structure, Releases) */
+        [data-ui="Navbar"] button[data-selected="true"],
+        [data-ui="Navbar"] button[aria-selected="true"],
+        [data-ui="Navbar"] [data-selected="true"] {
+          background-color: rgba(213, 168, 100, 0.18) !important;
+          border: 1px solid rgba(213, 168, 100, 0.4) !important;
+          border-radius: 8px !important;
+        }
+
+        [data-ui="Navbar"] button[data-selected="true"] span,
+        [data-ui="Navbar"] button[aria-selected="true"] span,
+        [data-ui="Navbar"] [data-selected="true"] span {
+          color: #d5a864 !important;
+          font-weight: 700 !important;
+        }
+
+        /* 5. Publish button high contrast */
         button[data-testid*="publish"],
         button[data-testid*="Publish"],
         button[aria-label*="Publish"],
@@ -26,7 +66,6 @@ export default function StudioNavbar(props: any) {
           stroke: #ffffff !important;
           opacity: 1 !important;
           font-weight: 700 !important;
-          letter-spacing: 0.01em !important;
         }
 
         button[data-testid*="publish"]:hover,
@@ -34,77 +73,10 @@ export default function StudioNavbar(props: any) {
         [data-ui="Button"][data-tone="positive"]:hover {
           background-color: #047857 !important;
         }
-
-        /* Primary Buttons (Gold) */
-        [data-ui="Button"][data-tone="primary"] {
-          background-color: #d5a864 !important;
-          color: #071914 !important;
-        }
-        [data-ui="Button"][data-tone="primary"] * {
-          color: #071914 !important;
-          font-weight: 700 !important;
-        }
-        [data-ui="Button"][data-tone="primary"]:hover {
-          background-color: #e2b772 !important;
-        }
-
-        /* Default action buttons in footer */
-        [data-testid="pane-footer"] button {
-          font-weight: 600 !important;
-        }
       `}</style>
 
-      {/* Top Brand Notification & Live Preview Bar */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '8px 20px',
-          backgroundColor: '#051410',
-          borderBottom: '1px solid rgba(213, 168, 100, 0.25)',
-          fontSize: '12px',
-          color: '#e5e7eb',
-          fontFamily: 'system-ui, -apple-system, sans-serif',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontSize: '10px' }}>🟢</span>
-            <span style={{ color: '#d5a864', fontWeight: 700 }}>JIC CMS Connected</span>
-            <span style={{ color: 'rgba(255, 255, 255, 0.4)' }}>·</span>
-            <span style={{ color: '#9ca3af', fontSize: '11px' }}>Dataset: production (fxrpr0tm)</span>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <a
-            href="/"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '4px 12px',
-              borderRadius: '8px',
-              backgroundColor: '#071914',
-              border: '1px solid rgba(213, 168, 100, 0.5)',
-              color: '#d5a864',
-              fontWeight: 700,
-              fontSize: '11.5px',
-              textDecoration: 'none',
-              transition: 'all 0.2s',
-            }}
-          >
-            <span>Lihat Website Live</span>
-            <span style={{ fontSize: '12px' }}>↗</span>
-          </a>
-        </div>
-      </div>
-
-      {/* Render Default Sanity Navbar */}
+      {/* Render Single Seamless Sanity Navbar */}
       {props.renderDefault(props)}
-    </div>
+    </>
   );
 }
