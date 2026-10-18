@@ -14,7 +14,6 @@ interface NavItem {
   id: string;
   label: string;
   href: string;
-  isSpecial?: boolean;
 }
 
 const NAV_ITEMS: NavItem[] = [
@@ -22,12 +21,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'solusi-properti', label: 'Solusi Properti', href: '#solusi-properti' },
   { id: 'area-potensial', label: 'Area Potensial', href: '#area-potensial' },
   { id: 'proses-layanan', label: 'Proses & Layanan', href: '#proses-layanan' },
-  {
-    id: 'studi-kasus-kedokteran',
-    label: 'Studi Kasus Kos',
-    href: '#studi-kasus-kedokteran',
-    isSpecial: true,
-  },
+  { id: 'proyek-selesai', label: 'Portofolio', href: '#proyek-selesai' },
 ];
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -184,25 +178,6 @@ export const Navbar: React.FC<NavbarProps> = ({
         <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium">
           {NAV_ITEMS.map((item) => {
             const isActive = activeSection === item.id;
-
-            if (item.isSpecial) {
-              return (
-                <a
-                  key={item.id}
-                  href={item.href}
-                  onClick={(e) => handleNavClick(e, item)}
-                  className={`transition-colors py-1 flex items-center gap-1.5 relative cursor-pointer ${
-                    isActive
-                      ? "text-[#d5a864] font-semibold after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-[#c5a25d]"
-                      : 'text-[#d5a864]/90 hover:text-[#e2b772]'
-                  }`}
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>{item.label}</span>
-                </a>
-              );
-            }
-
             return (
               <a
                 key={item.id}
@@ -256,12 +231,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className={`block py-1 transition-colors ${
                   isActive
                     ? 'text-[#c5a25d] font-bold border-l-2 border-[#c5a25d] pl-2'
-                    : item.isSpecial
-                    ? 'text-emerald-400 font-semibold hover:text-white'
                     : 'text-neutral-300 hover:text-white'
                 }`}
               >
-                {item.isSpecial ? `Studi Kasus: ${item.label}` : item.label}
+                {item.label}
               </a>
             );
           })}

@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { Navbar } from './Navbar';
 import { Hero } from './Hero';
 import { PropertyArchetypes } from './PropertyArchetypes';
-import { MedicalCampusCaseStudy } from './MedicalCampusCaseStudy';
 import { ProcessSteps } from './ProcessSteps';
 import { Projects, type ProjectData } from './Projects';
 import { StrategicAreas } from './StrategicAreas';
@@ -102,12 +101,6 @@ export default function PageClient({
     if (shouldScroll) scrollToCalculator();
   };
 
-  const handleConsultMedicalStudy = (_notes: string) => {
-    setSelectedPropertyType('kos');
-    setSelectedZone('Sleman - Kawasan Kampus (Seturan / Condongcatur / UGM)');
-    scrollToCalculator();
-  };
-
   const handleOpenWhatsAppDirect = () => {
     const text = encodeURIComponent(defaultWAMessage);
     window.open(`https://wa.me/${whatsappNumber}?text=${text}`, '_blank', 'noopener,noreferrer');
@@ -141,11 +134,8 @@ export default function PageClient({
         {/* 5. Proses Layanan */}
         <ProcessSteps steps={processSteps} />
 
-        {/* 5b. Portofolio Proyek Selesai */}
+        {/* 6. Portofolio Proyek Selesai */}
         <Projects projects={projects} />
-
-        {/* 6. Studi Kasus */}
-        <MedicalCampusCaseStudy onConsultCaseStudy={handleConsultMedicalStudy} />
 
         {/* 7. Kalkulator */}
         <LeadCalculatorBanner
