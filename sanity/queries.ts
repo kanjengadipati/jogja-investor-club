@@ -48,3 +48,19 @@ export const siteSettingsQuery = groq`
     "logo": logo.asset->url,
   }
 `;
+
+export const projectsQuery = groq`
+  *[_type == "project"] | order(order asc, year desc) {
+    title,
+    location,
+    propertyType,
+    year,
+    "coverImage": coverImage.asset->url,
+    summary,
+    description,
+    specs,
+    "gallery": gallery[].asset->url,
+    featured,
+    order,
+  }
+`;

@@ -6,6 +6,7 @@ import { Hero } from './Hero';
 import { PropertyArchetypes } from './PropertyArchetypes';
 import { MedicalCampusCaseStudy } from './MedicalCampusCaseStudy';
 import { ProcessSteps } from './ProcessSteps';
+import { Projects, type ProjectData } from './Projects';
 import { StrategicAreas } from './StrategicAreas';
 import { LeadCalculatorBanner } from './LeadCalculatorBanner';
 import { Footer } from './Footer';
@@ -59,6 +60,7 @@ interface PageClientProps {
   archetypes: PropertyArchetypeData[];
   processSteps: ProcessStepData[];
   siteSettings: SiteSettingsData | null;
+  projects: ProjectData[];
 }
 
 export default function PageClient({
@@ -66,6 +68,7 @@ export default function PageClient({
   archetypes,
   processSteps,
   siteSettings,
+  projects,
 }: PageClientProps) {
   const [selectedPropertyType, setSelectedPropertyType] = useState<PropertyType>('kos');
   const [selectedZone, setSelectedZone] = useState<string>(
@@ -137,6 +140,9 @@ export default function PageClient({
 
         {/* 5. Proses Layanan */}
         <ProcessSteps steps={processSteps} />
+
+        {/* 5b. Portofolio Proyek Selesai */}
+        <Projects projects={projects} />
 
         {/* 6. Studi Kasus */}
         <MedicalCampusCaseStudy onConsultCaseStudy={handleConsultMedicalStudy} />

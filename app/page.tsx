@@ -4,6 +4,7 @@ import {
   propertyArchetypesQuery,
   processStepsQuery,
   siteSettingsQuery,
+  projectsQuery,
 } from '../sanity/queries';
 import PageClient from '../src/components/PageClient';
 
@@ -12,11 +13,12 @@ export const revalidate = 60;
 
 export default async function HomePage() {
   // Fetch all Sanity data in parallel
-  const [heroData, archetypes, processSteps, siteSettings] = await Promise.all([
+  const [heroData, archetypes, processSteps, siteSettings, projects] = await Promise.all([
     client.fetch(heroQuery).catch(() => null),
     client.fetch(propertyArchetypesQuery).catch(() => []),
     client.fetch(processStepsQuery).catch(() => []),
     client.fetch(siteSettingsQuery).catch(() => null),
+    client.fetch(projectsQuery).catch(() => []),
   ]);
 
   return (
@@ -25,6 +27,7 @@ export default async function HomePage() {
       archetypes={archetypes ?? []}
       processSteps={processSteps ?? []}
       siteSettings={siteSettings}
+      projects={projects ?? []}
     />
   );
 }
