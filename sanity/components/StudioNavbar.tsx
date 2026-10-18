@@ -3,6 +3,57 @@ import React from 'react';
 export default function StudioNavbar(props: any) {
   return (
     <div>
+      {/* Global CSS injection for maximum button text contrast & clarity */}
+      <style>{`
+        /* Sanity Studio Action Bar: Publish Button Ultra-Clear Contrast */
+        button[data-testid*="publish"],
+        button[data-testid*="Publish"],
+        button[aria-label*="Publish"],
+        button[aria-label*="publish"],
+        [data-ui="Button"][data-tone="positive"] {
+          background-color: #059669 !important;
+          color: #ffffff !important;
+          border: 1px solid #047857 !important;
+        }
+
+        button[data-testid*="publish"] *,
+        button[data-testid*="Publish"] *,
+        button[aria-label*="Publish"] *,
+        button[aria-label*="publish"] *,
+        [data-ui="Button"][data-tone="positive"] * {
+          color: #ffffff !important;
+          fill: #ffffff !important;
+          stroke: #ffffff !important;
+          opacity: 1 !important;
+          font-weight: 700 !important;
+          letter-spacing: 0.01em !important;
+        }
+
+        button[data-testid*="publish"]:hover,
+        button[data-testid*="Publish"]:hover,
+        [data-ui="Button"][data-tone="positive"]:hover {
+          background-color: #047857 !important;
+        }
+
+        /* Primary Buttons (Gold) */
+        [data-ui="Button"][data-tone="primary"] {
+          background-color: #d5a864 !important;
+          color: #071914 !important;
+        }
+        [data-ui="Button"][data-tone="primary"] * {
+          color: #071914 !important;
+          font-weight: 700 !important;
+        }
+        [data-ui="Button"][data-tone="primary"]:hover {
+          background-color: #e2b772 !important;
+        }
+
+        /* Default action buttons in footer */
+        [data-testid="pane-footer"] button {
+          font-weight: 600 !important;
+        }
+      `}</style>
+
       {/* Top Brand Notification & Live Preview Bar */}
       <div
         style={{
