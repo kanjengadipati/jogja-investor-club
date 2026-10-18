@@ -3,6 +3,9 @@ import { propertyArchetypeSchema } from './propertyArchetype';
 import { siteSettingsSchema } from './siteSettings';
 import { processStepSchema } from './processStep';
 import { projectSchema } from './project';
+import { testimonialSchema } from './testimonial';
+import { faqSchema } from './faq';
+import { teamMemberSchema } from './teamMember';
 
 export const schemaTypes = [
   heroSchema,
@@ -10,4 +13,7 @@ export const schemaTypes = [
   processStepSchema,
   siteSettingsSchema,
   projectSchema,
+  testimonialSchema,
+  faqSchema,
+  teamMemberSchema,
 ];
