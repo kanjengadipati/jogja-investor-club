@@ -52,16 +52,19 @@ const structure = (S: StructureBuilder) =>
       // ── Collections ──────────────────────────────────────────────────────
       S.listItem()
         .title('🏠  Tipe Properti (Rumah / Villa / Kos)')
+        .id('tipePropertiRumahVillaKos')
         .schemaType('propertyArchetype')
         .child(S.documentTypeList('propertyArchetype').title('Tipe Properti')),
 
       S.listItem()
         .title('👣  Langkah Proses Kerja')
+        .id('langkahProsesKerja')
         .schemaType('processStep')
         .child(S.documentTypeList('processStep').title('Langkah Proses').defaultOrdering([{ field: 'number', direction: 'asc' }])),
 
       S.listItem()
         .title('🏗️  Proyek Selesai')
+        .id('proyekSelesai')
         .schemaType('project')
         .child(S.documentTypeList('project').title('Proyek Selesai').defaultOrdering([{ field: 'order', direction: 'asc' }])),
 
@@ -69,16 +72,19 @@ const structure = (S: StructureBuilder) =>
 
       S.listItem()
         .title('💬  Testimoni')
+        .id('testimoni')
         .schemaType('testimonial')
         .child(S.documentTypeList('testimonial').title('Testimoni').defaultOrdering([{ field: 'order', direction: 'asc' }])),
 
       S.listItem()
         .title('❓  FAQ (Pertanyaan Umum)')
+        .id('faqPertanyaanUmum')
         .schemaType('faq')
         .child(S.documentTypeList('faq').title('FAQ').defaultOrdering([{ field: 'order', direction: 'asc' }])),
 
       S.listItem()
         .title('👤  Tim & Konsultan')
+        .id('timKonsultan')
         .schemaType('teamMember')
         .child(S.documentTypeList('teamMember').title('Tim & Konsultan').defaultOrdering([{ field: 'order', direction: 'asc' }])),
 
@@ -86,11 +92,13 @@ const structure = (S: StructureBuilder) =>
 
       S.listItem()
         .title('🗺️  Kawasan Investasi (GIS Clusters)')
+        .id('kawasanInvestasiGISClusters')
         .schemaType('investmentCluster')
         .child(S.documentTypeList('investmentCluster').title('Kawasan Investasi').defaultOrdering([{ field: 'order', direction: 'asc' }])),
 
       S.listItem()
         .title('📍  Kabupaten/Kota Yogyakarta (Data GIS)')
+        .id('kabupatenKotaYogyakartaDataGIS')
         .schemaType('yogyakartaRegion')
         .child(S.documentTypeList('yogyakartaRegion').title('Kabupaten/Kota')),
     ]);
