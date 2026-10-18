@@ -168,7 +168,8 @@ export const Projects: React.FC<ProjectsProps> = ({ projects }) => {
               <div className="relative aspect-[4/3] overflow-hidden">
                 <img
                   src={project.coverImage}
-                  alt={project.title}
+                  alt={`${project.title} - Portofolio Properti ${project.location}`}
+                  loading="lazy"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   referrerPolicy="no-referrer"
                 />
@@ -335,7 +336,8 @@ export const Projects: React.FC<ProjectsProps> = ({ projects }) => {
                   >
                     <img
                       src={img}
-                      alt={`Thumbnail ${i + 1}`}
+                      alt={`${activeProject.title} foto detail ${i + 1}`}
+                      loading="lazy"
                       className="w-full h-full object-cover"
                       referrerPolicy="no-referrer"
                     />

@@ -12,8 +12,13 @@ import {
 } from '../sanity/queries';
 import PageClient from '../src/components/PageClient';
 
+import { JsonLd } from '../src/components/JsonLd';
+
 // Revalidate every 60 seconds (ISR)
 export const revalidate = 60;
+
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? 'https://jogja-investor-club.vercel.app';
 
 export default async function HomePage() {
   const [
@@ -39,16 +44,19 @@ export default async function HomePage() {
   ]);
 
   return (
-    <PageClient
-      heroData={heroData}
-      archetypes={archetypes ?? []}
-      processSteps={processSteps ?? []}
-      siteSettings={siteSettings}
-      projects={projects ?? []}
-      investmentClusters={investmentClusters ?? []}
-      yogyakartaRegions={yogyakartaRegions ?? []}
-      testimonials={testimonials ?? []}
-      faqs={faqs ?? []}
-    />
+    <>
+      <JsonLd siteUrl={SITE_URL} faqs={faqs ?? []} siteSettings={siteSettings} />
+      <PageClient
+        heroData={heroData}
+        archetypes={archetypes ?? []}
+        processSteps={processSteps ?? []}
+        siteSettings={siteSettings}
+        projects={projects ?? []}
+        investmentClusters={investmentClusters ?? []}
+        yogyakartaRegions={yogyakartaRegions ?? []}
+        testimonials={testimonials ?? []}
+        faqs={faqs ?? []}
+      />
+    </>
   );
 }

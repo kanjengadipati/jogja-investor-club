@@ -39,6 +39,11 @@ export const metadata: Metadata = {
   description:
     'Jogja Investor Club (JIC): ubah tanah kosong di Yogyakarta menjadi Rumah, Villa, atau Kos Eksklusif bernilai tinggi. Estimasi ROI gratis, analisis GIS presisi, dan pendampingan bangun profesional.',
 
+  applicationName: 'Jogja Investor Club',
+  category: 'Real Estate & Property Investment',
+  classification:
+    'Investasi Properti, Real Estate Yogyakarta, Kos Eksklusif, Villa Tropis, Jual Beli Tanah Sleman Bantul',
+
   keywords: [
     'investasi properti Jogja',
     'investasi properti Yogyakarta',
@@ -47,11 +52,17 @@ export const metadata: Metadata = {
     'bangun kos Jogja',
     'bangun rumah Yogyakarta',
     'konsultan properti Jogja',
+    'kontraktor kos Jogja',
+    'arsitek villa Jogja',
+    'legalitas tanah waris Jogja',
+    'izin PBG SLF Yogyakarta',
     'ROI properti Yogyakarta',
     'Jogja Investor Club',
     'JIC',
     'passive income properti',
     'kos eksklusif kampus UGM',
+    'kavling siap bangun Sleman',
+    'GIS tata ruang Yogyakarta',
   ],
 
   authors: [{ name: 'Jogja Investor Club', url: SITE_URL }],
@@ -79,12 +90,14 @@ export const metadata: Metadata = {
     description:
       'Bergabunglah dengan jaringan investor properti eksklusif di Yogyakarta. Akses deal terkurasi, analisis GIS presisi, dan pendampingan penuh — dari lahan hingga passive income.',
     locale: 'id_ID',
+    alternateLocale: ['en_US'],
     images: [
       {
         url: '/images/hero_jogja_landscape_1792108229283.jpg',
         width: 1200,
         height: 630,
         alt: 'Jogja Investor Club — Investasi Properti di Yogyakarta',
+        type: 'image/jpeg',
       },
     ],
   },
@@ -95,6 +108,8 @@ export const metadata: Metadata = {
     description:
       'Bergabunglah dengan jaringan investor properti eksklusif di Yogyakarta. Akses deal terkurasi, analisis GIS presisi, dan pendampingan penuh.',
     images: ['/images/hero_jogja_landscape_1792108229283.jpg'],
+    creator: '@jogjainvestorclub',
+    site: '@jogjainvestorclub',
   },
 
   robots: {
@@ -107,6 +122,13 @@ export const metadata: Metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
+  },
+
+  other: {
+    'geo.region': 'ID-YO',
+    'geo.placename': 'Yogyakarta, Sleman, Bantul',
+    'geo.position': '-7.7956;110.3695',
+    ICBM: '-7.7956, 110.3695',
   },
 };
 

@@ -36,7 +36,7 @@ const CATEGORY_MAP: Record<string, { label: string; icon: React.ElementType }> =
   umum: { label: 'Umum & Tata Cara', icon: Sparkles },
 };
 
-const FALLBACK_FAQS: FAQData[] = [
+export const FALLBACK_FAQS: FAQData[] = [
   {
     category: 'legalitas',
     question: 'Apakah tanah dengan status SHM Waris atau belum pecah sertifikat bisa dikembangkan bersama JIC?',

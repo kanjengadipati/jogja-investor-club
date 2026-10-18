@@ -102,7 +102,8 @@ export const PropertyArchetypes: React.FC<PropertyArchetypesProps> = ({
                 {/* Photo */}
                 <img
                   src={image}
-                  alt={card.title}
+                  alt={`${card.title} - Solusi Investasi & Bangun Properti Yogyakarta`}
+                  loading="lazy"
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   referrerPolicy="no-referrer"
                 />
