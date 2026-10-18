@@ -12,8 +12,9 @@ export default async function StudioPage({
   const resolvedParams = await params;
   const tool = resolvedParams?.tool;
 
-  // When opening /studio/structure without a specific document, redirect to welcome view
-  if (tool && tool.length === 1 && tool[0] === 'structure') {
+  // Always redirect root /studio and /studio/structure to /studio/structure/welcome
+  // so the sidebar menu is ALWAYS visible alongside the dashboard
+  if (!tool || tool.length === 0 || (tool.length === 1 && tool[0] === 'structure')) {
     redirect('/studio/structure/welcome');
   }
 

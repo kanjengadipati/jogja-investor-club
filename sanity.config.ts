@@ -112,14 +112,6 @@ export default defineConfig({
         S.document().views([S.view.form()]),
     }),
   ],
-  tools: (prev) => [
-    {
-      name: 'dashboard',
-      title: 'Beranda & Panduan',
-      component: StudioWelcome,
-    },
-    ...prev,
-  ],
   schema: {
     types: schemaTypes,
   },
