@@ -559,6 +559,46 @@ async function seed() {
     },
   ];
 
+  // ── 10. Tim & Konsultan ──────────────────────────────────────────────────
+  const teamMembers = [
+    {
+      _id: 'team-raditya', _type: 'teamMember',
+      name: 'Ir. H. Raditya Daniswara, M.Sc., IAI',
+      role: 'Principal Architect & Urban Planner',
+      bio: 'Berpengalaman 16+ tahun dalam perencanaan tata ruang kota Yogyakarta, masterplan kawasan komersial vertikal, dan perizinan PBG/SLF di DIY.',
+      expertise: ['Perencanaan Arsitektur Tropis', 'Tata Ruang & RTRW DIY', 'Audit KDB & PBG', 'Masterplan Kawasan'],
+      whatsapp: '6282137000888',
+      order: 1,
+    },
+    {
+      _id: 'team-bambang', _type: 'teamMember',
+      name: 'Bambang Trihatmojo, S.E., M.B.A., CFP',
+      role: 'Lead Investment & Feasibility Analyst',
+      bio: 'Praktisi investasi properti komersial eksklusif. Mengawasi studi kelayakan finansial (FS), kalkulasi NPV, IRR, dan strategi yield sewa jangka panjang.',
+      expertise: ['Feasibility Study & ROI', 'Valuasi Aset Properti', 'Struktur Pembiayaan KSO', 'Analisis GIS Spatial'],
+      whatsapp: '6282137000888',
+      order: 2,
+    },
+    {
+      _id: 'team-sekar', _type: 'teamMember',
+      name: 'Sekar Kinanti, S.H., M.Kn.',
+      role: 'Senior Legal & Notarial Advisor',
+      bio: 'Spesialis hukum pertanahan agraria di D.I. Yogyakarta, mediasi ahli waris, pengurusan konversi hak tanah, dan perjanjian kerjasama investasi notariil.',
+      expertise: ['Hukum Pertanahan Agraria', 'Mediasi SHM Waris', 'Perjanjian Notariil KSO', 'Legal Due Diligence'],
+      whatsapp: '6282137000888',
+      order: 3,
+    },
+    {
+      _id: 'team-agung', _type: 'teamMember',
+      name: 'Agung Prasetyo, S.T., IPM',
+      role: 'Head of Construction & Structural Engineering',
+      bio: 'Mengawal implementasi teknis konstruksi di lapangan, manajemen mutu material SNI, pengawasan jadwal SPK, dan sistem penjaminan retensi mutu.',
+      expertise: ['Struktur Sipil Tahan Gempa', 'Quality Control Material SNI', 'Manajemen Konstruksi Turn-Key', 'Pengawasan SPK'],
+      whatsapp: '6282137000888',
+      order: 4,
+    },
+  ];
+
   // ── Upsert all documents ─────────────────────────────────────────────────
   console.log('\n📄  Writing documents...\n');
 
@@ -572,6 +612,7 @@ async function seed() {
     ...yogyakartaRegions.map((d) => ({ doc: d, label: `Region: ${d.name}` })),
     ...testimonials.map((d) => ({ doc: d, label: `Testimonial: ${d.name}` })),
     ...faqs.map((d) => ({ doc: d, label: `FAQ: ${d.question}` })),
+    ...teamMembers.map((d) => ({ doc: d, label: `Team: ${d.name}` })),
   ];
 
   let created = 0, updated = 0;
