@@ -27,7 +27,7 @@ function extractAnswerText(answer: any): string {
 }
 
 export const JsonLd: React.FC<JsonLdProps> = ({
-  siteUrl = 'https://jogja-investor-club.vercel.app',
+  siteUrl = 'https://jic.webjoz.com',
   faqs,
   siteSettings,
 }) => {

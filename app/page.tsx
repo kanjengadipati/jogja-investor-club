@@ -18,7 +18,7 @@ import { JsonLd } from '../src/components/JsonLd';
 export const revalidate = 60;
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? 'https://jogja-investor-club.vercel.app';
+  process.env.NEXT_PUBLIC_SITE_URL ?? 'https://jic.webjoz.com';
 
 export default async function HomePage() {
   const [

@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? 'https://jogja-investor-club.vercel.app';
+  process.env.NEXT_PUBLIC_SITE_URL ?? 'https://jic.webjoz.com';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const currentDate = new Date();
