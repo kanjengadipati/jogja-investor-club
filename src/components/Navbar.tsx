@@ -18,10 +18,12 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { id: 'beranda', label: 'Beranda', href: '#beranda' },
-  { id: 'solusi-properti', label: 'Solusi Properti', href: '#solusi-properti' },
-  { id: 'area-potensial', label: 'Area Potensial', href: '#area-potensial' },
-  { id: 'proses-layanan', label: 'Proses & Layanan', href: '#proses-layanan' },
+  { id: 'solusi-properti', label: 'Solusi', href: '#solusi-properti' },
+  { id: 'area-potensial', label: 'Area GIS', href: '#area-potensial' },
+  { id: 'proses-layanan', label: 'Proses', href: '#proses-layanan' },
   { id: 'proyek-selesai', label: 'Portofolio', href: '#proyek-selesai' },
+  { id: 'testimoni', label: 'Testimoni', href: '#testimoni' },
+  { id: 'faq', label: 'FAQ', href: '#faq' },
 ];
 
 export const Navbar: React.FC<NavbarProps> = ({

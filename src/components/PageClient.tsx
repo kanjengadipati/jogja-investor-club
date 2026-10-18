@@ -7,6 +7,8 @@ import { PropertyArchetypes } from './PropertyArchetypes';
 import { ProcessSteps } from './ProcessSteps';
 import { Projects, type ProjectData } from './Projects';
 import { StrategicAreas } from './StrategicAreas';
+import { Testimonials, type TestimonialData } from './Testimonials';
+import { FAQ, type FAQData } from './FAQ';
 import { LeadCalculatorBanner } from './LeadCalculatorBanner';
 import { Footer } from './Footer';
 import { WhatsAppFloatingCTA } from './WhatsAppFloatingCTA';
@@ -103,6 +105,8 @@ interface PageClientProps {
   projects: ProjectData[];
   investmentClusters: SanityInvestmentCluster[];
   yogyakartaRegions: SanityYogyakartaRegion[];
+  testimonials?: TestimonialData[];
+  faqs?: FAQData[];
 }
 
 export default function PageClient({
@@ -113,6 +117,8 @@ export default function PageClient({
   projects,
   investmentClusters,
   yogyakartaRegions,
+  testimonials = [],
+  faqs = [],
 }: PageClientProps) {
   const [selectedPropertyType, setSelectedPropertyType] = useState<PropertyType>('kos');
   const [selectedZone, setSelectedZone] = useState<string>(
@@ -180,14 +186,26 @@ export default function PageClient({
         {/* 6. Portofolio Proyek Selesai */}
         <Projects projects={projects} />
 
-        {/* 7. Kalkulator */}
+        {/* 7. Testimoni Klien & Investor */}
+        <Testimonials
+          testimonials={testimonials}
+          onOpenConsultation={handleOpenWhatsAppDirect}
+        />
+
+        {/* 8. FAQ */}
+        <FAQ
+          faqs={faqs}
+          onOpenConsultation={handleOpenWhatsAppDirect}
+        />
+
+        {/* 9. Kalkulator Potensi */}
         <LeadCalculatorBanner
           initialPropertyType={selectedPropertyType}
           initialZone={selectedZone}
         />
       </main>
 
-      {/* 8. Footer */}
+      {/* 10. Footer */}
       <Footer onOpenWhatsApp={handleOpenWhatsAppDirect} siteSettings={siteSettings} />
 
       {/* Floating WhatsApp */}

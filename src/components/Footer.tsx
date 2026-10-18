@@ -64,8 +64,10 @@ export const Footer: React.FC<FooterProps> = ({ onOpenWhatsApp, siteSettings }) 
             <a href="#" className="hover:text-white transition-colors">Beranda</a>
             <a href="#solusi-properti" className="hover:text-white transition-colors">Solusi Properti</a>
             <a href="#proyek-selesai" className="hover:text-white transition-colors">Portofolio</a>
+            <a href="#testimoni" className="hover:text-white transition-colors">Testimoni</a>
             <a href="#area-potensial" className="hover:text-white transition-colors">Area Potensial</a>
             <a href="#proses-layanan" className="hover:text-white transition-colors">Proses &amp; Layanan</a>
+            <a href="#faq" className="hover:text-white transition-colors">FAQ</a>
             <a href="#hitung-potensi" className="hover:text-white transition-colors">Hitung Potensi</a>
           </nav>
 

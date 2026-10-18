@@ -104,3 +104,25 @@ export const yogyakartaRegionsQuery = groq`
     desc,
   }
 `;
+
+export const testimonialsQuery = groq`
+  *[_type == "testimonial"] | order(order asc) {
+    name,
+    role,
+    "avatar": avatar.asset->url,
+    quote,
+    rating,
+    propertyType,
+    featured,
+    order
+  }
+`;
+
+export const faqsQuery = groq`
+  *[_type == "faq"] | order(order asc) {
+    question,
+    answer,
+    category,
+    order
+  }
+`;

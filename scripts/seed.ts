@@ -445,6 +445,120 @@ async function seed() {
     },
   ];
 
+  // ── 8. Testimonials ──────────────────────────────────────────────────────
+  const testimonials = [
+    {
+      _id: 'testimonial-bambang', _type: 'testimonial',
+      name: 'Ir. Bambang Hendrawan, M.M.',
+      role: 'Pemilik Kos Eksklusif "D\'Kalyana"',
+      propertyType: 'Homestay & Kos',
+      rating: 5,
+      featured: true,
+      order: 1,
+      quote: 'Lahan warisan keluarga 450 m² di Seturan yang dulunya menganggur, kini jadi aset produktif bernilai tinggi. JIC mendampingi dari studi tata ruang, izin PBG, hingga konstruksi tuntas 7 bulan. Okupansi mahasiswa & pekerja medis stabil 95% sejak bulan pertama.',
+    },
+    {
+      _id: 'testimonial-cynthia', _type: 'testimonial',
+      name: 'dr. Cynthia Praditya, Sp.A',
+      role: 'Investor Properti & Dokter Spesialis',
+      propertyType: 'Villa',
+      rating: 5,
+      featured: true,
+      order: 2,
+      quote: 'Sebagai investor yang berdomisili di Jakarta, kendala utama saya adalah pengawasan lapangan. Bersama JIC, laporan mingguan real-time dan transparansi RAB membuat saya sangat tenang. Villa privat 2 unit selesai tepat waktu dengan kualitas finishing hotel bintang 4.',
+    },
+    {
+      _id: 'testimonial-hendra', _type: 'testimonial',
+      name: 'Hendra Kusuma, S.E.',
+      role: 'Pengusaha Logistik & Investor',
+      propertyType: 'Homestay & Kos',
+      rating: 5,
+      featured: true,
+      order: 3,
+      quote: 'Perhitungan feasibility study dan analisis GIS JIC sangat presisi. Homestay 10 kamar berkonsep arsitektur tropis modern di pusat kota selalu full-booked saat akhir pekan dan musim liburan. BEP diproyeksikan lebih cepat dari perkiraan awal.',
+    },
+    {
+      _id: 'testimonial-wicaksono', _type: 'testimonial',
+      name: 'Raden Mas Wicaksono',
+      role: 'Pemilik Lahan & Tokoh Komunitas',
+      propertyType: 'Rumah',
+      rating: 5,
+      featured: false,
+      order: 4,
+      quote: 'Lahan 1.200 m² kami berhasil dikonsep menjadi private cluster 4 unit bergaya Indische Kontemporer. Pendampingan legalitas sertifikat pecah kavling dari tim JIC sangat rapi tanpa kendala birokrasi sama sekali.',
+    },
+    {
+      _id: 'testimonial-anita', _type: 'testimonial',
+      name: 'Anita Wijaya',
+      role: 'Diaspora Investor (Singapura / Asal Jogja)',
+      propertyType: 'Villa',
+      rating: 5,
+      featured: false,
+      order: 5,
+      quote: 'Investasi properti dari luar negeri tadinya terasa berisiko. Namun kontrak notariil JIC yang rigid serta sistem manajemen turn-key terbukti kredibel. Properti saya kini menghasilkan passive income konsisten tanpa perlu saya repot kelola harian.',
+    },
+  ];
+
+  // ── 9. FAQs ──────────────────────────────────────────────────────────────
+  const faqs = [
+    {
+      _id: 'faq-shm-waris', _type: 'faq',
+      question: 'Apakah tanah dengan status SHM Waris atau belum pecah sertifikat bisa dikembangkan bersama JIC?',
+      category: 'legalitas',
+      order: 1,
+      answer: [block('a1', 'Sangat bisa. Tim notariat dan legal Jogja Investor Club siap membantu audit yuridis terlebih dahulu. Kami memfasilitasi proses mediasi keluarga ahli waris, pengurusan fatwa waris, hingga pemecahan (splitzing) sertifikat di kantor BPN Sleman, Bantul, maupun Kota Yogyakarta secara resmi dan aman.')],
+    },
+    {
+      _id: 'faq-pbg-rtrw', _type: 'faq',
+      question: 'Bagaimana penanganan izin PBG (Persetujuan Bangunan Gedung) dan zonasi RTRW di Yogyakarta?',
+      category: 'legalitas',
+      order: 2,
+      answer: [block('a2', 'Setiap kabupaten/kota di DIY memiliki regulasi RTRW dan batasan KDB (Koefisien Dasar Bangunan) yang spesifik. Melalui GIS Spatial Intelligence JIC, kami memverifikasi kesesuaian lahan sebelum desain dimulai. Seluruh proses permohonan PBG, dokumen lingkungan (SPPL/UKL-UPL), hingga Sertifikat Laik Fungsi (SLF) diurus turn-key oleh tim perizinan kami.')],
+    },
+    {
+      _id: 'faq-roi-yield', _type: 'faq',
+      question: 'Berapa proyeksi ROI dan yield tahunan untuk kos eksklusif atau villa di kawasan Jogja?',
+      category: 'investasi',
+      order: 3,
+      answer: [block('a3', 'Berdasarkan data historis portofolio JIC di kawasan lingkar kampus (Seturan, Condongcatur, Jakal), kos eksklusif menghasilkan gross yield 14% - 19% per tahun dengan masa balik modal (BEP) rata-rata 4.5 hingga 6 tahun. Sedangkan untuk boutique villa di area wisata seperti Pakem atau Kaliurang, net rental margin mencapai 16% - 21% per tahun dengan okupansi rata-rata di atas 75%.')],
+    },
+    {
+      _id: 'faq-manajemen-operasional', _type: 'faq',
+      question: 'Apakah JIC menyediakan layanan manajemen operasional setelah bangunan selesai serah terima?',
+      category: 'investasi',
+      order: 4,
+      answer: [block('a4', 'Ya. Kami menyediakan opsi Turn-Key Property Management. Anda dapat memilih mengelola properti secara mandiri, atau bermitra dengan divisi hospitality JIC untuk penanganan menyeluruh: listing di OTA (Airbnb, Booking.com, Mamikos), resepsionis, housekeeping, pembayaran utilitas, serta laporan keuangan bulanan transparan.')],
+    },
+    {
+      _id: 'faq-qc-progres', _type: 'faq',
+      question: 'Bagaimana sistem pengawasan kualitas bahan dan pelaporan progres pembangunan di lapangan?',
+      category: 'proses',
+      order: 5,
+      answer: [block('a5', 'Kami menerapkan sistem pengawasan berlapis dengan Quality Control (QC) arsitek & struktur sipil bersertifikat. Klien menerima laporan progres berkala melalui grup koordinasi terdedikasi, mencakup checklist material SNI, foto resolusi tinggi mingguan, serta rekaman video drone 360° yang dapat diakses darimana saja.')],
+    },
+    {
+      _id: 'faq-durasi-pembangunan', _type: 'faq',
+      question: 'Berapa lama durasi pengerjaan dari survei lahan hingga bangunan siap beroperasi?',
+      category: 'proses',
+      order: 6,
+      answer: [block('a6', 'Rata-rata proyek kos eksklusif 15–25 kamar membutuhkan waktu 6 hingga 8 bulan (termasuk fase perizinan PBG). Sedangkan pembangunan villa privat 1–2 unit berkisar 5 hingga 7 bulan. Setiap jadwal diikat dalam Surat Perjanjian Kerja (SPK) resmi di hadapan notaris dengan klausul garansi waktu dan retensi pemeliharaan 3–6 bulan pasca serah terima.')],
+    },
+    {
+      _id: 'faq-keterbatasan-modal', _type: 'faq',
+      question: 'Bagaimana jika saya memiliki tanah potensial namun keterbatasan dana untuk biaya bangun?',
+      category: 'pembiayaan',
+      order: 7,
+      answer: [block('a7', 'JIC memiliki program JIC Private Investor Network. Kami dapat menjembatani pemilik lahan dengan investor pemodal pasif melalui skema Kerjasama Operasi (KSO) atau Joint Venture bagi hasil berpayung hukum PT/CV resmi. Kepemilikan tanah dasar tetap dijamin aman 100% atas nama pemilik lahan.')],
+    },
+    {
+      _id: 'faq-biaya-konsultasi', _type: 'faq',
+      question: 'Apakah konsultasi awal dan estimasi hitung potensi lahan dipungut biaya?',
+      category: 'umum',
+      order: 8,
+      answer: [block('a8', 'Sama sekali TIDAK dipungut biaya (100% Gratis). Anda cukup mengisi formulir kalkulator tanah atau menghubungi WhatsApp Hotline kami. Tim kami akan menyiapkan ringkasan simulasi yield, estimasi anggaran kasar, serta kesesuaian arsitektur terbaik untuk lahan Anda.')],
+    },
+  ];
+
   // ── Upsert all documents ─────────────────────────────────────────────────
   console.log('\n📄  Writing documents...\n');
 
@@ -456,6 +570,8 @@ async function seed() {
     ...projects.map((d) => ({ doc: d, label: `Project: ${d.title}` })),
     ...investmentClusters.map((d) => ({ doc: d, label: `Investment Cluster: ${d.title}` })),
     ...yogyakartaRegions.map((d) => ({ doc: d, label: `Region: ${d.name}` })),
+    ...testimonials.map((d) => ({ doc: d, label: `Testimonial: ${d.name}` })),
+    ...faqs.map((d) => ({ doc: d, label: `FAQ: ${d.question}` })),
   ];
 
   let created = 0, updated = 0;
