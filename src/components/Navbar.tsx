@@ -16,22 +16,27 @@ interface NavItem {
   href: string;
 }
 
-const NAV_ITEMS: NavItem[] = [
-  { id: 'beranda', label: 'Beranda', href: '#beranda' },
-  { id: 'solusi-properti', label: 'Solusi', href: '#solusi-properti' },
-  { id: 'area-potensial', label: 'Area GIS', href: '#area-potensial' },
-  { id: 'proses-layanan', label: 'Proses', href: '#proses-layanan' },
-  { id: 'proyek-selesai', label: 'Portofolio', href: '#proyek-selesai' },
-  { id: 'testimoni', label: 'Testimoni', href: '#testimoni' },
-  { id: 'faq', label: 'FAQ', href: '#faq' },
-];
 
 export const Navbar: React.FC<NavbarProps> = ({
   onOpenConsultation,
   activeSection: propActiveSection,
   siteSettings,
 }) => {
-  const [activeSection, setActiveSection] = useState<string>(propActiveSection || 'beranda');
+  const navItems = React.useMemo<NavItem[]>(() => {
+    const items = [
+      { id: 'beranda', label: 'Beranda', href: '#beranda', show: siteSettings?.showSectionHero !== false },
+      { id: 'solusi-properti', label: 'Solusi', href: '#solusi-properti', show: siteSettings?.showSectionPropertyArchetypes !== false },
+      { id: 'area-potensial', label: 'Area GIS', href: '#area-potensial', show: siteSettings?.showSectionStrategicAreas !== false },
+      { id: 'proses-layanan', label: 'Proses', href: '#proses-layanan', show: siteSettings?.showSectionProcessSteps !== false },
+      { id: 'proyek-selesai', label: 'Portofolio', href: '#proyek-selesai', show: siteSettings?.showSectionProjects !== false },
+      { id: 'testimoni', label: 'Testimoni', href: '#testimoni', show: siteSettings?.showSectionTestimonials !== false },
+      { id: 'faq', label: 'FAQ', href: '#faq', show: siteSettings?.showSectionFAQ !== false },
+    ];
+    return items.filter((item) => item.show).map(({ show, ...rest }) => rest);
+  }, [siteSettings]);
+
+  const defaultActive = navItems[0]?.id || 'beranda';
+  const [activeSection, setActiveSection] = useState<string>(propActiveSection || defaultActive);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isClickScrollingRef = useRef(false);
   const clickTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -48,21 +53,25 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   // Scroll spy & URL hash detection
   useEffect(() => {
-    const sectionIds = NAV_ITEMS.map((item) => item.id);
+    const sectionIds = navItems.map((item) => item.id);
 
     const determineActiveSection = () => {
       if (isClickScrollingRef.current) return;
 
-      // When near the top, beranda is always active
+      // When near the top, first visible section is active
       if (window.scrollY < 120) {
-        setActiveSection('beranda');
+        if (sectionIds.includes('beranda')) {
+          setActiveSection('beranda');
+        } else if (navItems[0]) {
+          setActiveSection(navItems[0].id);
+        }
         return;
       }
 
       const navOffset = 110; // navbar height (80px) + safety buffer
 
       let matchedSection = '';
-      for (const item of NAV_ITEMS) {
+      for (const item of navItems) {
         const el = document.getElementById(item.id);
         if (!el) continue;
 
@@ -88,7 +97,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       if (sectionIds.includes(hash)) {
         setActiveSection(hash);
       } else if (!hash) {
-        setActiveSection('beranda');
+        setActiveSection(navItems[0]?.id || 'beranda');
       }
     };
 
@@ -107,7 +116,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       window.removeEventListener('hashchange', onHashChange);
       if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
     };
-  }, []);
+  }, [navItems]);
 
   const handleNavClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
@@ -153,7 +162,14 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Zone 1: Logo & Brand */}
         <a
           href="#beranda"
-          onClick={(e) => handleNavClick(e, NAV_ITEMS[0])}
+          onClick={(e) => {
+            e.preventDefault();
+            if (siteSettings?.showSectionHero !== false) {
+              handleNavClick(e, { id: 'beranda', label: 'Beranda', href: '#beranda' });
+            } else {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }}
           className="flex items-center gap-3.5 shrink-0 group cursor-pointer"
         >
           <div className="h-11 flex items-center justify-center group-hover:scale-105 transition-transform">
@@ -178,7 +194,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Zone 2: Navigation Links */}
         <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium">
-          {NAV_ITEMS.map((item) => {
+          {navItems.map((item) => {
             const isActive = activeSection === item.id;
             return (
               <a
@@ -223,7 +239,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-[#071914] border-b border-[#c5a25d]/20 px-6 py-4 space-y-3 text-sm">
-          {NAV_ITEMS.map((item) => {
+          {navItems.map((item) => {
             const isActive = activeSection === item.id;
             return (
               <a
@@ -240,22 +256,24 @@ export const Navbar: React.FC<NavbarProps> = ({
               </a>
             );
           })}
-          <a
-            href="#hitung-potensi"
-            onClick={(e) => {
-              e.preventDefault();
-              setMobileMenuOpen(false);
-              const el = document.getElementById('hitung-potensi');
-              if (el) {
-                const navOffset = 76;
-                const pos = el.getBoundingClientRect().top + window.scrollY - navOffset;
-                window.scrollTo({ top: pos, behavior: 'smooth' });
-              }
-            }}
-            className="block text-neutral-300 hover:text-white py-1"
-          >
-            Hitung Potensi Tanah
-          </a>
+          {siteSettings?.showSectionCalculator !== false && (
+            <a
+              href="#hitung-potensi"
+              onClick={(e) => {
+                e.preventDefault();
+                setMobileMenuOpen(false);
+                const el = document.getElementById('hitung-potensi');
+                if (el) {
+                  const navOffset = 76;
+                  const pos = el.getBoundingClientRect().top + window.scrollY - navOffset;
+                  window.scrollTo({ top: pos, behavior: 'smooth' });
+                }
+              }}
+              className="block text-neutral-300 hover:text-white py-1"
+            >
+              Hitung Potensi Tanah
+            </a>
+          )}
           <button
             onClick={() => {
               setMobileMenuOpen(false);
