@@ -643,8 +643,27 @@ export const JogjaRealMap: React.FC<JogjaRealMapProps> = ({
     // 4. Strategic Investment POI Layer (Compact pin, hover for tooltip, click for full popup)
     const poiGroup = L.layerGroup();
     INVESTMENT_POIS.forEach((poi) => {
-      const categoryColor = poi.category === 'kampus' ? '#10b981' : poi.category === 'kesehatan' ? '#ef4444' : '#06b6d4';
-      const categoryEmoji = poi.category === 'kampus' ? '🎓' : poi.category === 'kesehatan' ? '🏥' : '✈️';
+      let categoryColor = '#06b6d4';
+      let categoryEmoji = '📍';
+
+      if (poi.category === 'kampus') {
+        categoryColor = '#10b981';
+        categoryEmoji = '🎓';
+      } else if (poi.category === 'kesehatan') {
+        categoryColor = '#ef4444';
+        categoryEmoji = '🏥';
+      } else if (poi.category === 'wisata') {
+        categoryColor = '#f59e0b';
+        categoryEmoji = '🏔️';
+      } else if (poi.category === 'transport') {
+        if (poi.id.includes('station') || poi.id.includes('tugu') || poi.id.includes('kereta')) {
+          categoryColor = '#3b82f6';
+          categoryEmoji = '🚆';
+        } else {
+          categoryColor = '#06b6d4';
+          categoryEmoji = '✈️';
+        }
+      }
 
       const poiIcon = L.divIcon({
         className: 'poi-pin',
