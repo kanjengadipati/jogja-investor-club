@@ -55,79 +55,58 @@ export const Hero: React.FC<HeroProps> = ({ onStartCalculator, onOpenConsultatio
 
         {/* Content */}
         <div
-          className={`relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-4 w-full transition-all duration-700 ${
+          className={`relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-12 w-full transition-all duration-700 ${
             loaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
         >
-          <div className="max-w-2xl space-y-4 sm:space-y-5 lg:space-y-4 xl:space-y-5">
+          <div className="max-w-2xl space-y-5 lg:space-y-6">
 
-            {/* Kicker badge */}
-            <div className="inline-flex items-center gap-2 bg-[#d5a864]/15 border border-[#d5a864]/40 rounded-full px-3.5 py-1 backdrop-blur-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#d5a864] animate-pulse" />
-              <span className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-[#d5a864]">
-                {kicker}
+            {/* Kicker badge - flat rectangle */}
+            <div>
+              <span className="inline-block border border-white/25 bg-[#071914]/75 px-3 py-1 text-[11px] font-mono tracking-widest text-[#d5a864] uppercase rounded-none backdrop-blur-sm">
+                Investasi Properti
               </span>
             </div>
 
             {/* Headline */}
             <h1
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] xl:text-[3.75rem] font-extrabold tracking-tight text-white leading-[1.1]"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-[4rem] font-bold tracking-tight text-white leading-[1.08]"
               style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
             >
-              {headline}{' '}
-              <br />
+              Investasi Properti <br />
               <span
-                className="italic font-semibold text-[#d5a864]"
+                className="italic font-normal text-[#d5a864]"
                 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
               >
-                {headlineAccent}
-              </span>
-              {headlineSuffix}
+                di Jogja.
+              </span>{' '}
+              Lebih Cerdas.
             </h1>
 
             {/* Subheading */}
-            <p className="text-sm sm:text-base lg:text-base xl:text-lg text-neutral-200 font-normal max-w-xl leading-relaxed">
-              {subheadline}
+            <p className="text-sm sm:text-base lg:text-lg text-neutral-300 font-normal max-w-xl leading-relaxed">
+              Peluang investasi properti di lokasi strategis dengan nilai jangka panjang, di jantung budaya dan pertumbuhan ekonomi Yogyakarta.
             </p>
 
-            {/* CTA row */}
-            <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-1">
+            {/* CTA row - flat buttons */}
+            <div className="flex flex-wrap items-center gap-4 pt-2">
               <button
                 id="hero-cta-konsultasi"
-                onClick={onOpenConsultation}
-                className="group px-6 py-3.5 text-sm font-bold text-[#071914] bg-[#d5a864] hover:bg-[#e2b772] active:bg-[#c49855] rounded-xl transition-all shadow-[0_8px_32px_rgba(213,168,100,0.35)] flex items-center gap-2.5 cursor-pointer hover:-translate-y-0.5"
+                onClick={onStartCalculator}
+                className="px-6 py-3.5 text-xs sm:text-sm font-bold text-[#071914] bg-[#d5a864] hover:bg-[#e2b772] active:bg-[#c49855] rounded-none transition-all flex items-center gap-2 cursor-pointer uppercase tracking-wider"
               >
-                <span>{ctaPrimaryText}</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                <span>Lihat Proyek</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
 
               <button
                 id="hero-cta-potensi"
-                onClick={onStartCalculator}
-                title="Buka Peta GIS Spatial Intelligence"
-                className="group px-6 py-3.5 text-sm font-semibold text-white/90 hover:text-white border border-white/25 hover:border-white/50 rounded-xl transition-all backdrop-blur-sm flex items-center gap-2.5 cursor-pointer hover:-translate-y-0.5"
+                onClick={onOpenConsultation}
+                className="px-4 py-3.5 text-xs sm:text-sm font-semibold text-white hover:text-[#d5a864] rounded-none transition-all flex items-center gap-2 cursor-pointer"
               >
-                <MapPin className="w-4 h-4 text-[#d5a864] group-hover:scale-110 transition-transform" />
-                <span>{ctaSecondaryText}</span>
+                <span>Konsultasi Gratis</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
-            </div>
-
-            {/* Social proof micro-strip */}
-            <div className="flex items-center gap-4 pt-1">
-              <div className="flex -space-x-2">
-                {['#2a7a5f', '#3d8a72', '#509e87', '#65b29c'].map((c, i) => (
-                  <div
-                    key={i}
-                    className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-[#071914] flex items-center justify-center text-white text-[10px] font-bold"
-                    style={{ background: c }}
-                  >
-                    {['BK', 'AR', 'YS', 'DW'][i]}
-                  </div>
-                ))}
-              </div>
-              <p className="text-xs text-neutral-300">
-                <strong className="text-white">80+ investor aktif</strong> telah bergabung di JIC
-              </p>
             </div>
           </div>
         </div>
@@ -146,48 +125,48 @@ export const Hero: React.FC<HeroProps> = ({ onStartCalculator, onOpenConsultatio
         </div>
       </div>
 
-      {/* 4 Pillars Trust Bar */}
-      <div className="relative bg-[#0b1f1a] border-t border-[#c5a25d]/25 border-b border-[#c5a25d]/10 shrink-0">
+      {/* 4 Pillars Trust Bar - Flat */}
+      <div className="relative bg-[#0b1f1a] border-t border-[#c5a25d]/20 border-b border-[#c5a25d]/10 shrink-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-white/10">
 
-            <div className="flex items-center gap-3 py-3.5 sm:py-4 px-3 sm:px-5">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-[#d5a864]/10 border border-[#d5a864]/30 flex items-center justify-center shrink-0">
+            <div className="flex items-center gap-3 py-4 sm:py-5 px-3 sm:px-5">
+              <div className="w-8 h-8 rounded-none bg-[#d5a864]/10 border border-[#d5a864]/30 flex items-center justify-center shrink-0">
                 <MapPin className="w-4 h-4 text-[#d5a864]" />
               </div>
               <div>
-                <p className="text-xs sm:text-sm font-bold text-white leading-tight">Deal Eksklusif Jogja</p>
-                <p className="text-[10px] sm:text-[11px] text-neutral-400 leading-tight mt-0.5">Aset terkurasi, bukan pasar terbuka</p>
+                <p className="text-xs sm:text-sm font-bold text-white leading-tight">Lokasi Strategis</p>
+                <p className="text-[10px] sm:text-[11px] text-neutral-400 leading-tight mt-0.5">Dekat pusat bisnis &amp; wisata</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 py-3.5 sm:py-4 px-3 sm:px-5">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-[#d5a864]/10 border border-[#d5a864]/30 flex items-center justify-center shrink-0">
+            <div className="flex items-center gap-3 py-4 sm:py-5 px-3 sm:px-5">
+              <div className="w-8 h-8 rounded-none bg-[#d5a864]/10 border border-[#d5a864]/30 flex items-center justify-center shrink-0">
                 <BarChart3 className="w-4 h-4 text-[#d5a864]" />
               </div>
               <div>
-                <p className="text-xs sm:text-sm font-bold text-white leading-tight">GIS Intelligence</p>
-                <p className="text-[10px] sm:text-[11px] text-neutral-400 leading-tight mt-0.5">Data spasial & NJOP resmi DIY</p>
+                <p className="text-xs sm:text-sm font-bold text-white leading-tight">Nilai Investasi Tinggi</p>
+                <p className="text-[10px] sm:text-[11px] text-neutral-400 leading-tight mt-0.5">Pertumbuhan berkelanjutan</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 py-3.5 sm:py-4 px-3 sm:px-5">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-[#d5a864]/10 border border-[#d5a864]/30 flex items-center justify-center shrink-0">
+            <div className="flex items-center gap-3 py-4 sm:py-5 px-3 sm:px-5">
+              <div className="w-8 h-8 rounded-none bg-[#d5a864]/10 border border-[#d5a864]/30 flex items-center justify-center shrink-0">
                 <Users className="w-4 h-4 text-[#d5a864]" />
               </div>
               <div>
-                <p className="text-xs sm:text-sm font-bold text-white leading-tight">Member Network</p>
-                <p className="text-[10px] sm:text-[11px] text-neutral-400 leading-tight mt-0.5">80+ investor aktif se-DIY</p>
+                <p className="text-xs sm:text-sm font-bold text-white leading-tight">Developer Terpercaya</p>
+                <p className="text-[10px] sm:text-[11px] text-neutral-400 leading-tight mt-0.5">Dengan pengalaman terbaik</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 py-3.5 sm:py-4 px-3 sm:px-5">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-[#d5a864]/10 border border-[#d5a864]/30 flex items-center justify-center shrink-0">
+            <div className="flex items-center gap-3 py-4 sm:py-5 px-3 sm:px-5">
+              <div className="w-8 h-8 rounded-none bg-[#d5a864]/10 border border-[#d5a864]/30 flex items-center justify-center shrink-0">
                 <ShieldCheck className="w-4 h-4 text-[#d5a864]" />
               </div>
               <div>
-                <p className="text-xs sm:text-sm font-bold text-white leading-tight">Due Diligence Penuh</p>
-                <p className="text-[10px] sm:text-[11px] text-neutral-400 leading-tight mt-0.5">Legalitas & feasibility study</p>
+                <p className="text-xs sm:text-sm font-bold text-white leading-tight">Legalitas Lengkap</p>
+                <p className="text-[10px] sm:text-[11px] text-neutral-400 leading-tight mt-0.5">Aman dan terpercaya</p>
               </div>
             </div>
 

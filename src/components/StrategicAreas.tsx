@@ -133,104 +133,58 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({
       <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-[#d5a864]/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-[#1a4a39]/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="relative max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
+      <div className="relative max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
 
-        {/* Top Header Row — High density & streamlined to eliminate gap */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3">
-          <div className="space-y-1 flex-1">
-            <div className="inline-flex items-center gap-2 text-[11px] font-mono font-bold uppercase tracking-widest text-[#d5a864]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#d5a864] animate-pulse" />
-              <span>GIS SPATIAL INTELLIGENCE &amp; INFRASTRUKTUR</span>
-            </div>
+        {/* Top Header Row — Matching Mockup */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+          <div className="space-y-1.5 flex-1">
+            <span className="inline-block text-[11px] font-mono font-bold uppercase tracking-widest text-[#d5a864]">
+              LOKASI STRATEGIS
+            </span>
 
             <h2
-              className="text-xl sm:text-2xl lg:text-[1.85rem] xl:text-[2.1rem] font-bold text-white tracking-tight leading-tight"
+              className="text-2xl sm:text-3xl lg:text-[2.25rem] font-bold text-white tracking-tight leading-tight"
               style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
             >
-              Pemetaan Spasial &amp;{' '}
+              Pemetaan Spasial{' '}
               <span
                 className="italic font-normal text-[#d5a864]"
                 style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
               >
-                Kawasan Potensial
-              </span>{' '}
-              di Jogja
+                di Jantung Potensi di Jogja
+              </span>
             </h2>
-
-            <p className="text-xs sm:text-[13px] text-neutral-300 max-w-2xl leading-relaxed font-light">
-              Analisis data NJOP (PBB-P2) resmi, batas administratif 5 Kab/Kota, trase mega proyek tol Solo-Jogja-YIA, dan titik magnet kampus/RS.
-            </p>
           </div>
 
-          {/* Filter Pills (Zonasi RTRW, Harga Lahan / NJOP, Akses & Jalur Tol, Blok Mikro) */}
-          <div className="flex items-center gap-1.5 bg-[#0a231c] p-1 rounded-full border border-white/10 shrink-0 flex-wrap">
-            <button
-              type="button"
-              onClick={() => {
-                setActiveMapTab('zonasi');
-                setActiveFilterTab('zonasi');
-              }}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                activeFilterTab === 'zonasi' && activeMapTab === 'zonasi'
-                  ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
-                  : 'text-neutral-300 hover:text-white'
-              }`}
-            >
-              <Layers className="w-3.5 h-3.5" />
-              <span>Zonasi RTRW</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setActiveMapTab('zonasi');
-                setActiveFilterTab('harga');
-              }}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                activeFilterTab === 'harga' && activeMapTab === 'zonasi'
-                  ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
-                  : 'text-neutral-300 hover:text-white'
-              }`}
-            >
-              <DollarSign className="w-3.5 h-3.5" />
-              <span>Harga Lahan (NJOP)</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setActiveMapTab('zonasi');
-                setActiveFilterTab('akses');
-              }}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                activeFilterTab === 'akses' && activeMapTab === 'zonasi'
-                  ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
-                  : 'text-neutral-300 hover:text-white'
-              }`}
-            >
-              <Navigation className="w-3.5 h-3.5" />
-              <span>Akses &amp; Jalur Tol</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setActiveMapTab('blok');
-              }}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                activeMapTab === 'blok'
-                  ? 'bg-[#d5a864] text-[#071914] shadow-md font-extrabold'
-                  : 'text-neutral-300 hover:text-white'
-              }`}
-            >
-              <Globe className="w-3.5 h-3.5" />
-              <span>Blok Mikro</span>
-            </button>
+          {/* Filter Tabs - Flat Sharp Buttons */}
+          <div className="flex items-center gap-1 bg-[#071914] p-1 border border-white/15 shrink-0 flex-wrap rounded-none">
+            {[
+              { id: 'kampus', label: 'Kawasan Inti' },
+              { id: 'pertumbuhan', label: 'Sleman & Barat' },
+              { id: 'wisata', label: 'Timur & Selatan' },
+              { id: 'pesisir', label: 'Kulon Progo' },
+            ].map((tab) => {
+              const isActive = selectedCluster === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => handleSelectCluster(tab.id)}
+                  className={`px-4 py-2 rounded-none text-xs font-semibold transition-all cursor-pointer ${
+                    isActive
+                      ? 'bg-[#d5a864] text-[#071914] font-bold'
+                      : 'text-neutral-300 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Main Unified Interactive GIS Terminal Frame */}
-        <div className="rounded-3xl bg-[#0a231c]/90 border border-white/15 shadow-2xl backdrop-blur-md overflow-hidden">
+        {/* Main Unified Interactive GIS Terminal Frame - Flat */}
+        <div className="rounded-none bg-[#0a231c]/90 border border-white/15 shadow-2xl backdrop-blur-md overflow-hidden">
           
           {/* Top Unified Header: Terminal Peta GIS Yogyakarta & Controls */}
           <div className="p-3.5 sm:p-4 bg-[#071914] border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -725,138 +679,53 @@ export const StrategicAreas: React.FC<StrategicAreasProps> = ({
           </div>
         )}
 
-        {/* Bottom Box: Analisis Kawasan Terpilih & Metrik Dinamis */}
-        <div id="analisis-kawasan-detail" className="bg-[#0a231c]/90 rounded-3xl p-6 sm:p-8 border border-white/15 space-y-6 backdrop-blur-md scroll-mt-24">
+        {/* Bottom Box: Kawasan Strategis & Peluang Investasi */}
+        <div id="analisis-kawasan-detail" className="bg-[#0a231c]/90 rounded-none p-6 sm:p-8 border border-white/15 space-y-6 backdrop-blur-md scroll-mt-24">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-white/10 pb-5">
             <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] font-mono uppercase tracking-wider text-[#d5a864]">
-                  Analisis Kawasan Terpilih:
-                </span>
-                <span className="px-2 py-0.5 bg-[#071914] text-[10px] font-bold text-emerald-400 rounded-md border border-emerald-500/30">
-                  {currentData.badge}
-                </span>
-                {activeFilterTab === 'harga' && (
-                  <span className="px-2 py-0.5 bg-amber-500/20 text-[10px] font-mono text-amber-300 rounded-md border border-amber-500/40">
-                    MODE DATA NJOP RESMI PBB-P2
-                  </span>
-                )}
-                {activeFilterTab === 'akses' && (
-                  <span className="px-2 py-0.5 bg-blue-500/20 text-[10px] font-mono text-blue-300 rounded-md border border-blue-500/40">
-                    MODE KONEKTIVITAS AKSES JALAN TOL
-                  </span>
-                )}
-                {activeMapTab === 'blok' && (
-                  <span className="px-2 py-0.5 bg-amber-500/20 text-[10px] font-mono text-amber-300 rounded-md border border-amber-500/40">
-                    MODE KORIDOR BLOK MIKRO
-                  </span>
-                )}
-              </div>
               <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-                {currentData.fullName}
+                Kawasan Strategis &amp; Peluang Investasi
               </h3>
-              <p className="text-xs sm:text-sm text-neutral-300 max-w-3xl leading-relaxed">
-                {currentData.description}
+              <p className="text-xs sm:text-sm text-neutral-300 max-w-2xl leading-relaxed">
+                Lokasi terbaik untuk investasi jangka panjang di Yogyakarta.
               </p>
             </div>
 
             <button
               type="button"
               onClick={() => onSelectZone(currentData.fullName, true)}
-              className="self-start lg:self-center px-5 py-2.5 text-xs font-bold text-[#071914] bg-[#d5a864] hover:bg-[#e2b772] rounded-xl flex items-center gap-2 shrink-0 transition-all cursor-pointer shadow-md"
+              className="self-start lg:self-center px-5 py-2.5 text-xs font-bold text-[#071914] bg-[#d5a864] hover:bg-[#e2b772] rounded-none flex items-center gap-2 shrink-0 transition-all cursor-pointer shadow-md uppercase tracking-wider"
             >
-              <span>Hitung Potensi Tanah</span>
+              <span>Lihat Peta Lengkap</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          {/* 3 Metric Cards (Reaktif sesuai mode filter) */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {activeFilterTab === 'harga' ? (
-              <>
-                <div className="bg-[#071914] p-4.5 rounded-2xl border border-amber-500/30">
-                  <span className="text-xs text-amber-400 font-bold block mb-1">NJOP Resmi (PBB-P2)</span>
-                  <span className="text-xl sm:text-2xl font-black text-white tabular-nums block">
-                    {currentData.njopPrice}
-                  </span>
-                  <span className="text-[11px] text-neutral-400 block mt-1">Ketetapan Pemkab/Pemkot DIY</span>
-                </div>
+          {/* 4 Flat Metric Cards matching Mockup */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-[#071914] p-5 rounded-none border border-white/10 space-y-1">
+              <span className="text-xs text-neutral-400 block font-medium">Luas Kawasan Terpadu</span>
+              <span className="text-2xl font-bold text-white block">± 50 Ha</span>
+              <span className="text-[11px] text-neutral-400 block pt-1">Pengembangan kawasan terintegrasi</span>
+            </div>
 
-                <div className="bg-[#071914] p-4.5 rounded-2xl border border-white/10">
-                  <span className="text-xs text-emerald-400 font-bold block mb-1">Harga Transaksi Bebas Pasar</span>
-                  <span className="text-xl sm:text-2xl font-black text-emerald-400 tabular-nums block">
-                    {currentData.priceRange}
-                  </span>
-                  <span className="text-[11px] text-neutral-400 block mt-1">Nilai Transaksi Riil Lapangan</span>
-                </div>
+            <div className="bg-[#071914] p-5 rounded-none border border-white/10 space-y-1">
+              <span className="text-xs text-neutral-400 block font-medium">Potensi Nilai Investasi</span>
+              <span className="text-2xl font-bold text-[#d5a864] block">+43%</span>
+              <span className="text-[11px] text-neutral-400 block pt-1">Pertumbuhan nilai properti</span>
+            </div>
 
-                <div className="bg-[#071914] p-4.5 rounded-2xl border border-white/10">
-                  <span className="text-xs text-neutral-400 block mb-1">Potensi ROI &amp; Rekomendasi</span>
-                  <span className="text-xl sm:text-2xl font-black text-[#d5a864] tabular-nums block">
-                    {currentData.roi}
-                  </span>
-                  <span className="text-[11px] text-neutral-400 block mt-1">
-                    Apresiasi: <strong className="text-emerald-400">{currentData.growthRate}</strong>
-                  </span>
-                </div>
-              </>
-            ) : activeFilterTab === 'akses' ? (
-              <>
-                <div className="bg-[#071914] p-4.5 rounded-2xl border border-amber-500/30">
-                  <span className="text-xs text-amber-400 font-bold block mb-1">Konektivitas Exit Tol</span>
-                  <span className="text-lg sm:text-xl font-bold text-white block">
-                    {currentData.targetRegions.includes('kulonprogo') ? 'Tol YIA & Bandara' : currentData.targetRegions.includes('sleman') ? '5 Exit Tol Langsung' : currentData.targetRegions.includes('kota') ? '12-15 mnt ke Exit' : currentData.targetRegions.includes('bantul') ? 'Ring Road Selatan' : 'Jalur JJLS'}
-                  </span>
-                  <span className="text-[11px] text-neutral-400 block mt-1">Koridor Cepat Trans-Jawa</span>
-                </div>
+            <div className="bg-[#071914] p-5 rounded-none border border-white/10 space-y-1">
+              <span className="text-xs text-neutral-400 block font-medium">Akses ke Pusat Kota</span>
+              <span className="text-2xl font-bold text-white block">± 15 Menit</span>
+              <span className="text-[11px] text-neutral-400 block pt-1">Dari Tugu Yogyakarta</span>
+            </div>
 
-                <div className="bg-[#071914] p-4.5 rounded-2xl border border-white/10">
-                  <span className="text-xs text-neutral-400 block mb-1">Pertumbuhan Nilai Lahan</span>
-                  <span className="text-xl sm:text-2xl font-black text-emerald-400 tabular-nums block">
-                    {currentData.growthRate}
-                  </span>
-                  <span className="text-[11px] text-neutral-400 block mt-1">Terdorong infrastruktur tol</span>
-                </div>
-
-                <div className="bg-[#071914] p-4.5 rounded-2xl border border-white/10">
-                  <span className="text-xs text-neutral-400 block mb-1">Potensi ROI Operasional</span>
-                  <span className="text-xl sm:text-2xl font-black text-[#d5a864] tabular-nums block">
-                    {currentData.roi}
-                  </span>
-                  <span className="text-[11px] text-neutral-400 block mt-1">
-                    Best Fit: <strong className="text-neutral-200">{currentData.bestFor}</strong>
-                  </span>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="bg-[#071914] p-4.5 rounded-2xl border border-white/10">
-                  <span className="text-xs text-neutral-400 block mb-1">Harga Lahan Rata-rata</span>
-                  <span className="text-xl sm:text-2xl font-black text-white tabular-nums block">
-                    {currentData.priceRange}
-                  </span>
-                  <span className="text-[11px] text-neutral-500 block mt-1">NJOP: {currentData.njopPrice}</span>
-                </div>
-
-                <div className="bg-[#071914] p-4.5 rounded-2xl border border-white/10">
-                  <span className="text-xs text-neutral-400 block mb-1">Pertumbuhan Tahunan</span>
-                  <span className="text-xl sm:text-2xl font-black text-emerald-400 tabular-nums block">
-                    {currentData.growthRate}
-                  </span>
-                  <span className="text-[11px] text-neutral-500 block mt-1">Historis apresiasi 5 tahun</span>
-                </div>
-
-                <div className="bg-[#071914] p-4.5 rounded-2xl border border-white/10">
-                  <span className="text-xs text-neutral-400 block mb-1">Potensi ROI Operasional</span>
-                  <span className="text-xl sm:text-2xl font-black text-[#d5a864] tabular-nums block">
-                    {currentData.roi}
-                  </span>
-                  <span className="text-[11px] text-neutral-500 block mt-1">
-                    Rekomendasi: <strong className="text-neutral-300 font-semibold">{currentData.bestFor}</strong>
-                  </span>
-                </div>
-              </>
-            )}
+            <div className="bg-[#071914] p-5 rounded-none border border-white/10 space-y-1">
+              <span className="text-xs text-neutral-400 block font-medium">Fasilitas Lengkap</span>
+              <span className="text-sm font-semibold text-white block pt-1">Hospitality, healthcare, wisata</span>
+              <span className="text-[11px] text-neutral-400 block">dan komersial area</span>
+            </div>
           </div>
         </div>
 

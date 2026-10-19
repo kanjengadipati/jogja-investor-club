@@ -63,89 +63,92 @@ const FALLBACK_STEPS: ProcessStepData[] = [
 ];
 
 export const ProcessSteps: React.FC<ProcessStepsProps> = ({ steps }) => {
-  const data = steps && steps.length > 0 ? steps : FALLBACK_STEPS;
-  const stepCount = data.length;
+  const defaultSteps = [
+    {
+      number: 1,
+      title: 'Konsultasi Awal',
+      description: 'Diskusikan kebutuhan dan target investasi Anda bersama konsultan kami.',
+      icon: 'MessageSquare',
+    },
+    {
+      number: 2,
+      title: 'Pilih Lokasi',
+      description: 'Tentukan lokasi terbaik yang sesuai dengan rencana dan anggaran Anda.',
+      icon: 'Search',
+    },
+    {
+      number: 3,
+      title: 'Proses Mudah',
+      description: 'Kami bantu seluruh proses administrasi, perizinan, dan legalitas resmi.',
+      icon: 'PenTool',
+    },
+    {
+      number: 4,
+      title: 'Investasi Aman',
+      description: 'Nikmati hasil apresiasi nilai dan passive income properti dengan tenang.',
+      icon: 'Check',
+    },
+  ];
+
+  const data = steps && steps.length > 0 ? steps : defaultSteps;
 
   return (
-    <section id="proses-layanan" className="py-20 lg:py-28 bg-white">
+    <section id="proses-layanan" className="py-20 lg:py-28 bg-[#ffffff]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16">
-          <div className="space-y-3 max-w-lg">
-            <span className="inline-block text-xs font-bold uppercase tracking-widest text-[#c5a25d]">
-              Proses Kerja Kami
-            </span>
-            <h2
-              className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#081c17] tracking-tight leading-tight"
-              style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
+        {/* Centered Header */}
+        <div className="text-center mb-16 space-y-3">
+          <h2
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#081c17] tracking-tight leading-tight"
+            style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
+          >
+            Langkah Demi{' '}
+            <span
+              className="italic font-normal text-[#c5a25d]"
+              style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
             >
-              Langkah Demi{' '}
-              <span
-                className="italic font-normal text-[#c5a25d]"
-                style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
-              >
-                Langkah
-              </span>
-            </h2>
-            <p className="text-sm sm:text-base text-neutral-500 leading-relaxed">
-              Kami mendampingi Anda dari awal hingga properti siap digunakan.
-            </p>
-          </div>
-          <div className="hidden lg:flex items-center gap-2 text-sm text-neutral-400">
-            <span className="w-8 h-[1px] bg-neutral-200" />
-            <span>{stepCount} langkah mudah</span>
-            <span className="w-8 h-[1px] bg-neutral-200" />
-          </div>
+              Langkah
+            </span>
+          </h2>
+          <p className="text-sm sm:text-base text-neutral-500 max-w-xl mx-auto leading-relaxed">
+            Proses investasi properti menjadi lebih mudah.
+          </p>
         </div>
 
-        {/* Steps */}
-        <div className="relative">
-          {/* Connecting dashed line (desktop) */}
-          <div className="hidden lg:block absolute top-12 left-[calc(12.5%-1rem)] right-[calc(12.5%-1rem)] h-[1px] border-t border-dashed border-neutral-200 z-0" />
+        {/* Steps Grid - Flat without round */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {data.map((step, idx) => {
+            const iconKey = step.icon ?? 'Check';
+            const Icon: LucideIcon = ICON_MAP[iconKey] ?? CheckCircle;
+            const formattedNum = String(step.number || idx + 1).padStart(2, '0');
 
-          <div
-            className={`grid grid-cols-1 sm:grid-cols-2 gap-6 relative z-10 ${
-              stepCount === 4 ? 'lg:grid-cols-4' : stepCount === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'
-            }`}
-          >
-            {data.map((step, idx) => {
-              const styles = STEP_STYLES[idx % STEP_STYLES.length];
-              const iconKey = step.icon ?? 'Check';
-              const Icon: LucideIcon = ICON_MAP[iconKey] ?? CheckCircle;
-
-              return (
-                <div
-                  key={step.number}
-                  className="group flex flex-col items-center text-center bg-white rounded-2xl border border-neutral-100 p-6 hover:border-[#d5a864]/40 hover:shadow-lg transition-all duration-300"
-                >
-                  {/* Icon + badge */}
-                  <div className="relative mb-5">
-                    <div
-                      className={`w-10 h-10 rounded-full ${styles.bgColor} border ${styles.borderColor} flex items-center justify-center`}
-                    >
-                      <Icon className={`w-5 h-5 ${styles.color}`} />
-                    </div>
-                    <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#f5ebe0] border border-[#d5a864]/40 text-[#8c672b] text-[10px] font-extrabold flex items-center justify-center shadow-sm">
-                      {step.number}
-                    </span>
-                  </div>
-
-                  <h4
-                    className="text-sm sm:text-base font-bold text-[#081c17] mb-2"
-                    style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
-                  >
-                    {step.title}
-                  </h4>
-                  {step.description && (
-                    <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed">
-                      {step.description}
-                    </p>
-                  )}
+            return (
+              <div
+                key={step.number || idx}
+                className="group flex flex-col items-center text-center bg-[#fbf9f5] rounded-none border border-neutral-200/80 p-8 hover:border-[#d5a864] hover:shadow-lg transition-all duration-300"
+              >
+                {/* Flat square icon container */}
+                <div className="w-12 h-12 rounded-none bg-white border border-neutral-200 flex items-center justify-center text-[#c5a25d] mb-6 group-hover:border-[#d5a864] transition-colors">
+                  <Icon className="w-5 h-5 text-[#c5a25d]" />
                 </div>
-              );
-            })}
-          </div>
+
+                {/* Step title with 01. prefix */}
+                <h4
+                  className="text-base sm:text-lg font-bold text-[#081c17] mb-2.5"
+                  style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
+                >
+                  <span className="text-[#c5a25d] font-mono mr-1.5">{formattedNum}.</span>
+                  {step.title}
+                </h4>
+
+                {step.description && (
+                  <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed">
+                    {step.description}
+                  </p>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

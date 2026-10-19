@@ -73,81 +73,52 @@ export const LeadCalculatorBanner: React.FC<LeadCalculatorBannerProps> = ({
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* Main Consultation Box Container matching Mockup Section 5 */}
-        <div className="bg-[#0a221b] border border-[#d5a864]/25 rounded-3xl p-6 sm:p-10 lg:p-12 shadow-2xl">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
+        {/* Main Consultation Box Container matching Mockup Section */}
+        <div className="bg-[#0a221b] border border-[#d5a864]/20 rounded-none p-6 sm:p-10 lg:p-12 shadow-2xl">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
 
             {/* Left Column: Heritage Photo & Value Proposition (lg:col-span-6) */}
-            <div className="lg:col-span-6 flex flex-col justify-between h-full space-y-5">
+            <div className="lg:col-span-6 flex flex-col justify-between h-full space-y-6">
 
-              {/* Top part: Photo & Headline */}
-              <div className="space-y-4">
-                {/* Photo Box */}
-                <div className="relative rounded-2xl overflow-hidden aspect-[16/9] shadow-lg border border-white/10 group">
-                  <img
-                    src={JOGJA_IMAGES.heritage}
-                    alt="Candi Prambanan dan Warisan Sejarah Yogyakarta"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#d5a864] font-bold">
-                      YOGYAKARTA INVESTMENT HUB
-                    </span>
-                    <p className="text-sm font-semibold text-white drop-shadow-md">
-                      Nilai tanah strategis dengan potensi yield tinggi se-DIY
-                    </p>
-                  </div>
-                </div>
-
-                {/* Headline & Description */}
-                <div className="space-y-2.5">
-                  <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#d5a864]">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>KONSULTASI &amp; ANALISIS</span>
-                  </div>
-
-                  <h2
-                    className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight"
+              {/* Photo Box - Flat rectangle */}
+              <div className="relative rounded-none overflow-hidden aspect-[16/10] shadow-lg border border-white/10 group">
+                <img
+                  src={JOGJA_IMAGES.heritage}
+                  alt="Candi Prambanan dan Warisan Sejarah Yogyakarta"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+                <div className="absolute bottom-5 left-5 right-5">
+                  <p
+                    className="text-lg sm:text-xl font-bold text-white drop-shadow-md leading-tight"
                     style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
                   >
-                    Hitung Potensi{' '}
-                    <span
-                      className="italic font-normal text-[#d5a864]"
-                      style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
-                    >
-                      Tanah Anda
-                    </span>
-                  </h2>
-
-                  <p className="text-sm text-neutral-300 leading-relaxed font-light">
-                    Dapatkan estimasi nilai, rekomendasi pengembangan, dan peluang investasi terbaik sesuai dengan lokasi dan tujuan Anda.
+                    Investasi hari ini, untuk masa depan di Jogja.
                   </p>
                 </div>
               </div>
 
-              {/* Bottom part: 3 Value Pillars */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-                <div className="flex items-center gap-2.5 p-3 rounded-xl bg-[#061712]/80 border border-white/10">
-                  <FileText className="w-4 h-4 text-[#d5a864] shrink-0" />
-                  <span className="text-xs font-semibold text-neutral-200 leading-snug">
-                    Analisis Lengkap &amp; Data Akurat
-                  </span>
+              {/* 4 Value Points matching Mockup */}
+              <div className="grid grid-cols-2 gap-3 pt-2">
+                <div className="flex items-center gap-2 text-xs font-semibold text-neutral-200">
+                  <Check className="w-4 h-4 text-[#d5a864] shrink-0" />
+                  <span>Properti Berkualitas</span>
                 </div>
 
-                <div className="flex items-center gap-2.5 p-3 rounded-xl bg-[#061712]/80 border border-white/10">
-                  <Compass className="w-4 h-4 text-[#d5a864] shrink-0" />
-                  <span className="text-xs font-semibold text-neutral-200 leading-snug">
-                    Rekomendasi Pengembangan
-                  </span>
+                <div className="flex items-center gap-2 text-xs font-semibold text-neutral-200">
+                  <Check className="w-4 h-4 text-[#d5a864] shrink-0" />
+                  <span>Lokasi Strategis</span>
                 </div>
 
-                <div className="flex items-center gap-2.5 p-3 rounded-xl bg-[#061712]/80 border border-white/10">
-                  <Shield className="w-4 h-4 text-[#d5a864] shrink-0" />
-                  <span className="text-xs font-semibold text-neutral-200 leading-snug">
-                    Konsultasi Gratis Tanpa Biaya
-                  </span>
+                <div className="flex items-center gap-2 text-xs font-semibold text-neutral-200">
+                  <Check className="w-4 h-4 text-[#d5a864] shrink-0" />
+                  <span>Tim Profesional</span>
+                </div>
+
+                <div className="flex items-center gap-2 text-xs font-semibold text-neutral-200">
+                  <Check className="w-4 h-4 text-[#d5a864] shrink-0" />
+                  <span>Nilai Investasi Tinggi</span>
                 </div>
               </div>
 
@@ -155,80 +126,66 @@ export const LeadCalculatorBanner: React.FC<LeadCalculatorBannerProps> = ({
 
             {/* Right Column: Consultation Form (lg:col-span-6) */}
             <div className="lg:col-span-6 flex flex-col h-full">
-              <div className="bg-[#071914] border border-white/15 rounded-2xl p-6 sm:p-8 shadow-xl flex flex-col justify-between h-full space-y-5">
+              <div className="bg-[#071914] border border-white/10 rounded-none p-6 sm:p-8 shadow-xl flex flex-col justify-between h-full space-y-6">
 
-                <div className="space-y-1">
+                <div className="space-y-1.5">
                   <h3
-                    className="text-xl sm:text-2xl font-bold text-white tracking-tight"
+                    className="text-2xl sm:text-3xl font-bold text-white tracking-tight"
                     style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
                   >
-                    Konsultasi Gratis
+                    Konsultasi Sekarang
                   </h3>
-                  <p className="text-xs text-neutral-400">
-                    Isi form di bawah, konsultan properti kami akan menghubungi Anda secara personal.
+                  <p className="text-xs sm:text-sm text-neutral-400">
+                    Dapatkan informasi lengkap dan penawaran terbaik dari kami.
                   </p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="flex-1 flex flex-col justify-between space-y-4">
-                  <div className="space-y-3.5">
-                    {/* Row 1: Nama Lengkap & Nomor WhatsApp */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  <div className="space-y-4">
+                    {/* Row 1: Nama Lengkap & Email */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-semibold text-neutral-300 mb-1.5">
-                          Nama Lengkap *
-                        </label>
-                        <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
-                            <User className="w-4 h-4" />
-                          </div>
-                          <input
-                            type="text"
-                            required
-                            placeholder="Nama Anda"
-                            value={formData.fullName}
-                            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                            className="w-full pl-10 pr-3.5 py-3 text-sm bg-[#0a221b] border border-white/20 rounded-xl text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-[#d5a864] focus:border-[#d5a864] transition-all"
-                          />
-                        </div>
+                        <input
+                          type="text"
+                          required
+                          placeholder="Nama Lengkap *"
+                          value={formData.fullName}
+                          onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                          className="w-full px-4 py-3 text-sm bg-[#071914] border border-white/20 rounded-none text-white placeholder:text-neutral-500 focus:outline-none focus:border-[#d5a864] transition-all"
+                        />
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-neutral-300 mb-1.5">
-                          Nomor WhatsApp *
-                        </label>
-                        <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
-                            <Phone className="w-4 h-4" />
-                          </div>
-                          <input
-                            type="tel"
-                            required
-                            placeholder="0812xxxxxxx"
-                            value={formData.whatsappNumber}
-                            onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
-                            className="w-full pl-10 pr-3.5 py-3 text-sm bg-[#0a221b] border border-white/20 rounded-xl text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-[#d5a864] focus:border-[#d5a864] transition-all"
-                          />
-                        </div>
+                        <input
+                          type="email"
+                          placeholder="Email Anda *"
+                          className="w-full px-4 py-3 text-sm bg-[#071914] border border-white/20 rounded-none text-white placeholder:text-neutral-500 focus:outline-none focus:border-[#d5a864] transition-all"
+                        />
                       </div>
                     </div>
 
-                    {/* Row 2: Jenis Properti */}
-                    <div>
-                      <label className="block text-xs font-semibold text-neutral-300 mb-1.5">
-                        Jenis Properti *
-                      </label>
+                    {/* Row 2: Nomor WhatsApp & Jenis Properti */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <input
+                          type="tel"
+                          required
+                          placeholder="Nomor WhatsApp *"
+                          value={formData.whatsappNumber}
+                          onChange={(e) => setFormData({ ...formData, whatsappNumber: e.target.value })}
+                          className="w-full px-4 py-3 text-sm bg-[#071914] border border-white/20 rounded-none text-white placeholder:text-neutral-500 focus:outline-none focus:border-[#d5a864] transition-all"
+                        />
+                      </div>
+
                       <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
-                          <Home className="w-4 h-4" />
-                        </div>
                         <select
                           value={formData.propertyType}
                           onChange={(e) => setFormData({ ...formData, propertyType: e.target.value as PropertyType })}
-                          className="w-full pl-10 pr-10 py-3 text-sm bg-[#0a221b] border border-white/20 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-[#d5a864] focus:border-[#d5a864] appearance-none cursor-pointer transition-all"
+                          className="w-full px-4 py-3 text-sm bg-[#071914] border border-white/20 rounded-none text-white focus:outline-none focus:border-[#d5a864] appearance-none cursor-pointer transition-all pr-10"
                         >
-                          <option value="rumah" className="bg-[#071914] text-white">Rumah Tinggal / Hunian Keluarga</option>
-                          <option value="villa" className="bg-[#071914] text-white">Villa Mewah / Staycation Pariwisata</option>
-                          <option value="kos" className="bg-[#071914] text-white">Homestay &amp; Kos Eksklusif</option>
+                          <option value="rumah" className="bg-[#071914] text-white">Rumah</option>
+                          <option value="villa" className="bg-[#071914] text-white">Villa</option>
+                          <option value="kos" className="bg-[#071914] text-white">Homestay &amp; Resto</option>
                         </select>
                         <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-neutral-400">
                           <ChevronDown className="w-4 h-4" />
@@ -236,41 +193,31 @@ export const LeadCalculatorBanner: React.FC<LeadCalculatorBannerProps> = ({
                       </div>
                     </div>
 
-                    {/* Row 3: Keterangan (Opsional) */}
+                    {/* Row 3: Pesan atau pertanyaan */}
                     <div>
-                      <label className="block text-xs font-semibold text-neutral-300 mb-1.5">
-                        Keterangan (opsional)
-                      </label>
                       <textarea
-                        rows={2}
-                        placeholder="Ceritakan lokasi dan kebutuhan Anda..."
+                        rows={3}
+                        placeholder="Pesan atau pertanyaan..."
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
-                        className="w-full px-4 py-2.5 text-sm bg-[#0a221b] border border-white/20 rounded-xl text-white placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-[#d5a864] focus:border-[#d5a864] resize-none transition-all"
+                        className="w-full px-4 py-3 text-sm bg-[#071914] border border-white/20 rounded-none text-white placeholder:text-neutral-500 focus:outline-none focus:border-[#d5a864] resize-none transition-all"
                       />
                     </div>
                   </div>
 
-                  {/* Submit Button & Privacy */}
-                  <div className="space-y-2 pt-1">
+                  {/* Submit Button */}
+                  <div className="pt-2">
                     <button
                       type="submit"
-                      className="w-full py-4 px-6 bg-[#d5a864] hover:bg-[#e2b772] active:bg-[#c49855] text-[#071914] font-extrabold text-sm rounded-xl transition-all shadow-[0_4px_20px_rgba(213,168,100,0.3)] flex items-center justify-center gap-2 cursor-pointer hover:-translate-y-0.5"
+                      className="w-full py-4 px-6 bg-[#d5a864] hover:bg-[#e2b772] active:bg-[#c49855] text-[#071914] font-bold text-sm rounded-none transition-all flex items-center justify-center gap-2 cursor-pointer uppercase tracking-wider"
                     >
-                      <span>Kirim &amp; Konsultasi Gratis</span>
+                      <span>Kirim Pesan</span>
                       <ArrowRight className="w-4 h-4" />
                     </button>
-
-                    <div className="flex items-center justify-center gap-2 text-[11px] text-neutral-400 pt-1">
-                      <Shield className="w-3.5 h-3.5 text-[#d5a864]" />
-                      <span>Data Anda aman dan tidak akan dibagikan ke pihak lain.</span>
-                    </div>
                   </div>
                 </form>
-
               </div>
             </div>
-
           </div>
 
           {/* Interactive Detailed Simulation (Always Open) */}
@@ -286,7 +233,7 @@ export const LeadCalculatorBanner: React.FC<LeadCalculatorBannerProps> = ({
               </div>
 
               {/* Sliders & Option Selectors */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-[#071914] p-5 rounded-2xl border border-white/10">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-[#071914] p-5 rounded-none border border-white/10">
                 <div>
                   <div className="flex justify-between text-xs font-bold mb-2">
                     <span className="text-neutral-300">Luas Tanah:</span>
@@ -299,7 +246,7 @@ export const LeadCalculatorBanner: React.FC<LeadCalculatorBannerProps> = ({
                     step="10"
                     value={formData.landArea}
                     onChange={(e) => setFormData({ ...formData, landArea: Number(e.target.value) })}
-                    className="w-full h-2 bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-[#d5a864]"
+                    className="w-full h-2 bg-neutral-700 rounded-none appearance-none cursor-pointer accent-[#d5a864]"
                   />
                   <div className="flex justify-between text-[10px] text-neutral-400 mt-1 font-mono">
                     <span>60 m²</span>
@@ -316,7 +263,7 @@ export const LeadCalculatorBanner: React.FC<LeadCalculatorBannerProps> = ({
                   <select
                     value={formData.locationZone}
                     onChange={(e) => setFormData({ ...formData, locationZone: e.target.value })}
-                    className="w-full px-3.5 py-2.5 text-xs bg-[#0a221b] text-white border border-white/20 rounded-xl"
+                    className="w-full px-3.5 py-2.5 text-xs bg-[#0a221b] text-white border border-white/20 rounded-none"
                   >
                     <option value="Sleman - Kawasan Kampus (Seturan / Condongcatur / UGM)">
                       Sleman - Kawasan Kampus (Seturan / UGM)
@@ -343,7 +290,7 @@ export const LeadCalculatorBanner: React.FC<LeadCalculatorBannerProps> = ({
                   <select
                     value={formData.budgetRange}
                     onChange={(e) => setFormData({ ...formData, budgetRange: e.target.value })}
-                    className="w-full px-3.5 py-2.5 text-xs bg-[#0a221b] text-white border border-white/20 rounded-xl"
+                    className="w-full px-3.5 py-2.5 text-xs bg-[#0a221b] text-white border border-white/20 rounded-none"
                   >
                     <option value="Rp 500 Jt - Rp 1 Miliar">Rp 500 Jt - Rp 1 Miliar</option>
                     <option value="Rp 1 Miliar - Rp 2 Miliar">Rp 1 Miliar - Rp 2 Miliar</option>
@@ -355,7 +302,7 @@ export const LeadCalculatorBanner: React.FC<LeadCalculatorBannerProps> = ({
 
               {/* Output Quick Metrics */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
-                <div className="bg-[#071914] p-4 rounded-xl border border-white/10">
+                <div className="bg-[#071914] p-4 rounded-none border border-white/10">
                   <span className="text-[11px] text-neutral-400 block">Est. Biaya Bangun (RAB)</span>
                   <span className="text-lg font-black text-[#d5a864] tabular-nums block mt-0.5">
                     {formatShortRupiah(result.estimatedRAB)}
@@ -363,7 +310,7 @@ export const LeadCalculatorBanner: React.FC<LeadCalculatorBannerProps> = ({
                   <span className="text-[10px] text-neutral-400 block mt-0.5">~{result.totalBuildingArea} m² luas bangunan</span>
                 </div>
 
-                <div className="bg-[#071914] p-4 rounded-xl border border-white/10">
+                <div className="bg-[#071914] p-4 rounded-none border border-white/10">
                   <span className="text-[11px] text-neutral-400 block">Dasar Bangunan (KDB 60%)</span>
                   <span className="text-lg font-black text-white tabular-nums block mt-0.5">
                     {result.buildingCoverageArea} m²
@@ -371,7 +318,7 @@ export const LeadCalculatorBanner: React.FC<LeadCalculatorBannerProps> = ({
                   <span className="text-[10px] text-emerald-400 block mt-0.5">{result.suggestedFloors} Lantai rekomendasi</span>
                 </div>
 
-                <div className="bg-[#071914] p-4 rounded-xl border border-white/10">
+                <div className="bg-[#071914] p-4 rounded-none border border-white/10">
                   <span className="text-[11px] text-neutral-400 block">
                     {formData.propertyType === 'kos' ? 'Kapasitas Kamar' : 'Konsep Properti'}
                   </span>
@@ -387,7 +334,7 @@ export const LeadCalculatorBanner: React.FC<LeadCalculatorBannerProps> = ({
                   </span>
                 </div>
 
-                <div className="bg-[#071914] p-4 rounded-xl border border-white/10">
+                <div className="bg-[#071914] p-4 rounded-none border border-white/10">
                   <span className="text-[11px] text-neutral-400 block">Proyeksi Arus Kas</span>
                   <span className="text-lg font-black text-emerald-400 tabular-nums block mt-0.5">
                     {result.monthlyRevenueEstimate ? formatShortRupiah(result.monthlyRevenueEstimate) + '/bln' : '+12-15% /thn'}

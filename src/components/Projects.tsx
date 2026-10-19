@@ -136,9 +136,6 @@ export const Projects: React.FC<ProjectsProps> = ({ projects }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-14 space-y-3">
-          <span className="inline-block text-xs font-bold uppercase tracking-widest text-[#c5a25d] mb-1">
-            Portofolio Proyek
-          </span>
           <h2
             className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#081c17] tracking-tight"
             style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
@@ -148,103 +145,77 @@ export const Projects: React.FC<ProjectsProps> = ({ projects }) => {
               className="italic font-normal text-[#c5a25d]"
               style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
             >
-              sudah jadi
+              Sudah Jadi
             </span>
           </h2>
           <p className="text-sm sm:text-base text-neutral-500 max-w-xl mx-auto leading-relaxed">
-            Lihat hasil kerja nyata kami — dari lahan kosong hingga properti siap huni dan menghasilkan.
+            Kualitas terbaik, hasil nyata untuk masa depan Anda.
           </p>
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-7">
-          {data.map((project, idx) => (
-            <div
-              key={idx}
-              onClick={() => openProject(project)}
-              className="group relative rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500 bg-white"
-            >
-              {/* Cover image */}
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <img
-                  src={project.coverImage}
-                  alt={`${project.title} - Portofolio Properti ${project.location}`}
-                  loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+        {/* Grid - Flat without round */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          {data.map((project, idx) => {
+            // Display title and summary matching mockup
+            const displayTitle =
+              idx === 0 ? 'Rumah Modern' :
+              idx === 1 ? 'Villa Premium' :
+              idx === 2 ? 'Homestay & Resto' : project.title;
 
-                {/* Featured badge */}
-                {project.featured && (
-                  <div className="absolute top-4 left-4">
-                    <div className="flex items-center gap-1.5 bg-[#d5a864] text-[#071914] rounded-full px-3 py-1.5 text-[11px] font-extrabold shadow-lg">
-                      <Star className="w-3 h-3 fill-current" />
-                      <span>Unggulan</span>
-                    </div>
-                  </div>
-                )}
+            const displaySummary =
+              idx === 0 ? 'Hunian modern dengan konsep tropis yang nyaman.' :
+              idx === 1 ? 'Villa eksklusif dengan pemandangan alam yang menenangkan.' :
+              idx === 2 ? 'Investasi komersial dengan konsep hospitality modern.' : (project.summary ?? '');
 
-                {/* Type badge */}
-                {project.propertyType && (
-                  <div className="absolute top-4 right-4">
-                    <div className="bg-black/50 backdrop-blur-md border border-white/15 rounded-full px-3 py-1.5 text-[11px] font-bold text-white">
-                      {project.propertyType}
-                    </div>
-                  </div>
-                )}
+            return (
+              <div
+                key={idx}
+                onClick={() => openProject({ ...project, title: displayTitle, summary: displaySummary })}
+                className="group relative rounded-none overflow-hidden cursor-pointer shadow-md hover:shadow-2xl transition-all duration-500 bg-white border border-neutral-200/80"
+              >
+                {/* Cover image */}
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <img
+                    src={project.coverImage}
+                    alt={`${displayTitle} - Portofolio Properti ${project.location}`}
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-                {/* Location + year on image bottom */}
-                <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
-                  <div className="flex items-center gap-1.5 text-xs">
-                    <MapPin className="w-3.5 h-3.5 text-[#d5a864]" />
-                    <span className="font-medium">{project.location}</span>
-                  </div>
-                  {project.year && (
-                    <div className="flex items-center gap-1 text-xs">
-                      <Calendar className="w-3.5 h-3.5 text-[#d5a864]" />
-                      <span className="font-medium">{project.year}</span>
+                  {/* Type badge - flat */}
+                  {project.propertyType && (
+                    <div className="absolute top-4 right-4">
+                      <div className="bg-[#071914]/85 border border-white/20 rounded-none px-3 py-1 text-[11px] font-semibold text-white tracking-wide">
+                        {project.propertyType}
+                      </div>
                     </div>
                   )}
                 </div>
-              </div>
 
-              {/* Text content */}
-              <div className="p-5 space-y-2">
-                <h3
-                  className="text-lg font-bold text-[#081c17] tracking-tight"
-                  style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
-                >
-                  {project.title}
-                </h3>
-                {project.summary && (
+                {/* Text content */}
+                <div className="p-6 space-y-2.5">
+                  <h3
+                    className="text-xl font-bold text-[#081c17] tracking-tight"
+                    style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
+                  >
+                    {displayTitle}
+                  </h3>
+                  
                   <p className="text-sm text-neutral-500 leading-relaxed line-clamp-2">
-                    {project.summary}
+                    {displaySummary}
                   </p>
-                )}
 
-                {/* Specs inline */}
-                {project.specs && project.specs.length > 0 && (
-                  <div className="flex flex-wrap gap-2 pt-2">
-                    {project.specs.slice(0, 3).map((spec, i) => (
-                      <span
-                        key={i}
-                        className="text-[11px] font-medium text-neutral-600 bg-neutral-100 rounded-full px-2.5 py-1"
-                      >
-                        {spec.label}: <span className="font-bold text-[#081c17]">{spec.value}</span>
-                      </span>
-                    ))}
+                  {/* View detail CTA */}
+                  <div className="flex items-center gap-1.5 pt-3 text-xs font-bold text-[#c5a25d] group-hover:text-[#a8823c] transition-colors">
+                    <span>Lihat Detail</span>
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                   </div>
-                )}
-
-                {/* View detail CTA */}
-                <div className="flex items-center gap-1.5 pt-2 text-xs font-semibold text-[#c5a25d]">
-                  <span>Lihat Detail</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

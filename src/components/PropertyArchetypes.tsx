@@ -62,9 +62,6 @@ export const PropertyArchetypes: React.FC<PropertyArchetypesProps> = ({
 
         {/* Section header */}
         <div className="text-center mb-14 space-y-3">
-          <span className="inline-block text-xs font-bold uppercase tracking-widest text-[#c5a25d] mb-1">
-            Solusi Properti
-          </span>
           <h2
             className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#081c17] tracking-tight"
             style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
@@ -74,20 +71,31 @@ export const PropertyArchetypes: React.FC<PropertyArchetypesProps> = ({
               className="italic font-normal text-[#c5a25d]"
               style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
             >
-              banyak kemungkinan
+              Banyak Kemungkinan
             </span>
           </h2>
           <p className="text-sm sm:text-base text-neutral-500 max-w-xl mx-auto leading-relaxed">
-            Dari hunian properti hingga investasi, satu lahan bisa memberikan banyak manfaat.
+            Dari hunian eksklusif, villa modern, hingga komersial space, semua dalam satu kawasan terpadu.
           </p>
         </div>
 
-        {/* Cards grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-7">
+        {/* Cards grid - flat rounded-none */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {cards.map((card) => {
             const styles = STYLE_MAP[card.id] ?? { badgeColor: 'text-white', accent: 'from-neutral-900/40' };
             const image = card.image ?? FALLBACK_IMAGES[card.id] ?? JOGJA_IMAGES.villa;
-            const badge = card.yieldInfo ?? '';
+            
+            // Custom label and tag based on archetype id to match mockup
+            const customTag =
+              card.id === 'rumah' ? 'Hunian Eksklusif' :
+              card.id === 'villa' ? 'Villa Premium' : 'Komersial & Bisnis';
+
+            const customSubtitle =
+              card.id === 'rumah' ? 'Nyaman untuk hidup' :
+              card.id === 'villa' ? 'Investasi untuk masa depan' : 'Peluang bisnis yang menjanjikan';
+
+            const displayTitle =
+              card.id === 'kos' ? 'Homestay & Resto' : card.title;
 
             return (
               <div
@@ -96,15 +104,15 @@ export const PropertyArchetypes: React.FC<PropertyArchetypesProps> = ({
                 onMouseEnter={() => setHovered(card.id)}
                 onMouseLeave={() => setHovered(null)}
                 onClick={() => onSelectArchetype(card.id as PropertyType)}
-                className="group relative rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500 bg-neutral-900"
+                className="group relative rounded-none overflow-hidden cursor-pointer shadow-md hover:shadow-2xl transition-all duration-500 bg-neutral-950 border border-neutral-200/60"
                 style={{ aspectRatio: '4/5' }}
               >
                 {/* Photo */}
                 <img
                   src={image}
-                  alt={`${card.title} - Solusi Investasi & Bangun Properti Yogyakarta`}
+                  alt={`${displayTitle} - Solusi Investasi & Bangun Properti Yogyakarta`}
                   loading="lazy"
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   referrerPolicy="no-referrer"
                 />
 
@@ -114,21 +122,12 @@ export const PropertyArchetypes: React.FC<PropertyArchetypesProps> = ({
                   className={`absolute inset-0 bg-gradient-to-t ${styles.accent} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
                 />
 
-                {/* Top badge */}
-                {badge && (
-                  <div className="absolute top-4 left-4">
-                    <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-md border border-white/15 rounded-full px-3 py-1.5">
-                      <TrendingUp className={`w-3 h-3 ${styles.badgeColor}`} />
-                      <span className={`text-[11px] font-bold ${styles.badgeColor}`}>{badge}</span>
-                    </div>
-                  </div>
-                )}
-
-                {/* Hover CTA chip */}
-                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-1 group-hover:translate-y-0">
-                  <div className="flex items-center gap-1 bg-[#d5a864] text-[#071914] text-[11px] font-extrabold rounded-full px-3 py-1.5">
-                    <span>Hitung Potensi</span>
-                    <ArrowRight className="w-3 h-3" />
+                {/* Top flat tag */}
+                <div className="absolute top-4 left-4">
+                  <div className="bg-[#071914]/85 border border-white/20 rounded-none px-3 py-1.5 backdrop-blur-sm">
+                    <span className="text-[11px] font-semibold text-neutral-200 tracking-wide uppercase">
+                      {customTag}
+                    </span>
                   </div>
                 </div>
 
@@ -136,19 +135,15 @@ export const PropertyArchetypes: React.FC<PropertyArchetypesProps> = ({
                 <div className="absolute bottom-0 left-0 right-0 p-6">
                   <div className="space-y-1 transform group-hover:-translate-y-1 transition-transform duration-300">
                     <h3
-                      className="text-3xl font-extrabold text-white tracking-tight leading-tight"
+                      className="text-2xl sm:text-3xl font-bold text-white tracking-tight leading-tight"
                       style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
                     >
-                      {card.title}
+                      {displayTitle}
                     </h3>
-                    {card.subtitle && (
-                      <p className="text-sm text-neutral-300 font-light">{card.subtitle}</p>
-                    )}
-                  </div>
-
-                  {/* Arrow indicator */}
-                  <div className="mt-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <span className="text-xs font-semibold text-neutral-200">Lihat detail →</span>
+                    <p className="text-xs sm:text-sm text-neutral-300 font-normal flex items-center gap-1.5 pt-1">
+                      <span>{customSubtitle}</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-[#d5a864] group-hover:translate-x-1 transition-transform" />
+                    </p>
                   </div>
                 </div>
               </div>

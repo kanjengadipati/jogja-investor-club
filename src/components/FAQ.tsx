@@ -124,6 +124,15 @@ export const FAQ: React.FC<FAQProps> = ({ faqs, onOpenConsultation }) => {
 
   const list: FAQData[] = faqs && faqs.length > 0 ? faqs : FALLBACK_FAQS;
 
+  const categories = [
+    { key: 'semua', label: 'Semua' },
+    { key: 'investasi', label: 'Investasi' },
+    { key: 'proses', label: 'Lokasi & Akses' },
+    { key: 'legalitas', label: 'Legalitas' },
+    { key: 'pembiayaan', label: 'Pembiayaan' },
+    { key: 'umum', label: 'Lainnya' },
+  ];
+
   const filteredList = useMemo(() => {
     return list.filter((item) => {
       // Category filter
@@ -169,16 +178,11 @@ export const FAQ: React.FC<FAQProps> = ({ faqs, onOpenConsultation }) => {
   };
 
   return (
-    <section id="faq" className="py-20 lg:py-28 bg-white relative">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="faq" className="py-20 lg:py-28 bg-[#fbf9f5] relative">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
-        <div className="text-center space-y-4 mb-12">
-          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#071914]/5 border border-[#d5a864]/30 text-[#8c672b] text-xs font-bold tracking-widest uppercase">
-            <HelpCircle className="w-3.5 h-3.5 text-[#c5a25d]" />
-            <span>FAQ &amp; Informasi Transparan</span>
-          </span>
-
+        {/* Centered Section Header */}
+        <div className="text-center space-y-3 mb-10">
           <h2
             className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#081c17] tracking-tight leading-tight"
             style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
@@ -192,155 +196,86 @@ export const FAQ: React.FC<FAQProps> = ({ faqs, onOpenConsultation }) => {
             </span>
           </h2>
 
-          <p className="text-sm sm:text-base text-neutral-600 max-w-2xl mx-auto leading-relaxed">
-            Pahami detail legalitas tanah, kalkulasi ROI, perizinan PBG, hingga penjaminan kualitas
-            konstruksi sebelum Anda melangkah membangun di Yogyakarta.
+          <p className="text-sm sm:text-base text-neutral-500 max-w-xl mx-auto leading-relaxed">
+            Temukan jawaban atas pertanyaan umum seputar investasi properti di Jogja.
           </p>
-
-          {/* Search Box */}
-          <div className="max-w-md mx-auto pt-2">
-            <div className="relative flex items-center">
-              <Search className="w-4 h-4 text-neutral-400 absolute left-3.5 pointer-events-none" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cari pertanyaan (contoh: PBG, SHM, yield, modal)..."
-                className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm bg-neutral-50 hover:bg-neutral-100/70 focus:bg-white rounded-xl border border-neutral-200 focus:border-[#c5a25d] focus:outline-none focus:ring-2 focus:ring-[#c5a25d]/20 transition-all text-[#081c17] placeholder:text-neutral-400"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-3 text-xs text-neutral-400 hover:text-neutral-600 font-bold"
-                >
-                  Reset
-                </button>
-              )}
-            </div>
-          </div>
         </div>
 
-        {/* Category Pills */}
+        {/* Category Tabs - Flat Sharp Buttons */}
         <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
-          {Object.entries(CATEGORY_MAP).map(([key, item]) => {
-            const active = selectedCategory === key;
-            const Icon = item.icon;
+          {categories.map((cat) => {
+            const active = selectedCategory === cat.key;
             return (
               <button
-                key={key}
-                onClick={() => setSelectedCategory(key)}
-                className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+                key={cat.key}
+                onClick={() => setSelectedCategory(cat.key)}
+                className={`px-4 py-2 rounded-none text-xs font-semibold transition-all cursor-pointer ${
                   active
-                    ? 'bg-[#071914] text-[#d5a864] shadow-sm'
-                    : 'bg-neutral-100/80 hover:bg-neutral-200/60 text-neutral-600 border border-neutral-200/60'
+                    ? 'bg-[#071914] text-white font-bold'
+                    : 'bg-white hover:bg-neutral-100 text-neutral-600 border border-neutral-200'
                 }`}
               >
-                <Icon className={`w-3.5 h-3.5 ${active ? 'text-[#d5a864]' : 'text-neutral-500'}`} />
-                <span>{item.label}</span>
+                <span>{cat.label}</span>
               </button>
             );
           })}
         </div>
 
-        {/* FAQ Accordion List */}
-        <div className="space-y-3.5">
-          {filteredList.length === 0 ? (
-            <div className="text-center py-12 px-4 rounded-2xl bg-neutral-50 border border-neutral-200/60">
-              <ShieldAlert className="w-8 h-8 text-neutral-400 mx-auto mb-2" />
-              <p className="text-sm font-bold text-neutral-700">
-                Tidak ada pertanyaan yang sesuai dengan kata kunci &ldquo;{searchQuery}&rdquo;.
-              </p>
-              <p className="text-xs text-neutral-500 mt-1">
-                Silakan coba kata kunci lain atau langsung hubungi tim konsultan kami.
-              </p>
-              <button
-                onClick={() => {
-                  setSearchQuery('');
-                  setSelectedCategory('semua');
-                }}
-                className="mt-4 px-4 py-2 text-xs font-bold text-[#8c672b] bg-[#d5a864]/10 rounded-lg hover:bg-[#d5a864]/20 transition-colors cursor-pointer"
-              >
-                Tampilkan Semua Pertanyaan
-              </button>
-            </div>
-          ) : (
-            filteredList.map((item, index) => {
-              const isOpen = expandedIndex === index;
-              const catKey = (item.category || 'umum').toLowerCase();
-              const catInfo = CATEGORY_MAP[catKey] || CATEGORY_MAP.umum;
+        {/* FAQ Accordion List - Minimalist Flat Rows */}
+        <div className="divide-y divide-neutral-200 border-t border-b border-neutral-200 bg-white shadow-sm">
+          {filteredList.map((item, index) => {
+            const isOpen = expandedIndex === index;
 
-              return (
-                <div
-                  key={`${item.question}-${index}`}
-                  className={`rounded-2xl transition-all duration-200 border ${
-                    isOpen
-                      ? 'bg-neutral-50/80 border-[#d5a864]/50 shadow-md ring-1 ring-[#d5a864]/20'
-                      : 'bg-white border-neutral-200/80 hover:border-neutral-300'
-                  }`}
+            return (
+              <div key={`${item.question}-${index}`} className="transition-colors">
+                <button
+                  onClick={() => toggleAccordion(index)}
+                  className="w-full text-left py-5 px-6 flex items-center justify-between gap-4 cursor-pointer hover:bg-neutral-50/60 transition-colors"
+                  aria-expanded={isOpen}
                 >
-                  <button
-                    onClick={() => toggleAccordion(index)}
-                    className="w-full text-left p-5 sm:p-6 flex items-start justify-between gap-4 cursor-pointer"
-                    aria-expanded={isOpen}
+                  <h3
+                    className="text-sm sm:text-base font-bold text-[#081c17]"
+                    style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
                   >
-                    <div className="space-y-1.5 flex-1 pr-2">
-                      <div className="flex items-center gap-2">
-                        <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-[#d5a864]/15 text-[#8c672b]">
-                          {catInfo.label}
-                        </span>
-                      </div>
-                      <h3
-                        className={`text-sm sm:text-base font-bold transition-colors ${
-                          isOpen ? 'text-[#081c17]' : 'text-neutral-800 hover:text-[#081c17]'
-                        }`}
-                        style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
-                      >
-                        {item.question}
-                      </h3>
-                    </div>
+                    {item.question}
+                  </h3>
 
-                    <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-transform duration-200 ${
-                        isOpen
-                          ? 'bg-[#071914] text-[#d5a864] rotate-180'
-                          : 'bg-neutral-100 text-neutral-500'
-                      }`}
-                    >
-                      <ChevronDown className="w-4 h-4" />
-                    </div>
-                  </button>
+                  <div className="w-6 h-6 flex items-center justify-center shrink-0 text-neutral-400">
+                    <span className="text-lg font-mono font-light">
+                      {isOpen ? '−' : '+'}
+                    </span>
+                  </div>
+                </button>
 
-                  {isOpen && (
-                    <div className="px-5 sm:px-6 pb-6 pt-1 border-t border-neutral-200/40 text-neutral-600">
-                      {renderAnswer(item.answer)}
-                    </div>
-                  )}
-                </div>
-              );
-            })
-          )}
+                {isOpen && (
+                  <div className="px-6 pb-6 pt-1 text-sm text-neutral-600 leading-relaxed border-t border-neutral-100 bg-[#fcfbfa]">
+                    {renderAnswer(item.answer)}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
 
-        {/* Still Have Questions Box */}
-        <div className="mt-12 p-6 sm:p-8 rounded-3xl bg-[#fbf9f5] border border-[#d5a864]/30 flex flex-col sm:flex-row items-center justify-between gap-5 text-center sm:text-left">
+        {/* Flat Help Box matching Mockup */}
+        <div className="mt-12 p-6 sm:p-7 rounded-none bg-white border border-neutral-200 flex flex-col sm:flex-row items-center justify-between gap-5 text-center sm:text-left shadow-sm">
           <div className="space-y-1">
             <h4
               className="text-base sm:text-lg font-bold text-[#081c17]"
               style={{ fontFamily: 'var(--font-plus-jakarta), system-ui' }}
             >
-              Punya Pertanyaan Spesifik Mengenai Lahan Anda?
+              Tim kami siap membantu Anda.
             </h4>
-            <p className="text-xs sm:text-sm text-neutral-500 max-w-xl">
-              Setiap bidang tanah memiliki karakteristik zonasi dan potensi ROI yang unik. Diskusikan langsung dengan konsultan ahli kami tanpa biaya.
+            <p className="text-xs sm:text-sm text-neutral-500">
+              Konsultasikan kebutuhan investasi properti Anda dengan tim kami.
             </p>
           </div>
 
           <button
             onClick={handleWhatsApp}
-            className="shrink-0 px-5 py-3 rounded-xl bg-[#071914] hover:bg-[#0d2e24] text-[#d5a864] text-xs sm:text-sm font-bold transition-all shadow-md flex items-center gap-2 cursor-pointer"
+            className="shrink-0 px-6 py-3 rounded-none bg-[#071914] hover:bg-[#0d2e24] text-white text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 cursor-pointer uppercase tracking-wider"
           >
-            <MessageCircle className="w-4 h-4" />
-            <span>Tanya via WhatsApp</span>
+            <span>Hubungi Kami Sekarang</span>
             <ArrowRight className="w-4 h-4 text-[#d5a864]" />
           </button>
         </div>

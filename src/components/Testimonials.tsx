@@ -187,7 +187,7 @@ export const Testimonials: React.FC<TestimonialsProps> = ({
           </p>
 
           {/* Social Proof Stats Ribbon */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full mt-8 p-4 sm:p-5 bg-white/90 backdrop-blur-sm rounded-2xl border border-[#d5a864]/20 shadow-xs">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full mt-8 p-4 sm:p-5 bg-white/90 backdrop-blur-sm rounded-none border border-[#d5a864]/20 shadow-xs">
             <div className="flex flex-col items-center justify-center p-2 text-center border-r last:border-r-0 border-neutral-100">
               <span className="text-xl sm:text-2xl font-black text-[#081c17]">40+</span>
               <span className="text-[11px] sm:text-xs text-neutral-500 font-medium mt-0.5">Proyek Terealisasi</span>
@@ -214,7 +214,7 @@ export const Testimonials: React.FC<TestimonialsProps> = ({
                 <button
                   key={cat}
                   onClick={() => setSelectedFilter(cat)}
-                  className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+                  className={`px-4 py-2 rounded-none text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
                     active
                       ? 'bg-[#071914] text-[#d5a864] shadow-md'
                       : 'bg-white text-neutral-600 hover:text-[#081c17] hover:bg-neutral-100/80 border border-neutral-200'
@@ -236,7 +236,7 @@ export const Testimonials: React.FC<TestimonialsProps> = ({
             return (
               <div
                 key={`${item.name}-${index}`}
-                className="group relative flex flex-col justify-between bg-white rounded-3xl p-6 sm:p-7 border border-neutral-200/80 hover:border-[#d5a864]/50 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                className="group relative flex flex-col justify-between bg-white rounded-none p-6 sm:p-7 border border-neutral-200/80 hover:border-[#d5a864]/50 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               >
                 {/* Decorative Quote Icon Watermark */}
                 <div className="absolute top-5 right-6 text-neutral-100 group-hover:text-[#d5a864]/15 transition-colors pointer-events-none">

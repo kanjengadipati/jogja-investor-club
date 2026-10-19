@@ -217,9 +217,9 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="hidden sm:flex items-center gap-3 shrink-0">
           <button
             onClick={onOpenConsultation}
-            className="px-5 py-2.5 text-xs sm:text-sm font-bold text-[#071914] bg-[#d5a864] hover:bg-[#e2b772] active:bg-[#c49855] rounded-xl transition-all shadow-md flex items-center gap-2 cursor-pointer"
+            className="px-5 py-2.5 text-xs sm:text-sm font-semibold text-[#071914] bg-[#d5a864] hover:bg-[#e2b772] active:bg-[#c49855] rounded-none transition-all flex items-center gap-2 cursor-pointer uppercase tracking-wider"
           >
-            <span>Konsultasi Gratis</span>
+            <span>Hubungi Kami</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
@@ -228,7 +228,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex md:hidden">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-neutral-300 hover:text-white cursor-pointer"
+            className="p-2 text-neutral-300 hover:text-white cursor-pointer rounded-none"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -246,7 +246,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 key={item.id}
                 href={item.href}
                 onClick={(e) => handleNavClick(e, item)}
-                className={`block py-1 transition-colors ${
+                className={`block py-1 transition-colors rounded-none ${
                   isActive
                     ? 'text-[#c5a25d] font-bold border-l-2 border-[#c5a25d] pl-2'
                     : 'text-neutral-300 hover:text-white'
@@ -279,9 +279,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               setMobileMenuOpen(false);
               onOpenConsultation();
             }}
-            className="w-full mt-2 py-3 text-center text-xs font-bold text-[#071914] bg-[#d5a864] rounded-xl cursor-pointer"
+            className="w-full mt-2 py-3 text-center text-xs font-bold text-[#071914] bg-[#d5a864] rounded-none cursor-pointer uppercase tracking-wider"
           >
-            Konsultasi Gratis via WhatsApp
+            Hubungi Kami via WhatsApp
           </button>
         </div>
       )}
