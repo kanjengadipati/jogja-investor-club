@@ -55,6 +55,15 @@ export interface SiteSettingsData {
   tagline?: string;
   defaultWhatsAppMessage?: string;
   logo?: string;
+  // Section visibility toggles (default true if not set)
+  showSectionHero?: boolean;
+  showSectionPropertyArchetypes?: boolean;
+  showSectionStrategicAreas?: boolean;
+  showSectionProcessSteps?: boolean;
+  showSectionProjects?: boolean;
+  showSectionTestimonials?: boolean;
+  showSectionFAQ?: boolean;
+  showSectionCalculator?: boolean;
 }
 
 /** Mirrors investmentCluster Sanity schema */
@@ -157,6 +166,9 @@ export default function PageClient({
     window.open(`https://wa.me/${whatsappNumber}?text=${text}`, '_blank', 'noopener,noreferrer');
   };
 
+  // Helper: tampilkan section jika field null/undefined (belum diset) atau true
+  const show = (flag: boolean | undefined | null) => flag !== false;
+
   return (
     <div className="min-h-screen flex flex-col bg-[#fbf9f5] text-[#1a221f] selection:bg-[#d5a864] selection:text-[#071914]">
       {/* 1. Navbar */}
@@ -164,45 +176,61 @@ export default function PageClient({
 
       <main className="flex-1">
         {/* 2. Hero */}
-        <Hero
-          onStartCalculator={scrollToGISSpatial}
-          onOpenConsultation={handleOpenWhatsAppDirect}
-          heroData={heroData}
-        />
+        {show(siteSettings?.showSectionHero) && (
+          <Hero
+            onStartCalculator={scrollToGISSpatial}
+            onOpenConsultation={handleOpenWhatsAppDirect}
+            heroData={heroData}
+          />
+        )}
 
         {/* 3. Solusi Properti */}
-        <PropertyArchetypes onSelectArchetype={handleSelectArchetype} archetypes={archetypes} />
+        {show(siteSettings?.showSectionPropertyArchetypes) && (
+          <PropertyArchetypes onSelectArchetype={handleSelectArchetype} archetypes={archetypes} />
+        )}
 
         {/* 4. Area Strategis GIS */}
-        <StrategicAreas
-          onSelectZone={handleSelectZone}
-          sanityInvestmentClusters={investmentClusters}
-          sanityYogyakartaRegions={yogyakartaRegions}
-        />
+        {show(siteSettings?.showSectionStrategicAreas) && (
+          <StrategicAreas
+            onSelectZone={handleSelectZone}
+            sanityInvestmentClusters={investmentClusters}
+            sanityYogyakartaRegions={yogyakartaRegions}
+          />
+        )}
 
         {/* 5. Proses Layanan */}
-        <ProcessSteps steps={processSteps} />
+        {show(siteSettings?.showSectionProcessSteps) && (
+          <ProcessSteps steps={processSteps} />
+        )}
 
         {/* 6. Portofolio Proyek Selesai */}
-        <Projects projects={projects} />
+        {show(siteSettings?.showSectionProjects) && (
+          <Projects projects={projects} />
+        )}
 
         {/* 7. Testimoni Klien & Investor */}
-        <Testimonials
-          testimonials={testimonials}
-          onOpenConsultation={handleOpenWhatsAppDirect}
-        />
+        {show(siteSettings?.showSectionTestimonials) && (
+          <Testimonials
+            testimonials={testimonials}
+            onOpenConsultation={handleOpenWhatsAppDirect}
+          />
+        )}
 
         {/* 8. FAQ */}
-        <FAQ
-          faqs={faqs}
-          onOpenConsultation={handleOpenWhatsAppDirect}
-        />
+        {show(siteSettings?.showSectionFAQ) && (
+          <FAQ
+            faqs={faqs}
+            onOpenConsultation={handleOpenWhatsAppDirect}
+          />
+        )}
 
         {/* 9. Kalkulator Potensi */}
-        <LeadCalculatorBanner
-          initialPropertyType={selectedPropertyType}
-          initialZone={selectedZone}
-        />
+        {show(siteSettings?.showSectionCalculator) && (
+          <LeadCalculatorBanner
+            initialPropertyType={selectedPropertyType}
+            initialZone={selectedZone}
+          />
+        )}
       </main>
 
       {/* 10. Footer */}

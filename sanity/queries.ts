@@ -46,6 +46,14 @@ export const siteSettingsQuery = groq`
     tagline,
     defaultWhatsAppMessage,
     "logo": logo.asset->url,
+    showSectionHero,
+    showSectionPropertyArchetypes,
+    showSectionStrategicAreas,
+    showSectionProcessSteps,
+    showSectionProjects,
+    showSectionTestimonials,
+    showSectionFAQ,
+    showSectionCalculator,
   }
 `;
 
