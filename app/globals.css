@@ -7,6 +7,28 @@
     border-radius: 0 !important;
   }
 
+  /* Indikator status, dot, avatar, pin marker, dan spinner tetap bulat */
+  .rounded-full,
+  [class*="rounded-full"],
+  .poi-pin,
+  .poi-pin div,
+  .inspect-land-pin,
+  .inspect-land-pin div,
+  .custom-land-pin div:last-child,
+  .animate-spin,
+  .animate-ping {
+    border-radius: 9999px !important;
+  }
+
+  /* Tombol, link navigasi, kartu, input, dan panel tetap flat */
+  button:not(.btn-round),
+  a:not(.btn-round),
+  input,
+  select,
+  textarea {
+    border-radius: 0 !important;
+  }
+
   body {
     font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
     color: #1a221f;
