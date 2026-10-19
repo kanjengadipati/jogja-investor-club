@@ -83,6 +83,14 @@ async function seed() {
     address: 'Yogyakarta, D.I. Yogyakarta',
     tagline: 'Konsultan Finansial & Kontraktor Properti',
     defaultWhatsAppMessage: 'Halo Tim Jogja Investor Club, saya memiliki tanah di Yogyakarta dan ingin berkonsultasi mengenai potensi pengembangan menjadi Rumah / Villa / Homestay & Kos Eksklusif. Mohon info jadwal konsultasi awal gratis. Terima kasih!',
+    showSectionHero: true,
+    showSectionPropertyArchetypes: true,
+    showSectionStrategicAreas: true,
+    showSectionProcessSteps: true,
+    showSectionProjects: true,
+    showSectionTestimonials: true,
+    showSectionFAQ: true,
+    showSectionCalculator: true,
     ...(imgLogo ? { logo: imgLogo } : {}),
   };
 
